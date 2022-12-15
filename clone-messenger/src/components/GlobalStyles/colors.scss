@@ -1,11 +1,21 @@
-// Color Background
-$web-wash : #F0F2F5;
+//Color
 
-//Color Text
-$secondary-text: #65676B;
+$lightBlue: #0A7CFF;
+
+// Color Background
+$webWash : #F0F2F5;
+$grayBackground : #f8f8f8;
+//Color Tex;
+$secondaryText: #65676B;
+$grayText : #595959;
+$primaryText : #050505;
+//Border
+$mediaInnerBorder: rgba(0, 0, 0, 0.1);
+//Icon
+$placeholderIcon :#65676B;
+$primaryIcon: #050505;
 
 //Bold
-$FontWeight : (
-    700 : 700,
+$FontWeights : (700 : 700,
     bold: bold,
-)
+);

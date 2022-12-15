@@ -1,9 +1,11 @@
 @use "sass:map";
 
 @import '../GlobalStyles/colors.scss';
+
 .content {
-    color: $secondary-text;
-    font-weight: map.get($FontWeight, 700 );
+    height: 100%;
+    color:$secondaryText;
+    font-weight: map.get($FontWeights, 700 );
     font-size: 1.25rem;
     text-align: center;
     display: flex;

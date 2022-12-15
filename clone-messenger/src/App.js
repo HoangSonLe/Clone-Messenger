@@ -1,10 +1,11 @@
-import DefaultLayout from "./components/Layouts/DefaultLayout/DefaultLayout";
+import { RouterProvider } from "react-router-dom";
+import { routes } from "./routes/routes";
 function App() {
   return (
-    <DefaultLayout>
-      
-    </DefaultLayout>
- );
+    <div style={{ height: "100vh" }}>
+      <RouterProvider router={routes} />
+    </div>
+  );
 }
 
 export default App;

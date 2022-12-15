@@ -1,0 +1,23 @@
+@import '../../GlobalStyles/colors.scss';
+
+.icon {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    color: $placeholderIcon;
+    padding: 2px 8px;
+    // transition: background-color ease-in-out 200ms;
+    transition: 200ms;
+
+
+    &.active {
+        background-color: $webWash;
+        color: $primaryIcon;
+    }
+
+    &:hover {
+        background-color: $webWash;
+    }
+}
