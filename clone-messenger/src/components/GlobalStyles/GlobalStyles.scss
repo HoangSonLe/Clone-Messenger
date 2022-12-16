@@ -8,6 +8,7 @@
 
 :root {
     --font-family: 'Segoe UI Historic', , ' sans-serif';
+    --font-size-input : .9375rem;
 }
 
 * {
@@ -29,4 +30,7 @@ body {
 }
 a[href]{
     text-decoration: none;
+}
+input {
+    font-family: var(--font-family);
 }

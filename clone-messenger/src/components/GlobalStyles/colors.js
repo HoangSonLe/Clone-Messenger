@@ -17,6 +17,7 @@ export const Colors = {
 
 //Bold
 export const FontWeights = {
+  500: "500",
   700: "700",
   bold: "bold",
 };

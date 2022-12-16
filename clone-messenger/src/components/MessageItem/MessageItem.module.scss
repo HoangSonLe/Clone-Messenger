@@ -1,0 +1,65 @@
+@use "sass:map";
+@import '../GlobalStyles/colors.scss';
+
+.wrapper {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0px 6px;
+    padding: 10px;
+    border-radius: 8px;
+
+    &.active {
+        background-color: $webWash;
+    }
+
+    &:hover {
+        background-color: $webWash;
+    }
+}
+
+.avatar {
+    padding-right: 10px;
+}
+
+.content {
+    color: $primaryText;
+    flex: 1;
+
+}
+
+.name {
+    color: $primaryText;
+    font-weight: map-get($FontWeights, 500);
+    text-align: left;
+    font-size: var(--font-size-input);
+
+    // overflow-x: hidden;
+    // white-space: nowrap;
+    // text-overflow: ellipsis;
+    // max-width: 100%;
+
+    // position: relative;
+    // &>span {
+    //     position: absolute;
+    //     left: 0;
+    //     right: 0;
+    //     white-space: nowrap;
+    //     overflow: hidden;
+    //     text-overflow: ellipsis;
+    // }
+    &.active {
+        font-weight: map-get($FontWeights, 700);
+    }
+}
+
+.message {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.dot-space {
+    margin: 0px 3px;
+}

@@ -16,6 +16,12 @@ $placeholderIcon :#65676B;
 $primaryIcon: #050505;
 
 //Bold
-$FontWeights : (700 : 700,
+$FontWeights : (
+    500 : 500,
+    700 : 700,
     bold: bold,
 );
+
+//Media
+
+$media-width-breakpoint : 900px;

@@ -4,7 +4,6 @@ import { createBrowserRouter } from "react-router-dom";
 import ContactList from "../components/ContactList/ContactList";
 import DefaultLayout from "../components/Layouts/DefaultLayout/DefaultLayout";
 import ErrorPage from "../components/Layouts/ErrorPage/ErrorPage";
-import MenuContentDefaultLayout from "../components/Layouts/MenuContentDefaultLayout/MenuContentDefaultLayout";
 import MessageList from "../components/MessageList/MessageList";
 
 //Config routes
@@ -13,9 +12,9 @@ const configRoutes = {
   home: "/",
   active: "/active",
   //nested routes
+  defaultMessage : "/message",
   message: "/message/:id",
 };
-const Layout = MenuContentDefaultLayout;
 //Routes
 const publicRoutes = [
   //root
@@ -27,19 +26,11 @@ const publicRoutes = [
       //nested routes
       {
         path: configRoutes.message,
-        element: (
-          <Layout>
-            <MessageList />
-          </Layout>
-        ),
+        element: <MessageList />,
       },
       {
         path: configRoutes.active,
-        element: (
-          <Layout>
-            <ContactList />
-          </Layout>
-        ),
+        element: <ContactList />,
       },
     ],
   },
@@ -47,3 +38,4 @@ const publicRoutes = [
 const routes = createBrowserRouter([...publicRoutes]);
 
 export { configRoutes, routes };
+

@@ -1,0 +1,55 @@
+@use "sass:map";
+@import '../../GlobalStyles/colors.scss';
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 6px 16px 12px;
+}
+
+.btn-back {
+    text-align: center;
+    margin-left: -12px;
+    @media (max-width : $media-width-breakpoint) {
+        display: none;
+    }
+}
+
+.search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    background-color: $webWash;
+    border-radius: 50px;
+}
+
+.search-icon {
+    color: #606770;
+    margin-top: 5px;
+    padding-left: 10px;
+}
+
+.search-input {
+    flex: 1;
+    input {
+        width: 100%;
+        outline: none;
+        color: $primaryText;
+        height: 36px;
+        font-size: var(--font-size-input);
+        caret-color: $primaryText;
+        background-color: transparent;
+        border-width: 0px;
+        padding:0px 8px;
+
+        @media (min-width : $media-width-breakpoint) {
+            padding:0px 8px;
+        }
+        @media (max-width : $media-width-breakpoint) {
+            padding:0px 3px;
+        }
+    }
+}
