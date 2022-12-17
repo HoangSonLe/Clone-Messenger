@@ -1,6 +1,8 @@
 //Color
 export const Colors = {
   lightBlue: "#0A7CFF",
+  background : "#FFFFFF",
+
   // Color Background
   webWash: "#F0F2F5",
   grayBackground: "#f8f8f8",

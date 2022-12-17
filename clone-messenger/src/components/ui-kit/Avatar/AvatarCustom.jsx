@@ -1,64 +1,58 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Badge from '@mui/material/Badge';
-import Avatar from '@mui/material/Avatar';
-import Stack from '@mui/material/Stack';
+import Avatar from "@mui/material/Avatar";
+import Badge from "@mui/material/Badge";
+import { styled } from "@mui/material/styles";
+import * as React from "react";
+import PropTypes from "prop-types";
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  '& .MuiBadge-badge': {
-    backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: "-1px",
-      left: "-1px",
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: 'ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
+import images from "../../../assets/img";
+
+const StyledBadge = styled(Badge)(({ theme, top = "28px", left = "20px" }) => ({
+    "& .MuiBadge-badge": {
+        backgroundColor: "#44b700",
+        color: "#44b700",
+        boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+		top, left,
+        "&::after": {
+            position: "absolute",
+            top: "-1px",
+            left: "-1px",
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            // animation: "ripple 1.2s infinite ease-in-out",
+            // border: "1px solid currentColor",
+            content: '""',
+        },
     },
-  },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
-      opacity: 1,
+    "@keyframes ripple": {
+        "0%": {
+            transform: "scale(.8)",
+            opacity: 1,
+        },
+        "100%": {
+            transform: "scale(2.4)",
+            opacity: 0,
+        },
     },
-    '100%': {
-      transform: 'scale(2.4)',
-      opacity: 0,
-    },
-  },
 }));
+AvatarCustom.defaultProps = {
+    src: images.defaultAvatar,
+    variant: "dot",
+};
+AvatarCustom.propTypes = {
+    styles: PropTypes.object,
+    variant: PropTypes.instanceOf(["dot", "standard"]),
+};
 
-const SmallAvatar = styled(Avatar)(({ theme }) => ({
-  width: 32,
-  height: 32,
-  border: `2px solid ${theme.palette.background.paper}`,
-}));
-
-export default function BadgeAvatars() {
-  return (
-    <Stack direction="row" spacing={2}>
-        <div></div>
-      {/* <StyledBadge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        variant="dot"
-      >
-        <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-      </StyledBadge> */}
-      <Badge
-        overlap="circular"
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-        badgeContent={
-          <SmallAvatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        }
-      >
-        <Avatar sx={{ width: 32, height: 32 }} alt="Travis Howard" src="/static/images/avatar/2.jpg" />
-      </Badge>
-    </Stack>
-  );
+export default function AvatarCustom({ src, alt, styles, variant }) {
+    return (
+        <StyledBadge
+            overlap="circular"
+            anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+            variant={variant}
+        >
+            <Avatar sx={styles} alt={alt} src={src} />
+        </StyledBadge>
+    );
 }
+export { StyledBadge };

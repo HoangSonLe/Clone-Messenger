@@ -13,7 +13,8 @@ const configRoutes = {
   active: "/active",
   //nested routes
   defaultMessage : "/message",
-  message: "/message/:id",
+  // message: "/message/:id",
+  message: "/message/*",
 };
 //Routes
 const publicRoutes = [
@@ -24,6 +25,11 @@ const publicRoutes = [
     errorElement: <ErrorPage />,
     children: [
       //nested routes
+      {
+        index :true,
+        // path: configRoutes.message,
+        element: <MessageList />,
+      },
       {
         path: configRoutes.message,
         element: <MessageList />,

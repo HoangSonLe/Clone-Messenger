@@ -1,0 +1,84 @@
+.parent1 {
+  width:100px;
+  height:100px;
+  padding:50px;
+}
+
+/* .parent:hover {
+} */
+
+.child1 {
+  height:100px;
+  width:100px;
+  background:#355E95;
+  transition:background-color 1s;
+  
+  position: relative;
+  top: -200px;
+}
+
+.child1:hover {
+  background:#000;
+}
+
+.sibling{
+  position: relative;
+  width:100px;
+  height:100px;
+  padding: 50px;
+  top: -50px;
+  left: -50px;
+  background:#3D6AA2;
+  transition:background-color 1s;    
+}
+
+.sibling:hover{
+  background:#FFF;
+  transition:background-color 1s;
+}
+
+.parent {
+  width:100px;
+  height:100px;
+  padding:50px;
+  transition:background-color 1s;
+  background:#3D6AA2;    
+  position: relative;
+  z-index: 1;
+}
+
+.parent:hover{
+  background:#FFF;    
+}
+
+
+.child {
+  height:100px;
+  width:100px;
+  background:#355E95;
+  transition:background-color 1s;
+  position: relative;
+}
+
+.child:hover {    
+  background:#000;
+}
+
+.child:before{
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;        
+  z-index: -1;
+  transition:background-color 1s;
+}
+
+.child:hover:before{
+  top: -50px;
+  bottom: -50px;
+  left: -50px;
+  right: -50px;     
+  background:#3D6AA2;    
+}
