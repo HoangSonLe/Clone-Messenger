@@ -1,0 +1,30 @@
+@import "../../GlobalStyles/colors.scss";
+.header-menu{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.menu-body{
+    width: 100%;
+}
+.menu-item-title{
+    flex: 1;
+    text-align: left;
+    padding-left: 8px;
+}
+.menu-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+.btn-icon{
+    padding: 0;
+    svg{
+        height: 24px;
+        width: 24px;
+        color: $primaryIcon;
+    }
+}

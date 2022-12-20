@@ -1,12 +1,37 @@
-.wrapper{
-    display:flex;
+@use "sass:map";
+@import '../GlobalStyles/colors.scss';
+
+.wrapper {
+    display: flex;
     flex-direction: column;
     max-height: 100%;
 }
+
 .search {
     flex-shrink: 0;
 }
+
 .message-list {
     overflow-y: auto;
     flex-grow: 1;
-}   
+}
+
+.app-install {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 20px;
+    min-height: 54px;
+    border-top: 1px solid $mediaInnerBorder;
+
+    p {
+        margin-left: 10px;
+        color: $primaryText;
+        text-align: left;
+        font-size: var(--font-size-input);
+        font-weight: map-get($FontWeights, 500);
+        @media (max-width : $media-width-breakpoint) {
+            display: none;
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import classNames from "classnames/bind";
+import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
 
 import styles from "./MessageList.module.scss";
 import Header from "../Layouts/Header/Header";
@@ -22,9 +23,16 @@ export default function MessageList() {
                     <Search />
                 </div>
                 <div className={cx("message-list")}>
-                    {[...Array(20).keys()].map((i) => (
-                        <MessageItem key={i} data={{ ...mockData, id: i }} />
+                    {[...Array(10).keys()].map((i, index) => (
+                        <MessageItem
+                            key={`${i.id}-${index}`}
+                            data={{ ...mockData, id: i }}
+                        />
                     ))}
+                </div>
+                <div className={cx("app-install")}>
+                    <BrowserUpdatedIcon />
+                    <p>Install Messenger app</p>
                 </div>
             </div>
         </>

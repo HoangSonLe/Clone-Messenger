@@ -1,0 +1,102 @@
+@use "sass:map";
+@import '../GlobalStyles/colors.scss';
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wrapper-message {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $background;
+}
+
+.header {
+    width: 100%;
+    padding: 10px 6px;
+    box-shadow: 0 0 4px $shadow2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.btn-icon {
+    flex-shrink: 0;
+
+    svg {
+        height: 24px;
+        width: 24px;
+        color: $blue;
+    }
+}
+
+.content {
+    width: 100%;
+    max-width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.message {
+    flex: 1;
+    width: 100%;
+}
+
+.input {
+    width: 100%;
+}
+
+//Drawer
+
+.message-more-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.avatar {
+    padding: 16px 0px 12px;
+    text-align: center;
+}
+
+.name {
+    color: $primaryText;
+    text-align: center;
+    font-size: var(--font-size-message-name);
+    font-weight: map-get($FontWeights, 500);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.action {
+    padding: 20px 12px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+
+    .icon {
+        padding: 6px 16px;
+    }
+
+    svg {
+        height: 28px;
+        width: 28px;
+        color: $primaryIcon;
+    }
+}

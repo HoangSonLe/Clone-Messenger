@@ -1,0 +1,39 @@
+@use "sass:map";
+@import '../../GlobalStyles/colors.scss';
+
+.wrapper {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 6px;
+    padding-left: 12px;
+    border-radius: 8px;
+    color: $primaryText;
+    & .content {
+        @media (max-width : $media-width-breakpoint) {
+            display: none;
+        }
+    }
+
+    &:hover {
+        background-color: $webWash;
+    }
+}
+
+.avatar {
+    padding: 0px 6px;
+    padding-right: 10px;
+    margin-left: -10px;
+}
+
+.name {
+    color: $primaryText;
+    text-align: left;
+    font-size: var(--font-size-input);
+    font-weight: map-get($FontWeights, 500);
+
+    &.active {
+        font-weight: map-get($FontWeights, 700);
+    }
+}
