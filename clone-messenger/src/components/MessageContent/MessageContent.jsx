@@ -1,22 +1,20 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import CallIcon from "@mui/icons-material/Call";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import PendingIcon from "@mui/icons-material/Pending";
 import SearchIcon from "@mui/icons-material/Search";
-import VideocamIcon from "@mui/icons-material/Videocam";
 import { Drawer, IconButton } from "@mui/material";
 import classNames from "classnames/bind";
-import { Link, useParams } from "react-router-dom";
-import styles from "./MessageContent.module.scss";
-
 import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+
 import images from "../../assets/img";
 import { defaultOnClick } from "../../generals/defaultActions";
-import DefaultMessageContent from "../DefaultMessageContent/DefaultMessageContent";
-import AvatarCustom, { AvatarWithName } from "../ui-kit/Avatar/AvatarCustom";
-import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
 import helper from "../../generals/helper";
+import DefaultMessageContent from "../DefaultMessageContent/DefaultMessageContent";
+import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
+import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
+import styles from "./MessageContent.module.scss";
+import MessageContentHeader from "./MessageContentHeader";
+import MessageList from "./MessageList.jsx/MessageList";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
@@ -24,6 +22,7 @@ const styleIcon = {
 };
 const maxWidthDrawer = 380;
 const minWidthDrawer = 250;
+const widthDrawer = 255;
 export default function MessageContent() {
     const [isOpenDrawer, setOpenDrawer] = useState(false);
     let { id } = useParams();
@@ -38,7 +37,7 @@ export default function MessageContent() {
                     <div
                         className={cx("wrapper-message")}
                         style={{
-                            marginRight: -maxWidthDrawer,
+                            marginRight: -widthDrawer,
                             transition: "margin ease-in-out 200ms",
                             ...(isOpenDrawer && {
                                 marginRight: 0,
@@ -46,35 +45,25 @@ export default function MessageContent() {
                             }),
                         }}
                     >
-                        <div className={cx("header")}>
-                            <AvatarWithName title="HoangHuy" />
-                            <div className={cx("btn-icon")}>
-                                <IconButton onClick={defaultOnClick}>
-                                    <CallIcon size="large" />
-                                </IconButton>
-                                <IconButton onClick={defaultOnClick}>
-                                    <VideocamIcon size="large" />
-                                </IconButton>
-                                <IconButton onClick={handleToggleDrawer}>
-                                    {!isOpenDrawer ? (
-                                        <MoreHorizIcon size="large" />
-                                    ) : (
-                                        <PendingIcon size="large" />
-                                    )}
-                                </IconButton>
-                            </div>
-                        </div>
+                        <MessageContentHeader
+                            title={"Hoang Huy"}
+                            href={"/"}
+                            isOpenDrawer
+                            handleToggleDrawer={handleToggleDrawer}
+                        />
                         <div className={cx("content")}>
-                            <div className={cx("message")}>Input</div>
+                            <div className={cx("message")}>
+                                <MessageList />
+                            </div>
                             <div className={cx("input")}>Input</div>
                         </div>
                     </div>
                     <Drawer
                         sx={{
-                            width: maxWidthDrawer,
+                            width: widthDrawer,
                             flexShrink: 1,
                             "& .MuiDrawer-paper": {
-                                width: maxWidthDrawer,
+                                width: widthDrawer,
                             },
                         }}
                         variant="persistent"
@@ -91,7 +80,7 @@ export default function MessageContent() {
                                 />
                             </div>
                             <EllipsisContent component={"div"}>
-                                <Link to={`/`}>
+                                <Link to={"/"} target="_blank">
                                     <div className={cx("name")}>Hoang Huy</div>
                                 </Link>
                             </EllipsisContent>

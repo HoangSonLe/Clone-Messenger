@@ -62,6 +62,7 @@ export default function AvatarCustom({
     variant,
     styleWrapper,
 }) {
+
     const isGroupAvatar = srcList.length >= 2;
     let heightImage = helper.getNumberInString(
         isGroupAvatar ? groupHeight : height
