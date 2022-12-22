@@ -1,0 +1,17 @@
+@use "sass:map";
+@import "../../GlobalStyles/colors.scss";
+
+.wrapper {
+    background: $messengerCardPrimaryBackground;
+}
+.hours{
+    text-align: center;
+    font-weight: map-get($FontWeights, 500);
+    margin: 2px 0px;
+    padding: 16px 20px;
+    font-size: .75rem;
+    color: $secondaryText;
+}
+.last-divide {
+    height: 8px;
+}

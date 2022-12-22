@@ -1,67 +1,69 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
-import { Drawer } from "@mui/material";
+import { Drawer, IconButton } from "@mui/material";
 import classNames from "classnames/bind";
-import { useState, useMemo, useEffect } from "react";
+import { useMemo } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import images from "../../assets/img";
 import { defaultOnClick } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
 import DefaultMessageContent from "../DefaultMessageContent/DefaultMessageContent";
+import { mediaWidthBreakpoint } from "../GlobalStyles/colors";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
-import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
 import styles from "./MessageContent.module.scss";
 import MessageContentHeader from "./MessageContentHeader";
 import MessageList from "./MessageList.jsx/MessageList";
-import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
     background: helper.getColorFromName("webWash"),
 };
-const maxWidthDrawer = 300;
+const maxWidthDrawer = 365;
 const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
 export default function MessageContent() {
-    //Check breakpoint responsive drawer
     const breakpointWidth = useMemo(() =>
-        helper.getNumberInString(mediaWidthBreakpoint2)
+        helper.getNumberInString(mediaWidthBreakpoint)
     );
     const [isOpenDrawer, setOpenDrawer] = useState(false);
-
-    //Check width with breakpoint
     const checkWidthView = () => {
-        return window.innerWidth > breakpointWidth
-            ? maxWidthDrawer
-            : widthDrawerDefault;
+        if (isOpenDrawer) {
+            return window.innerWidth > breakpointWidth
+                ? maxWidthDrawer
+                : widthDrawerDefault;
+        }
+        return widthDrawerDefault;
     };
     const [widthDrawer, setWidthDrawer] = useState(checkWidthView);
-    //Handle open close drawer
+
+    let { id } = useParams();
     const handleToggleDrawer = () => {
         setOpenDrawer((prev) => !prev);
-        isOpenDrawer && handleWidthViewChange(true);
     };
-
-    //Event when window resize
-    const handleWidthViewChange = (force = false) => {
-        if (isOpenDrawer || force) {
+    const handleWidthViewChange = () => {
+        if (isOpenDrawer) {
             let needWidth = checkWidthView();
-            console.log(isOpenDrawer, needWidth, widthDrawer);
+            console.log(
+                window.innerWidth,
+                isOpenDrawer,
+                needWidth,
+                widthDrawer
+            );
             needWidth !== widthDrawer && setWidthDrawer(needWidth);
         }
     };
-    //Add and remove event resize of window
+
     useEffect(() => {
         window.addEventListener("resize", handleWidthViewChange);
         return () => {
             window.removeEventListener("resize", handleWidthViewChange);
         };
     }, [widthDrawer]);
-
-    let { id } = useParams();
     return (
         <>
             {id ? (
@@ -77,24 +79,19 @@ export default function MessageContent() {
                             }),
                         }}
                     >
-                        {/* Header */}
                         <MessageContentHeader
                             title={"Hoang Huy"}
                             href={"/"}
                             isOpenDrawer
                             handleToggleDrawer={handleToggleDrawer}
                         />
-                        {/* Header */}
-                        {/* Messages */}
                         <div className={cx("content")}>
                             <div className={cx("message")}>
                                 <MessageList />
                             </div>
                             <div className={cx("input")}>Input</div>
                         </div>
-                        {/* Messages */}
                     </div>
-                    {/* Drawer more information */}
                     <Drawer
                         sx={{
                             width: widthDrawer,
@@ -107,7 +104,6 @@ export default function MessageContent() {
                         anchor="right"
                         open={isOpenDrawer}
                     >
-                        {/* More information content */}
                         <div className={cx("message-more-wrapper")}>
                             <div className={cx("avatar")}>
                                 <AvatarCustom
@@ -124,31 +120,28 @@ export default function MessageContent() {
                             </EllipsisContent>
                             <div className={cx("action")}>
                                 <div className={cx("icon")}>
-                                    <IconButtonCustom
+                                    <IconButton
                                         sx={styleIcon}
                                         onClick={defaultOnClick}
                                     >
                                         <AccountCircleIcon />
-                                    </IconButtonCustom>
-                                    <p>Profile</p>
+                                    </IconButton>
                                 </div>
                                 <div className={cx("icon")}>
-                                    <IconButtonCustom
+                                    <IconButton
                                         sx={styleIcon}
                                         onClick={defaultOnClick}
                                     >
                                         <NotificationsIcon />
-                                    </IconButtonCustom>
-                                    <p>Mute</p>
+                                    </IconButton>
                                 </div>
                                 <div className={cx("icon")}>
-                                    <IconButtonCustom
+                                    <IconButton
                                         sx={styleIcon}
                                         onClick={defaultOnClick}
                                     >
                                         <SearchIcon />
-                                    </IconButtonCustom>
-                                    <p>Search</p>
+                                    </IconButton>
                                 </div>
                             </div>
                             <div className={cx("menu")}></div>

@@ -9,6 +9,7 @@ import styles from "./MessageContent.module.scss";
 import { defaultOnClick } from "../../generals/defaultActions";
 import { AvatarWithName } from "../ui-kit/Avatar/AvatarCustom";
 import { Link } from "react-router-dom";
+import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 
 const cx = classNames.bind(styles);
 
@@ -21,22 +22,31 @@ export default function MessageContentHeader({
     return (
         <div className={cx("header")}>
             <Link to={href} target="_blank">
-                <AvatarWithName title={title} />
+                <AvatarWithName forceContent={true} title={title} />
             </Link>
             <div className={cx("btn-icon")}>
-                <IconButton onClick={defaultOnClick}>
+                <IconButtonCustom
+                    title="Start a voice call"
+                    onClick={defaultOnClick}
+                >
                     <CallIcon size="large" />
-                </IconButton>
-                <IconButton onClick={defaultOnClick}>
+                </IconButtonCustom>
+                <IconButtonCustom
+                    title={"Start a video call"}
+                    onClick={defaultOnClick}
+                >
                     <VideocamIcon size="large" />
-                </IconButton>
-                <IconButton onClick={handleToggleDrawer}>
+                </IconButtonCustom>
+                <IconButtonCustom
+                    title={"Conversion information"}
+                    onClick={handleToggleDrawer}
+                >
                     {!isOpenDrawer ? (
                         <MoreHorizIcon size="large" />
                     ) : (
                         <PendingIcon size="large" />
                     )}
-                </IconButton>
+                </IconButtonCustom>
             </div>
         </div>
     );

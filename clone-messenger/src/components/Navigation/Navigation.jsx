@@ -3,6 +3,7 @@ import { MessageIcon, UserGroupIcon } from "../../Icons";
 import { AvatarMenu } from "../../mockData/MenuData";
 import { configRoutes } from "../../routes/routes";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
+import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import MenuPopover from "../ui-kit/Menu/MenuPopover";
 import Menu from "./Menu/Menu";
 import MenuItem from "./MenuItem/MenuItem";
@@ -15,11 +16,29 @@ export default function Navigation() {
                 <Menu>
                     <MenuItem
                         href={configRoutes.defaultMessage}
-                        icon={<MessageIcon />}
+                        icon={
+                            <IconButtonCustom
+                                sx={{ padding: 0 }}
+                                title={"Chats"}
+                                placement={"right"}
+                                onClick={() => {}}
+                            >
+                                <MessageIcon />
+                            </IconButtonCustom>
+                        }
                     />
                     <MenuItem
                         href={configRoutes.active}
-                        icon={<UserGroupIcon />}
+                        icon={
+                            <IconButtonCustom
+                                sx={{ padding: 0 }}
+                                title={"People"}
+                                placement={"right"}
+                                onClick={() => {}}
+                            >
+                                <UserGroupIcon />
+                            </IconButtonCustom>
+                        }
                     />
                 </Menu>
 
@@ -29,7 +48,7 @@ export default function Navigation() {
             </div>
             <div className={cx("avatar")}>
                 <MenuPopover options={AvatarMenu}>
-                    <AvatarCustom height="36px" width="36px"/>
+                    <AvatarCustom height="36px" width="36px" />
                 </MenuPopover>
             </div>
         </div>

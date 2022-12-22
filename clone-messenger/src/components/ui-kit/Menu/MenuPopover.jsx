@@ -1,16 +1,15 @@
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Divider, IconButton } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import classNames from "classnames/bind.js";
 import * as React from "react";
 import { useState } from "react";
-import classNames from "classnames/bind.js";
-import swal from "sweetalert";
-import { Divider, IconButton } from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
-import styles from "./Menu.module.scss";
-import HeaderMenu from "./HeaderMenu.jsx";
-import helper from "../../../generals/helper";
 import { defaultOnClick } from "../../../generals/defaultActions";
+import helper from "../../../generals/helper";
+import HeaderMenu from "./HeaderMenu.jsx";
+import styles from "./Menu.module.scss";
 const styleMenu = {
     elevation: 0,
     sx: {

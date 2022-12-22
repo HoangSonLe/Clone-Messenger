@@ -1,5 +1,11 @@
-import { memo } from "react";
-import { MessageGroup } from "../Message/Message";
+import React, { memo } from "react";
+import classNames from "classnames/bind";
+
+import styles from "./MessageList.module.scss";
+import MessageGroup from "../MessageGroup/MessageGroup";
+import Message from "../Message/Message";
+
+const cx = classNames.bind(styles);
 
 function addHours(hours) {
     let date = Date.now();
@@ -11,13 +17,11 @@ function addDays(days) {
     let date = Date.now();
     var result = new Date(date);
     result.setDate(result.getDate() + days);
-    console.log(result);
     return result;
 }
-const message = ({ userId, date = Date.now(), isMyMessage = true }) => ({
+const message = (userId, date = Date.now()) => ({
     id: Math.random(),
-    userId: 1,
-    text: "LalalalaLalalalaLalalala",
+    text: "LalalalaLala laLalalalaLa laaLa lalalaLalalala",
     reactList: [
         {
             reactTypeIcon: "",
@@ -25,16 +29,24 @@ const message = ({ userId, date = Date.now(), isMyMessage = true }) => ({
         },
     ],
     createDateTime: date,
-    isMyMessage: isMyMessage,
 });
-const groupMessage = ({ date = Date.now() }) => ({
+const groupMessageByUserId = (userId, isMyMessage = true) => ({
+    id: Math.random(),
+    userId,
+    messageList: [
+        message(userId, addHours(0)),
+        message(userId, addHours(0)),
+        message(userId, addHours(1)),
+    ],
+    isMyMessage,
+});
+const groupMessage = (date = Date.now()) => ({
     id: Math.random(),
     date,
     messageList: [
-        message(1, addHours(0), true),
-        message(1, addHours(0), true),
-        message(1, addHours(1), true),
-        message(2, addHours(5), false),
+        groupMessageByUserId(1, true),
+        groupMessageByUserId(2, false),
+        groupMessageByUserId(1, true),
     ],
 });
 
@@ -44,11 +56,28 @@ const listMes = [
     groupMessage(addDays(-1)),
 ];
 function MessageList({}) {
-    console.log(12);
     return (
-        <div>
+        <div className={cx("wrapper")}>
             {listMes.map((i, index) => (
-                <MessageGroup data={i} key={index} />
+                <div key={index}>
+                    <div className={cx("wrapper")}>
+                        <div className={cx("hours")}>
+                            {new Date(i.date).toUTCString()}
+                        </div>
+                        <div className={cx("message-list")}>
+                            {i.messageList?.map((j) => {
+                                return (
+                                    <React.Fragment key={j.id}>
+                                        <Message data={j} />
+                                        <div
+                                            className={cx("last-divide")}
+                                        ></div>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
             ))}
         </div>
     );

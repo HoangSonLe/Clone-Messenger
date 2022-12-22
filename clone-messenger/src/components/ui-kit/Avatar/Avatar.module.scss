@@ -15,6 +15,9 @@
             display: none;
         }
     }
+    & .force-content{
+        display: unset;
+    }
 
     &:hover {
         background-color: $webWash;
