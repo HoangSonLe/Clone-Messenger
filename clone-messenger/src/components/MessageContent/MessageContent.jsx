@@ -9,7 +9,7 @@ import { Link, useParams } from "react-router-dom";
 import images from "../../assets/img";
 import { defaultOnClick } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
-import DefaultMessageContent from "../DefaultMessageContent/DefaultMessageContent";
+import DefaultMessageContent from "./DefaultMessageContent/DefaultMessageContent";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
@@ -17,6 +17,8 @@ import styles from "./MessageContent.module.scss";
 import MessageContentHeader from "./MessageContentHeader";
 import MessageList from "./MessageList.jsx/MessageList";
 import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
+import MenuTreeView from "./ConversationInformation/MenuTreeview";
+import { ConversationMenu } from "../../HardData/MenuData";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
@@ -151,7 +153,9 @@ export default function MessageContent() {
                                     <p>Search</p>
                                 </div>
                             </div>
-                            <div className={cx("menu")}></div>
+                            <div className={cx("menu")}>
+                                <MenuTreeView data={ConversationMenu} />
+                            </div>
                         </div>
                     </Drawer>
                 </div>

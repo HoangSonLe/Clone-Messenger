@@ -2,7 +2,7 @@ import classNames from "classnames/bind";
 import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
 
-import styles from "./MessageList.module.scss";
+import styles from "./ConversationList.module.scss";
 import Header from "../Layouts/Header/Header";
 import MessageItem from "../MessageItem/MessageItem";
 import Search from "../ui-kit/Search/Search";

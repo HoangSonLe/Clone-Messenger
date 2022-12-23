@@ -33,6 +33,7 @@ const Colors = {
 //Bold
 const FontWeights = {
     500: "500",
+    600: "600",
     700: "700",
     bold: "bold",
 };

@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import { MessageIcon, UserGroupIcon } from "../../Icons";
-import { AvatarMenu } from "../../mockData/MenuData";
+import { AvatarMenu } from "../../HardData/MenuData";
 import { configRoutes } from "../../routes/routes";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
