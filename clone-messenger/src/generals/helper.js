@@ -25,6 +25,10 @@ let getFontWeightFromName = (name) => {
 };
 helper.getFontWeightFromName = getFontWeightFromName;
 
+
+helper.isValidSearchString = (str) => {
+    return str !== null && str !== undefined && str !== "";
+}
 helper.getNumberInString = (value) => {
   let s = value.toString().replace(/[^0-9]/g, "");
     return parseInt(s);

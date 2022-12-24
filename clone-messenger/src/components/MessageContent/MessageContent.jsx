@@ -19,6 +19,7 @@ import MessageList from "./MessageList.jsx/MessageList";
 import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
 import MenuTreeView from "./ConversationInformation/MenuTreeview";
 import { ConversationMenu } from "../../HardData/MenuData";
+import MessageInput from "./MessageInput/MessageInput";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
@@ -92,7 +93,9 @@ export default function MessageContent() {
                             <div className={cx("message")}>
                                 <MessageList />
                             </div>
-                            <div className={cx("input")}>Input</div>
+                            <div className={cx("input")}>
+                                <MessageInput isRemoveFromChatGroup={false}/>
+                            </div>
                         </div>
                         {/* Messages */}
                     </div>

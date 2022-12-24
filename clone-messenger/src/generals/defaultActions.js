@@ -1,6 +1,8 @@
 import swal from "sweetalert";
 
-const defaultOnClick = () =>
+const defaultOnClick = (e) => {
+    e.preventDefault();
     swal("Updating!", "This feature is developing!", "info");
+};
 
 export { defaultOnClick };
