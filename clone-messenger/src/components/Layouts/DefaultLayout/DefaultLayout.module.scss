@@ -27,7 +27,8 @@ $min-width-content : 88px;
     border-right: 1px solid $mediaInnerBorder;
     // max-width: $max-width-content;
     @media (min-width : $media-width-breakpoint) {
-        width: $max-width-content;
+        max-width: $max-width-content;
+        min-width: $max-width-content;
     }
     @media (max-width : $media-width-breakpoint) {
         width: $min-width-content;

@@ -24,6 +24,7 @@ import {
     LikeIcon,
     NicknameIcon,
 } from "../Icons";
+import { removeGroup } from "../features/ChatGroup/ChatGroupSlice";
 const AvatarMenu = [
     {
         icon: <SettingsIcon />,
@@ -122,7 +123,7 @@ const AvatarMenu = [
         groupIndex: 5,
     },
 ];
-const MessageItemMenu = [
+const MessageItemMenu = (data) => [
     {
         icon: <CheckIcon />,
         title: "Mark as read",
@@ -165,13 +166,6 @@ const MessageItemMenu = [
         child: null,
         groupIndex: 3,
     },
-    // {
-    //     icon: "UserBlockIcon",
-    //     title: "Block",
-    //     to: "/",
-    //     child: null,
-    //     groupIndex : 4,
-    // },
     {
         icon: <ArchivedChatsIcon />,
         title: "Archive chat",
@@ -185,6 +179,7 @@ const MessageItemMenu = [
         to: "/",
         child: null,
         groupIndex: 4,
+        onClickDispatch: () => removeGroup(data),
     },
     {
         icon: <ReportProblemIcon />,

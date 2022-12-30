@@ -1,0 +1,12 @@
+.hideScroll {
+
+
+    &::-webkit-scrollbar {
+        display: none
+    }
+}
+
+.scroll {
+    overflow-y: auto;
+    height: 100%;
+}

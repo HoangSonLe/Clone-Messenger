@@ -1,4 +1,8 @@
-import { Colors as ColorObject, FontWeights } from "../components/GlobalStyles/colors";
+import moment from "moment/moment";
+import {
+    Colors as ColorObject,
+    FontWeights,
+} from "../components/GlobalStyles/colors";
 const helper = {};
 
 let getColorFromName = (name) => {
@@ -25,12 +29,60 @@ let getFontWeightFromName = (name) => {
 };
 helper.getFontWeightFromName = getFontWeightFromName;
 
-
 helper.isValidSearchString = (str) => {
     return str !== null && str !== undefined && str !== "";
-}
+};
 helper.getNumberInString = (value) => {
-  let s = value.toString().replace(/[^0-9]/g, "");
+    let s = value.toString().replace(/[^0-9]/g, "");
     return parseInt(s);
+};
+const secondsDiff = (dateBefore, dateAfter) => {
+    return Math.floor((dateAfter - dateBefore) / 1000);
+};
+const minutesDiff = (dateBefore, dateAfter) => {
+    return Math.floor(secondsDiff(dateBefore, dateAfter) / 60);
+};
+const hoursDiff = (dateBefore, dateAfter) => {
+    return Math.floor(minutesDiff(dateBefore, dateAfter) / 60);
+};
+const dateDiff = (dateBefore, dateAfter) => {
+    return Math.floor(hoursDiff(dateBefore, dateAfter) / 24);
+};
+const monthsDiff = (dateBefore, dateAfter) => {
+    return Math.floor(dateDiff(dateBefore, dateAfter) / 30);
+};
+const yearsDiff = (dateBefore, dateAfter) => {
+    return Math.floor(monthsDiff(dateBefore, dateAfter) / 365);
+};
+helper.yearsDiff = yearsDiff;
+helper.monthsDiff = monthsDiff;
+helper.dateDiff = dateDiff;
+helper.hoursDiff = hoursDiff;
+helper.minutesDiff = minutesDiff;
+helper.secondsDiff = secondsDiff;
+helper.timeNotification = (datetime, suffix = "trước") => {
+    const now = new Date(Date.now());
+    const time = moment(datetime).toDate();
+    let timeString = "";
+    if (yearsDiff(time, now) > 0) {
+        timeString = `${yearsDiff(time, now)} năm`;
+    } else if (monthsDiff(time, now) > 0) {
+        timeString = `${monthsDiff(time, now)} tháng`;
+    } else if (dateDiff(time, now) > 0) {
+        if (dateDiff(time, now) >= 7)
+            timeString = `${Math.floor(dateDiff(time, now) / 7)} tuần`;
+        else timeString = `${dateDiff(time, now)} ngày`;
+    } else if (hoursDiff(time, now) > 0) {
+        timeString = `${hoursDiff(time, now)} giờ`;
+    } else if (minutesDiff(time, now) > 0) {
+        timeString = `${minutesDiff(time, now)} phút`;
+    } else if (secondsDiff(time, now) > 0) {
+        if (secondsDiff(time, now) > 30)
+            timeString = `${secondsDiff(time, now)} giây`;
+        else timeString = "Vừa xong";
+    }
+    if (suffix != null && timeString != "Vừa xong")
+        return `${timeString} ${suffix}`;
+    else return timeString;
 };
 export default helper;

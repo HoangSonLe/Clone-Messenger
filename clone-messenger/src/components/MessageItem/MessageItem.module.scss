@@ -7,7 +7,7 @@
     align-items: center;
     position: relative;
     padding: 8px 6px;
-    margin: 0px 6px;
+    margin: 1px 8px;
     border-radius: 8px;
     &:hover {
         background-color: $webWash;
@@ -31,44 +31,14 @@
     margin-top: -10px;
 }
 
-// .content {
-//     color: $primaryText;
-//     flex: 1;
-//     @media (max-width : $media-width-breakpoint) {
-//         display: none;
-//     }
-// }
-
-// .name {
-//     color: $primaryText;
-//     font-weight: map-get($FontWeights, 500);
-//     text-align: left;
-//     font-size: var(--font-size-input);
-
-//     // overflow-x: hidden;
-//     // white-space: nowrap;
-//     // text-overflow: ellipsis;
-//     // max-width: 100%;
-
-//     // position: relative;
-//     // &>span {
-//     //     position: absolute;
-//     //     left: 0;
-//     //     right: 0;
-//     //     white-space: nowrap;
-//     //     overflow: hidden;
-//     //     text-overflow: ellipsis;
-//     // }
-//     &.active {
-//         font-weight: map-get($FontWeights, 700);
-//     }
-// }
-
 .message {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: flex-start;
+}
+.time{
+    min-width: fit-content;
 }
 .dot-space {
     margin: 0px 3px;

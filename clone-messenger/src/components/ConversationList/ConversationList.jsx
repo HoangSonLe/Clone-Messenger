@@ -1,22 +1,21 @@
-import classNames from "classnames/bind";
 import BrowserUpdatedIcon from "@mui/icons-material/BrowserUpdated";
 import VideoCallIcon from "@mui/icons-material/VideoCall";
+import classNames from "classnames/bind";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import styles from "./ConversationList.module.scss";
-import Header from "../Layouts/Header/Header";
-import MessageItem from "../MessageItem/MessageItem";
-import Search from "../ui-kit/Search/Search";
-import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
+import chatGroupApi from "../../api/chatGroupApi";
+import { addListGroup } from "../../features/ChatGroup/ChatGroupSlice";
 import helper from "../../generals/helper";
 import { EditIcon } from "../../Icons";
-const mockData = {
-    id: 1,
-    name: "Chat Name Chat Name Chat NameChat NameChat Name Chat NameChat NameChat NameChat NameChat NameChat Name",
-    isActive: true,
-    lastMessage: "You left the group.",
-    avatar: null,
-    time: "5y",
-};
+import Header from "../Layouts/Header/Header";
+import MessageItem from "../MessageItem/MessageItem";
+import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
+import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
+import Search from "../ui-kit/Search/Search";
+import styles from "./ConversationList.module.scss";
 const cx = classNames.bind(styles);
 const styleIcon = {
     color: helper.getColorFromName("primaryText"),
@@ -24,6 +23,36 @@ const styleIcon = {
     marginLeft: "12px",
 };
 export default function MessageList() {
+    const dispatch = useDispatch();
+    const { chatGroupList, hasMore } = useSelector((state) => state.chatGroup);
+    const [isLoading, setLoading] = useState(true);
+
+    const _fetchGetGroupList = async () => {
+        let postData = {};
+        await chatGroupApi
+            .getList(postData)
+            .then((response) => {
+                dispatch(addListGroup(response.data));
+            })
+            .catch((err) => {
+                toast.error("Error.Please try again");
+                toast.error(err);
+                console.log(err);
+            });
+    };
+    useEffect(() => {
+        _fetchGetGroupList();
+        setLoading(false);
+    }, []);
+
+    const onScrollBottom = () => {
+        console.log(hasMore);
+        if (hasMore) {
+            setLoading(true);
+            _fetchGetGroupList();
+            setLoading(false);
+        }
+    };
     return (
         <>
             <div className={cx("wrapper")}>
@@ -39,12 +68,32 @@ export default function MessageList() {
                     <Search />
                 </div>
                 <div className={cx("message-list")}>
-                    {[...Array(10).keys()].map((i, index) => (
-                        <MessageItem
-                            key={`${i.id}-${index}`}
-                            data={{ ...mockData, id: i }}
-                        />
-                    ))}
+                    <ScrollLoadMore onScrollBottom={onScrollBottom}>
+                        <>
+                            {chatGroupList.map((i, index) => (
+                                <MessageItem
+                                    key={`${i.id}-${index}`}
+                                    data={i}
+                                />
+                            ))}
+                            {isLoading ? (
+                                <>
+                                    <MessageItem isLoading={true} />
+                                    <MessageItem isLoading={true} />
+                                </>
+                            ) : null}
+                        </>
+                    </ScrollLoadMore>
+                    <ToastContainer
+                        position="bottom-right"
+                        autoClose={1000}
+                        hideProgressBar
+                        newestOnTop={true}
+                        closeOnClick
+                        pauseOnFocusLoss
+                        pauseOnHover
+                        theme="colored"
+                    />
                 </div>
                 <div className={cx("app")}>
                     <div className={cx("app-install")}>

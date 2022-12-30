@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import classNames from "classnames/bind.js";
 import * as React from "react";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 import { defaultOnClick } from "../../../generals/defaultActions";
 import helper from "../../../generals/helper";
@@ -48,7 +49,17 @@ const cx = classNames.bind(styles);
 export default function MenuPopover({ children, options, customRenderItem }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [menuItemList, setMenuItemList] = useState([{ data: options }]);
+    const dispatch = useDispatch();
+
     React.useDebugValue(menuItemList);
+    //Check has function onClick=> No : disable(opacity)
+    const checkHasOnClickFunction = (item) => {
+        var onClick = item?.onClick && typeof item.onClick === "function";
+        var onClickDispatch =
+            item?.onClickDispatch && typeof item.onClickDispatch === "function";
+        if (onClick || onClickDispatch) return true;
+        return false;
+    };
     //Handle popover menu
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -61,9 +72,20 @@ export default function MenuPopover({ children, options, customRenderItem }) {
         setAnchorEl(null);
     };
     // Handle action menu
-    const onClickMenuItem = () => defaultOnClick();
+    const onClickMenuItem = (item, e) => {
+        if (item?.onClick && typeof item.onClick === "function") {
+            item.onClick(item);
+        } else if (
+            item?.onClickDispatch &&
+            typeof item.onClickDispatch === "function"
+        ) {
+            var i;
+            dispatch(item.onClickDispatch());
+        } else {
+            defaultOnClick(e);
+        }
+    };
     //Handle render menu item
-
     const handleBackMenu = () => {
         setMenuItemList((prev) => prev.slice(0, prev.length - 1));
     };
@@ -129,17 +151,20 @@ export default function MenuPopover({ children, options, customRenderItem }) {
                           })()}
                     <MenuItem
                         key={index}
-                        onClick={() => {
+                        onClick={(e) => {
                             if (_checkMenuHasChild(item)) {
                                 setMenuItemList((prev) => [
                                     ...prev,
                                     item.child,
                                 ]);
                             } else {
-                                onClickMenuItem(item);
+                                onClickMenuItem(item, e);
                             }
                         }}
-                        sx={customStyleMenuItem}
+                        sx={{
+                            ...customStyleMenuItem,
+                            opacity: checkHasOnClickFunction(item) ? 1 : 0.5,
+                        }}
                     >
                         {
                             <div className={cx("menu-body")}>

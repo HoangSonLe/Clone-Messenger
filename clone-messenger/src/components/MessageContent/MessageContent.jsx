@@ -52,7 +52,7 @@ export default function MessageContent() {
     const handleWidthViewChange = (force = false) => {
         if (isOpenDrawer || force) {
             let needWidth = checkWidthView();
-            console.log(isOpenDrawer, needWidth, widthDrawer);
+            // console.log(isOpenDrawer, needWidth, widthDrawer);
             needWidth !== widthDrawer && setWidthDrawer(needWidth);
         }
     };
