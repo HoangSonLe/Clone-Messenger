@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import swal from "sweetalert";
 
 const defaultOnClick = (e) => {
@@ -5,4 +6,9 @@ const defaultOnClick = (e) => {
     swal("Updating!", "This feature is developing!", "info");
 };
 
-export { defaultOnClick };
+const toastError = (err) => {
+    toast.error("Error.Please try again");
+    toast.error(err);
+    console.log(err);
+};
+export { defaultOnClick, toastError };

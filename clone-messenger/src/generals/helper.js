@@ -60,7 +60,7 @@ helper.dateDiff = dateDiff;
 helper.hoursDiff = hoursDiff;
 helper.minutesDiff = minutesDiff;
 helper.secondsDiff = secondsDiff;
-helper.timeNotification = (datetime, suffix = "trước") => {
+helper.timeNotification = (datetime) => {
     const now = new Date(Date.now());
     const time = moment(datetime).toDate();
     let timeString = "";
@@ -81,8 +81,32 @@ helper.timeNotification = (datetime, suffix = "trước") => {
             timeString = `${secondsDiff(time, now)} giây`;
         else timeString = "Vừa xong";
     }
-    if (suffix != null && timeString != "Vừa xong")
-        return `${timeString} ${suffix}`;
-    else return timeString;
+    return timeString;
+};
+helper.messageTimeDisplay = (datetime) => {
+    const now = new Date(Date.now());
+    const time = moment(datetime);
+    let timeString = "";
+    if (dateDiff(time, now) <= 7) {
+        let format = "ddd LT";
+        timeString = moment(datetime).format(format);
+    } else {
+        let format = "DD/MM/YY, LT";
+        timeString = moment(datetime).format(format);
+    }
+    return timeString;
+};
+helper.messageTimeToolTipDisplay = (datetime) => {
+    const now = new Date(Date.now());
+    const time = moment(datetime);
+    let timeString = "";
+    if (dateDiff(time, now) <= 7) {
+        let format = "dddd hh:mma";
+        timeString = moment(datetime).format(format);
+    } else {
+        let format = "MMMM D, YYYY [at] LT";
+        timeString = moment(datetime).format(format);
+    }
+    return timeString;
 };
 export default helper;

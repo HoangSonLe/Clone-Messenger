@@ -20,6 +20,7 @@ import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
 import MenuTreeView from "./ConversationInformation/MenuTreeview";
 import { ConversationMenu } from "../../HardData/MenuData";
 import MessageInput from "./MessageInput/MessageInput";
+import { useSelector } from "react-redux";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
@@ -29,6 +30,8 @@ const maxWidthDrawer = 300;
 const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
 export default function MessageContent() {
+    const { conversation } = useSelector((state) => state.message);
+
     //Check breakpoint responsive drawer
     const breakpointWidth = useMemo(() =>
         helper.getNumberInString(mediaWidthBreakpoint2)
@@ -64,10 +67,9 @@ export default function MessageContent() {
         };
     }, [widthDrawer]);
 
-    let { id } = useParams();
     return (
         <>
-            {id ? (
+            {conversation ? (
                 <div className={cx("wrapper")}>
                     <div
                         className={cx("wrapper-message")}
@@ -82,7 +84,7 @@ export default function MessageContent() {
                     >
                         {/* Header */}
                         <MessageContentHeader
-                            title={"Hoang Huy"}
+                            title={conversation.name}
                             href={"/"}
                             isOpenDrawer
                             handleToggleDrawer={handleToggleDrawer}
@@ -91,10 +93,10 @@ export default function MessageContent() {
                         {/* Messages */}
                         <div className={cx("content")}>
                             <div className={cx("message")}>
-                                <MessageList />
+                                <MessageList  />
                             </div>
                             <div className={cx("input")}>
-                                <MessageInput isRemoveFromChatGroup={false}/>
+                                <MessageInput isRemoveFromChatGroup={conversation.isRemoved} />
                             </div>
                         </div>
                         {/* Messages */}
@@ -118,13 +120,20 @@ export default function MessageContent() {
                                 <AvatarCustom
                                     height={72}
                                     width={72}
-                                    srcList={[images.defaultAvatar]}
+                                    srcList={
+                                        conversation.isGroup
+                                            ? [
+                                                  images.defaultAvatar,
+                                                  images.defaultAvatar,
+                                              ]
+                                            : [images.defaultAvatar]
+                                    }
                                     styleWrapper={{ cursor: "default" }}
                                 />
                             </div>
                             <EllipsisContent component={"div"}>
                                 <Link to={"/"} target="_blank">
-                                    <div className={cx("name")}>Hoang Huy</div>
+                                    <div className={cx("name")}>{conversation.name}</div>
                                 </Link>
                             </EllipsisContent>
                             <div className={cx("action")}>

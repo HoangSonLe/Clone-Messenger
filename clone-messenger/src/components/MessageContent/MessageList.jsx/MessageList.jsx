@@ -1,73 +1,28 @@
-import React, { memo } from "react";
 import classNames from "classnames/bind";
+import React, { memo } from "react";
+import { useSelector } from "react-redux";
 
-import styles from "./MessageList.module.scss";
-import MessageGroup from "../MessageGroup/MessageGroup";
+import helper from "../../../generals/helper";
 import Message from "../Message/Message";
+import styles from "./MessageList.module.scss";
 
 const cx = classNames.bind(styles);
 
-function addHours(hours) {
-    let date = Date.now();
-    var result = new Date(date);
-    result.setHours(result.getHours() + hours);
-    return result;
-}
-function addDays(days) {
-    let date = Date.now();
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-}
-const message = (userId, date = Date.now()) => ({
-    id: Math.random(),
-    text: "LalalalaLala laLalalalaLa laaLa lalalaLalalala",
-    reactList: [
-        {
-            reactTypeIcon: "",
-            userReact: "Hoang Huy",
-        },
-    ],
-    createDateTime: date,
-});
-const groupMessageByUserId = (userId, isMyMessage = true) => ({
-    id: Math.random(),
-    userId,
-    messageList: [
-        message(userId, addHours(0)),
-        message(userId, addHours(0)),
-        message(userId, addHours(1)),
-    ],
-    isMyMessage,
-});
-const groupMessage = (date = Date.now()) => ({
-    id: Math.random(),
-    date,
-    messageList: [
-        groupMessageByUserId(1, true),
-        groupMessageByUserId(2, false),
-        groupMessageByUserId(1, true),
-    ],
-});
-
-const listMes = [
-    groupMessage(addDays(-3)),
-    groupMessage(addDays(-2)),
-    groupMessage(addDays(-1)),
-];
-function MessageList({}) {
+function MessageList() {
+    const { conversation } = useSelector((state) => state.message);
     return (
         <div className={cx("wrapper")}>
-            {listMes.map((i, index) => (
-                <div key={index}>
+            {conversation.groupMessageListByTime.map((i, index) => (
+                <div key={i.continuityKeyByTime}>
                     <div className={cx("wrapper")}>
+                        {/* Futures group messages by time */}
                         <div className={cx("hours")}>
-                            {new Date(i.date).toUTCString()}
+                            {helper.messageTimeDisplay(i.groupMessageTime)}
                         </div>
                         <div className={cx("message-list")}>
-                            {i.messageList?.map((j) => {
+                            {i.groupMessageListByUser?.map((j) => {
                                 return (
-                                    <React.Fragment key={j.id}>
+                                    <React.Fragment key={j.continuityKeyByUser}>
                                         <Message data={j} />
                                         <div
                                             className={cx("last-divide")}

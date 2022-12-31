@@ -3,11 +3,12 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import chatGroupApi from "../../api/chatGroupApi";
 import { addListGroup } from "../../features/ChatGroup/ChatGroupSlice";
+import { toastError } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
 import { EditIcon } from "../../Icons";
 import Header from "../Layouts/Header/Header";
@@ -33,16 +34,14 @@ export default function MessageList() {
             .getList(postData)
             .then((response) => {
                 dispatch(addListGroup(response.data));
+                setLoading(false);
             })
             .catch((err) => {
-                toast.error("Error.Please try again");
-                toast.error(err);
-                console.log(err);
+                toastError(err);
             });
     };
     useEffect(() => {
         _fetchGetGroupList();
-        setLoading(false);
     }, []);
 
     const onScrollBottom = () => {

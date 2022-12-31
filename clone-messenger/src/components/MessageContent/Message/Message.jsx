@@ -12,59 +12,55 @@ import ToolTipCustom from "../../ui-kit/IconButton/ToolTipCustom";
 
 const cx = classNames.bind(styles);
 function Message({ data }) {
-    let { id, userId, date, messageList, isMyMessage } = data;
-    // let { id, userId, date, text, reactList, createDateTime, isMyMessage } =
-    // data;
+    let { continuityKeyByUser, messages, isMyMessage } = data;
+
     return (
         <div className={cx("wrapper")}>
             <div className={cx("receiver-avatar")}>
                 {!isMyMessage ? <AvatarCustom /> : null}
             </div>
             <div className={cx("messages-container")}>
-                {messageList.map((i, index) => {
+                {messages.map((i, index) => {
                     return (
-                        <div className={cx("messages")} key={i.id}>
-                            <div className={cx("message")}>
+                        <div key={i.id} className={cx("message")}>
+                            <div
+                                className={cx("message-row", {
+                                    "message-row-receiver": !isMyMessage,
+                                })}
+                            >
+                                <div className={cx("spacer")}></div>
+                                <div className={cx("action-menu")}>
+                                    <IconButtonCustom
+                                        placement={"top"}
+                                        title="More"
+                                        size="small"
+                                    >
+                                        <MoreVertIcon fontSize="inherit" />
+                                    </IconButtonCustom>
+                                    <IconButtonCustom
+                                        placement={"top"}
+                                        title="Reply"
+                                        size="small"
+                                    >
+                                        <ReplyIcon fontSize="inherit" />
+                                    </IconButtonCustom>
+                                    <IconButtonCustom
+                                        placement={"top"}
+                                        title="React"
+                                        size="small"
+                                    >
+                                        <MoodIcon fontSize="inherit" />
+                                    </IconButtonCustom>
+                                </div>
                                 <div
-                                    className={cx("message-row", {
-                                        "message-row-receiver": !isMyMessage,
+                                    className={cx("content", {
+                                        "receiver-content": !isMyMessage,
+                                        "user-content": isMyMessage,
                                     })}
                                 >
-                                    <div className={cx("spacer")}></div>
-                                    <div className={cx("action-menu")}>
-                                        <IconButtonCustom
-                                            placement={"top"}
-                                            title="More"
-                                            size="small"
-                                        >
-                                            <MoreVertIcon fontSize="inherit" />
-                                        </IconButtonCustom>
-                                        <IconButtonCustom
-                                            placement={"top"}
-                                            title="Reply"
-                                            size="small"
-                                        >
-                                            <ReplyIcon fontSize="inherit" />
-                                        </IconButtonCustom>
-                                        <IconButtonCustom
-                                            placement={"top"}
-                                            title="React"
-                                            size="small"
-                                        >
-                                            <MoodIcon fontSize="inherit" />
-                                        </IconButtonCustom>
-                                    </div>
-                                    <div
-                                        className={cx("content", {
-                                            "receiver-content": !isMyMessage,
-                                            "user-content": isMyMessage,
-                                        })}
-                                    >
-                                        {i.text}
-                                    </div>
+                                    {i.text}
                                 </div>
                             </div>
-                            <div className={cx("divide")}></div>
                         </div>
                     );
                 })}
