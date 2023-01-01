@@ -13,14 +13,19 @@ const messageSlice = createSlice({
             state.conversation = data;
         },
         sendMessage: (state, action) => {
-            state.messageList.push(action.payload);
+            state.conversation.groupMessageListByTime.data.push(action.payload);
         },
         loadMoreMessage: (state, action) => {
-            state.messageList = [...action.payload, ...state.messageList];
+            state.conversation.groupMessageListByTime.data = [
+                ...action.payload.data,
+                ...state.conversation.groupMessageListByTime.data,
+            ];
+            state.conversation.groupMessageListByTime.skip =
+                action.payload.skip;
         },
     },
 });
 const { actions, reducer } = messageSlice;
-export const { initConversation } = actions;
+export const { initConversation, sendMessage, loadMoreMessage } = actions;
 
 export default reducer;

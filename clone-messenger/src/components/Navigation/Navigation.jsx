@@ -15,7 +15,7 @@ export default function Navigation() {
             <div className={cx("menu")}>
                 <Menu>
                     <MenuItem
-                        href={configRoutes.defaultMessage}
+                        href={configRoutes.message}
                         icon={
                             <IconButtonCustom
                                 sx={{ padding: 0 }}

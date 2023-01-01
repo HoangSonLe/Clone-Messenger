@@ -12,7 +12,7 @@ function MessageList() {
     const { conversation } = useSelector((state) => state.message);
     return (
         <div className={cx("wrapper")}>
-            {conversation.groupMessageListByTime.map((i, index) => (
+            {conversation.groupMessageListByTime.data.map((i, index) => (
                 <div key={i.continuityKeyByTime}>
                     <div className={cx("wrapper")}>
                         {/* Futures group messages by time */}

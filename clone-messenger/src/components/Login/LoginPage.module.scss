@@ -1,0 +1,96 @@
+@use "sass:map";
+@import '../GlobalStyles/colors.scss';
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: $background;
+    position: relative;
+}
+
+.logo {
+    width: 100%;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+        width: 75px;
+        height: 75px;
+    }
+}
+
+.content {
+    width: 100%;
+    margin: 5px 0 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    input {
+        border: 1px solid rgba(0, 0, 0, .20);
+        border-radius: 4px;
+        color: rgba(0, 0, 0, 1);
+        display: block;
+        font-family: Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+        font-size: 17px;
+        height: 42px;
+        margin-bottom: 12px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 0 16px;
+        width: 320px;
+    }
+}
+
+.buttons {
+    width: 100%;
+    padding: 20px 0px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    button {
+        +button {
+            margin-left: 10px;
+        }
+    }
+}
+
+.title {
+    font-size: 35px;
+    line-height: 40px;
+    text-align: center;
+    font-weight: 450;
+    margin-top: 24px;
+    margin-bottom: 45px;
+}
+
+.footer {
+    width: 100%;
+    margin-bottom: 66px;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+
+    .divide {
+        visibility: hidden;
+        margin: 0px 30px;
+    }
+
+    a,
+    span {
+        color: #262626;
+        font-size: 15px;
+        font-weight: 400;
+    }
+
+    a:hover {
+        text-decoration: underline;
+    }
+}

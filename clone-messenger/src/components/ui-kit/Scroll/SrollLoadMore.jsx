@@ -1,5 +1,7 @@
 import classNames from "classnames/bind";
 import _ from "lodash";
+import { useEffect } from "react";
+import { useRef } from "react";
 
 import styles from "./ScrollLoadMore.scss";
 const cx = classNames.bind(styles);
@@ -12,9 +14,11 @@ function ScrollLoadMore(props) {
         onScrollTop,
         onScrollBottom,
         children,
+        beginBottom,
         hideScroll = false,
         ...otherProps
     } = props;
+    const refDiv = useRef();
     const _onScrollDebounce = _.debounce(
         (scrollTop, offsetHeight, scrollHeight) => {
             // console.log(
@@ -41,6 +45,18 @@ function ScrollLoadMore(props) {
         const offsetHeight = e.target.offsetHeight;
         _onScrollDebounce(scrollTop, offsetHeight, scrollHeight);
     };
+    const _scrollToBottom = () => {
+        if (beginBottom) {
+            refDiv.current.scrollIntoView({
+                // behavior: "smooth",
+                block: "end",
+                inline: "nearest",
+            });
+        }
+    };
+    useEffect(() => {
+        _scrollToBottom();
+    }, []);
     return (
         <div
             {...otherProps}
@@ -48,6 +64,7 @@ function ScrollLoadMore(props) {
             onScroll={_onScroll}
         >
             {children}
+            <div ref={refDiv}></div>
         </div>
     );
 }

@@ -45,7 +45,6 @@ export default function MessageList() {
     }, []);
 
     const onScrollBottom = () => {
-        console.log(hasMore);
         if (hasMore) {
             setLoading(true);
             _fetchGetGroupList();

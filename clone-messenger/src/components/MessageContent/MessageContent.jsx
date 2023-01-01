@@ -1,27 +1,29 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
-import { Drawer } from "@mui/material";
+import { CircularProgress, Drawer } from "@mui/material";
 import classNames from "classnames/bind";
-import { useState, useMemo, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import images from "../../assets/img";
-import { defaultOnClick } from "../../generals/defaultActions";
+import { defaultOnClick, toastError } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
-import DefaultMessageContent from "./DefaultMessageContent/DefaultMessageContent";
+import { ConversationMenu } from "../../HardData/MenuData";
+import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
+import MenuTreeView from "./ConversationInformation/MenuTreeview";
+import DefaultMessageContent from "./DefaultMessageContent/DefaultMessageContent";
 import styles from "./MessageContent.module.scss";
 import MessageContentHeader from "./MessageContentHeader";
-import MessageList from "./MessageList.jsx/MessageList";
-import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
-import MenuTreeView from "./ConversationInformation/MenuTreeview";
-import { ConversationMenu } from "../../HardData/MenuData";
 import MessageInput from "./MessageInput/MessageInput";
-import { useSelector } from "react-redux";
-
+import MessageList from "./MessageList.jsx/MessageList";
+import chatMessageApi from "../../api/chatMessageApi";
+import { loadMoreMessage } from "../../features/Messages/MessageSlice";
+import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
 const cx = classNames.bind(styles);
 const styleIcon = {
     background: helper.getColorFromName("webWash"),
@@ -30,8 +32,30 @@ const maxWidthDrawer = 300;
 const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
 export default function MessageContent() {
+    const dispatch = useDispatch();
+    const [isLoading, setLoading] = useState(true);
     const { conversation } = useSelector((state) => state.message);
-
+    const { chatMessagePaginationModel } = useSelector(
+        (state) => state.pageDefault
+    );
+    const _fetchGetMessageList = async () => {
+        let postData = {
+            ...chatMessagePaginationModel,
+            skip: conversation.groupMessageListByTime.skip,
+            chatGroupId: conversation.id,
+        };
+        await chatMessageApi
+            .getMessages(postData)
+            .then((response) => {
+                dispatch(loadMoreMessage(response.data));
+            })
+            .catch((err) => toastError(err));
+    };
+    const onScrollTop = () => {
+        setLoading(true);
+        _fetchGetMessageList();
+        setLoading(false);
+    };
     //Check breakpoint responsive drawer
     const breakpointWidth = useMemo(() =>
         helper.getNumberInString(mediaWidthBreakpoint2)
@@ -93,10 +117,36 @@ export default function MessageContent() {
                         {/* Messages */}
                         <div className={cx("content")}>
                             <div className={cx("message")}>
-                                <MessageList  />
+                                <ScrollLoadMore
+                                    beginBottom={true}
+                                    onScrollTop={onScrollTop}
+                                >
+                                    {isLoading ? (
+                                        <div
+                                            style={{
+                                                textAlign: "center",
+                                                width: "100%",
+                                            }}
+                                        >
+                                            <CircularProgress
+                                                sx={{
+                                                    color: helper.getColorFromName(
+                                                        "placeholderIcon"
+                                                    ),
+                                                }}
+                                                size={25}
+                                            />
+                                        </div>
+                                    ) : null}
+                                    <MessageList />
+                                </ScrollLoadMore>
                             </div>
                             <div className={cx("input")}>
-                                <MessageInput isRemoveFromChatGroup={conversation.isRemoved} />
+                                <MessageInput
+                                    isRemoveFromChatGroup={
+                                        conversation.isRemoved
+                                    }
+                                />
                             </div>
                         </div>
                         {/* Messages */}
@@ -133,7 +183,9 @@ export default function MessageContent() {
                             </div>
                             <EllipsisContent component={"div"}>
                                 <Link to={"/"} target="_blank">
-                                    <div className={cx("name")}>{conversation.name}</div>
+                                    <div className={cx("name")}>
+                                        {conversation.name}
+                                    </div>
                                 </Link>
                             </EllipsisContent>
                             <div className={cx("action")}>

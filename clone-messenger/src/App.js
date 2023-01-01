@@ -1,31 +1,12 @@
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { RouterProvider } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useRoutes } from "react-router-dom";
 import { routes } from "./routes/routes";
 
-import { setPageDefaultModel } from "./features/PageDefaultSlice";
-import pageDefaultApi from "./api/pageDefaultApi";
-import { toastError } from "./generals/defaultActions";
 function App() {
-    const dispatch = useDispatch();
-    const _fetchPageDefaultModel = async () => {
-        await pageDefaultApi
-            .getPageDefaultModel()
-            .then((response) => {
-                dispatch(setPageDefaultModel(response.data));
-            })
-            .catch((err) => {
-                toastError(err);
-            });
-    };
-    useEffect(() => {
-        _fetchPageDefaultModel();
-    }, []);
-    return (
-        <div style={{ height: "100vh" }}>
-            <RouterProvider router={routes} />
-        </div>
-    );
+    // var {isLoggedIn} = useSelector(state => state.auth);
+    var isLoggedIn = true;
+    var routing = useRoutes(routes(isLoggedIn));
+    return <div style={{ height: "100vh" }}>{routing}</div>;
 }
 
 export default App;

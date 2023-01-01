@@ -1,38 +1,37 @@
-import { createBrowserRouter } from "react-router-dom";
-
 //Pages
+import { Navigate } from "react-router-dom";
 import ContactList from "../components/ContactList/ContactList";
+import MessageList from "../components/ConversationList/ConversationList";
 import DefaultLayout from "../components/Layouts/DefaultLayout/DefaultLayout";
 import ErrorPage from "../components/Layouts/ErrorPage/ErrorPage";
-import MessageList from "../components/ConversationList/ConversationList";
 import TestPage from "../components/Layouts/TestPage/TestPage";
+import LoginPage from "../components/Login/LoginPage";
 
 //Config routes
 const configRoutes = {
     // root
     home: "/",
+    login: "/login",
     active: "/active",
-    //nested routes
     defaultMessage: "/message",
-    // message: "/message/:id",
-    message: "/message/:id",
+    message: "/message",
     test: "/test",
 };
 //Routes
-const publicRoutes = [
+const routes = (isLoggedIn) => [
     //root
     {
         path: configRoutes.home,
-        element: <DefaultLayout />,
+        element: isLoggedIn ? (
+            <DefaultLayout />
+        ) : (
+            <Navigate to={configRoutes.login} />
+        ),
         errorElement: <ErrorPage />,
         children: [
             //nested routes
             {
                 index: true,
-                element: <MessageList />,
-            },
-            {
-                path: configRoutes.defaultMessage,
                 element: <MessageList />,
             },
             {
@@ -49,7 +48,9 @@ const publicRoutes = [
         path: configRoutes.test,
         element: <TestPage />,
     },
+    {
+        path: configRoutes.login,
+        element: <LoginPage />,
+    },
 ];
-const routes = createBrowserRouter([...publicRoutes]);
-
 export { configRoutes, routes };

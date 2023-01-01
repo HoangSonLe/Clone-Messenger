@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import classNames from "classnames/bind";
 import MoodIcon from "@mui/icons-material/Mood";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
@@ -6,9 +7,11 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 import styles from "./MessageInput.module.scss";
+import chatMessageApi from "../../../api/chatMessageApi";
 import helper from "../../../generals/helper";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../Icons";
+import { toastError } from "../../../generals/defaultActions";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
@@ -16,8 +19,11 @@ const styleIcon = {
     padding: "4px",
 };
 function MessageInput({ isRemoveFromChatGroup }) {
+    const dispatch = useDispatch();
     const [text, setText] = useState("");
     const [files, setFiles] = useState([]);
+    const { conversation } = useSelector((state) => state.message);
+    const { messagePostData } = useSelector((state) => state.pageDefault);
     const textAreaRef = useRef();
     const resizeTextArea = () => {
         textAreaRef.current.style.height = "auto";
@@ -37,14 +43,28 @@ function MessageInput({ isRemoveFromChatGroup }) {
     };
     const checkCanSend = checkEnableSendButton();
 
-    const onSubmitForm = (event) => {
-        alert("TODO");
+    const _sendMessage = async (data) => {
+        await chatMessageApi
+            .sendMessage(data)
+            .then((response) => {
+                setText("");
+            })
+            .catch((err) => toastError(err));
+    };
+    const onSubmitForm = (e) => {
+        e.preventDefault();
+        var postData = {
+            ...messagePostData,
+            groupId: conversation.id,
+            text: text,
+        };
+        _sendMessage(postData);
     };
     //Handle change text
     const handleKeyDown = (event) => {
         if (event.key === "Enter" && !event.shiftKey) {
             event.preventDefault();
-            onSubmitForm();
+            onSubmitForm(event);
         }
     };
 
@@ -113,82 +133,74 @@ function MessageInput({ isRemoveFromChatGroup }) {
                 </div>
             ) : (
                 // <form onSubmit={onSubmitForm}>
-                    <div className={cx("wrapper-input")}>
-                        <IconButtonCustom
-                            sx={{
-                                ...styleIcon,
-                                marginLeft: "8px",
-                            }}
-                            title="Open more actions"
-                        >
-                            <AddCircleIcon />
-                        </IconButtonCustom>
-                        <div className={cx("inputs")}>
-                            <div className={cx("wrapper-actions")}>
-                                <div className={cx("actions")}>
-                                    <IconButtonCustom
-                                        sx={styleIcon}
-                                        title="Attach a file"
-                                    >
-                                        <FileInputIcon />
-                                    </IconButtonCustom>
-                                    <IconButtonCustom
-                                        sx={styleIcon}
-                                        title="Choose a ticker"
-                                    >
-                                        <StickerInputIcon />
-                                    </IconButtonCustom>
-                                    <IconButtonCustom
-                                        sx={styleIcon}
-                                        title="Choose a gift"
-                                    >
-                                        <GifInputIcon />
-                                    </IconButtonCustom>
-                                </div>
-                            </div>
-                            <div className={cx("input-wrapper")}>
-                                <div className={cx("input")}>
-                                    <textarea
-                                        ref={textAreaRef}
-                                        autoFocus
-                                        placeholder="Aa"
-                                        value={text}
-                                        rows={1}
-                                        onChange={(e) =>
-                                            setText(e.target.value)
-                                        }
-                                        onKeyDown={handleKeyDown}
-                                    />
-                                </div>
+                <div className={cx("wrapper-input")}>
+                    <IconButtonCustom
+                        sx={{
+                            ...styleIcon,
+                            marginLeft: "8px",
+                        }}
+                        title="Open more actions"
+                    >
+                        <AddCircleIcon />
+                    </IconButtonCustom>
+                    <div className={cx("inputs")}>
+                        <div className={cx("wrapper-actions")}>
+                            <div className={cx("actions")}>
                                 <IconButtonCustom
                                     sx={styleIcon}
-                                    title="Choose a emoji"
+                                    title="Attach a file"
                                 >
-                                    <MoodIcon />
+                                    <FileInputIcon />
+                                </IconButtonCustom>
+                                <IconButtonCustom
+                                    sx={styleIcon}
+                                    title="Choose a ticker"
+                                >
+                                    <StickerInputIcon />
+                                </IconButtonCustom>
+                                <IconButtonCustom
+                                    sx={styleIcon}
+                                    title="Choose a gift"
+                                >
+                                    <GifInputIcon />
                                 </IconButtonCustom>
                             </div>
                         </div>
-
-                        <IconButtonCustom
-                            title={
-                                checkCanSend
-                                    ? "Press enter to send"
-                                    : "Send a like"
-                            }
-                            sx={{
-                                ...styleIcon,
-                                paddingLeft: "8px",
-                                paddingRight: "8px",
-                            }}
-                            onClick={onSubmitForm}
-                        >
-                            {checkCanSend ? (
-                                <SendSharpIcon />
-                            ) : (
-                                <ThumbUpAltIcon />
-                            )}
-                        </IconButtonCustom>
+                        <div className={cx("input-wrapper")}>
+                            <div className={cx("input")}>
+                                <textarea
+                                    ref={textAreaRef}
+                                    autoFocus
+                                    placeholder="Aa"
+                                    value={text}
+                                    rows={1}
+                                    onChange={(e) => setText(e.target.value)}
+                                    onKeyDown={handleKeyDown}
+                                />
+                            </div>
+                            <IconButtonCustom
+                                sx={styleIcon}
+                                title="Choose a emoji"
+                            >
+                                <MoodIcon />
+                            </IconButtonCustom>
+                        </div>
                     </div>
+
+                    <IconButtonCustom
+                        title={
+                            checkCanSend ? "Press enter to send" : "Send a like"
+                        }
+                        sx={{
+                            ...styleIcon,
+                            paddingLeft: "8px",
+                            paddingRight: "8px",
+                        }}
+                        onClick={onSubmitForm}
+                    >
+                        {checkCanSend ? <SendSharpIcon /> : <ThumbUpAltIcon />}
+                    </IconButtonCustom>
+                </div>
                 // </form>
             )}
         </div>
