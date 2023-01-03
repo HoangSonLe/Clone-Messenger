@@ -1,17 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import classNames from "classnames/bind";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 import MoodIcon from "@mui/icons-material/Mood";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import classNames from "classnames/bind";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import styles from "./MessageInput.module.scss";
 import chatMessageApi from "../../../api/chatMessageApi";
 import helper from "../../../generals/helper";
-import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../Icons";
-import { toastError } from "../../../generals/defaultActions";
+import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
+import styles from "./MessageInput.module.scss";
 
 const cx = classNames.bind(styles);
 const styleIcon = {
@@ -27,8 +26,7 @@ function MessageInput({ isRemoveFromChatGroup }) {
     const textAreaRef = useRef();
     const resizeTextArea = () => {
         textAreaRef.current.style.height = "auto";
-        textAreaRef.current.style.height =
-            textAreaRef.current.scrollHeight + "px";
+        textAreaRef.current.style.height = textAreaRef.current.scrollHeight + "px";
     };
     useEffect(resizeTextArea, [text]);
     useEffect(() => {
@@ -44,12 +42,14 @@ function MessageInput({ isRemoveFromChatGroup }) {
     const checkCanSend = checkEnableSendButton();
 
     const _sendMessage = async (data) => {
-        await chatMessageApi
-            .sendMessage(data)
-            .then((response) => {
+        try {
+            var response = await chatMessageApi.sendMessage(data);
+            if (response) {
                 setText("");
-            })
-            .catch((err) => toastError(err));
+            }
+        } catch (err) {
+            console.log("err", err);
+        }
     };
     const onSubmitForm = (e) => {
         e.preventDefault();
@@ -123,12 +123,9 @@ function MessageInput({ isRemoveFromChatGroup }) {
             ) : null} */}
             {isRemoveFromChatGroup ? (
                 <div className={cx("leave-wrapper")}>
-                    <div className={cx("title-leave")}>
-                        You can't message this group
-                    </div>
+                    <div className={cx("title-leave")}>You can't message this group</div>
                     <div className={cx("content-leave")}>
-                        You're no longer in this group and can't send or receive
-                        calls or messages unless you are added back to it.
+                        You're no longer in this group and can't send or receive calls or messages unless you are added back to it.
                     </div>
                 </div>
             ) : (
@@ -146,22 +143,13 @@ function MessageInput({ isRemoveFromChatGroup }) {
                     <div className={cx("inputs")}>
                         <div className={cx("wrapper-actions")}>
                             <div className={cx("actions")}>
-                                <IconButtonCustom
-                                    sx={styleIcon}
-                                    title="Attach a file"
-                                >
+                                <IconButtonCustom sx={styleIcon} title="Attach a file">
                                     <FileInputIcon />
                                 </IconButtonCustom>
-                                <IconButtonCustom
-                                    sx={styleIcon}
-                                    title="Choose a ticker"
-                                >
+                                <IconButtonCustom sx={styleIcon} title="Choose a ticker">
                                     <StickerInputIcon />
                                 </IconButtonCustom>
-                                <IconButtonCustom
-                                    sx={styleIcon}
-                                    title="Choose a gift"
-                                >
+                                <IconButtonCustom sx={styleIcon} title="Choose a gift">
                                     <GifInputIcon />
                                 </IconButtonCustom>
                             </div>
@@ -178,19 +166,14 @@ function MessageInput({ isRemoveFromChatGroup }) {
                                     onKeyDown={handleKeyDown}
                                 />
                             </div>
-                            <IconButtonCustom
-                                sx={styleIcon}
-                                title="Choose a emoji"
-                            >
+                            <IconButtonCustom sx={styleIcon} title="Choose a emoji">
                                 <MoodIcon />
                             </IconButtonCustom>
                         </div>
                     </div>
 
                     <IconButtonCustom
-                        title={
-                            checkCanSend ? "Press enter to send" : "Send a like"
-                        }
+                        title={checkCanSend ? "Press enter to send" : "Send a like"}
                         sx={{
                             ...styleIcon,
                             paddingLeft: "8px",

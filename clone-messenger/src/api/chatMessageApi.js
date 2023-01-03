@@ -2,11 +2,11 @@ import axiosClient from "./axiosClient";
 
 const chatMessageApi = {
     getMessages: (params) => {
-        const url = "/GetMessageList";
+        const url = "/chat/GetMessageList";
         return axiosClient.post(url, { ...params });
     },
     sendMessage :(params)=>{
-        const url = "/SendMessage";
+        const url = "/chat/SendMessage";
         return axiosClient.post(url, { ...params });
     }
 };

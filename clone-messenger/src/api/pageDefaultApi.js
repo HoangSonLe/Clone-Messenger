@@ -2,7 +2,7 @@ import axiosClient from "./axiosClient";
 
 const pageDefaultApi = {
     getPageDefaultModel: () => {
-        const url = "/GetPageDefaultModel";
+        const url = "/chat/GetPageDefaultModel";
         return axiosClient.get(url);
     },
 };

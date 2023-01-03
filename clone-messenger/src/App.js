@@ -3,9 +3,8 @@ import { useRoutes } from "react-router-dom";
 import { routes } from "./routes/routes";
 
 function App() {
-    // var {isLoggedIn} = useSelector(state => state.auth);
-    var isLoggedIn = true;
-    var routing = useRoutes(routes(isLoggedIn));
+    var { token } = useSelector((state) => state.auth);
+    var routing = useRoutes(routes(token));
     return <div style={{ height: "100vh" }}>{routing}</div>;
 }
 

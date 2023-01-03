@@ -47,7 +47,7 @@ export default function Navigation() {
           <ArchivedChatsIcon className={cx("icon")}/> */}
             </div>
             <div className={cx("avatar")}>
-                <MenuPopover options={AvatarMenu}>
+                <MenuPopover options={AvatarMenu()}>
                     <AvatarCustom height="36px" width="36px" />
                 </MenuPopover>
             </div>

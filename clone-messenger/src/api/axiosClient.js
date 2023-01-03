@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toastError } from "../generals/defaultActions";
 
 const axiosClient = axios.create({
     baseURL: process.env.REACT_APP_BASE_API_URL,
@@ -9,11 +10,11 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async (config) => {
-    // const token = await getFirebaseToken();
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`;
-    // }
-
+    var token = localStorage.getItem("jwtToken");
+    console.log(config);
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
     return config;
 });
 axiosClient.interceptors.response.use(
@@ -23,9 +24,16 @@ axiosClient.interceptors.response.use(
         }
         return response;
     },
-    (error) => {
+    (err) => {
         // Handle errors
-        throw error;
+        console.log(err);
+        if (err?.response.data.length > 0) {
+            err?.response.data.forEach((e) => {
+                toastError(e);
+            });
+        } else {
+            toastError("Error.Please try again");
+        }
     }
 );
 

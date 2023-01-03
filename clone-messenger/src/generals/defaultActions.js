@@ -7,8 +7,6 @@ const defaultOnClick = (e) => {
 };
 
 const toastError = (err) => {
-    toast.error("Error.Please try again");
     toast.error(err);
-    console.log(err);
 };
 export { defaultOnClick, toastError };

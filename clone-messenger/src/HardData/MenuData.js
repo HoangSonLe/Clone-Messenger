@@ -15,17 +15,12 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import PermMediaOutlinedIcon from "@mui/icons-material/PermMediaOutlined";
 import TextSnippetSharpIcon from "@mui/icons-material/TextSnippetSharp";
 import RadioButtonCheckedSharpIcon from "@mui/icons-material/RadioButtonCheckedSharp";
-import {
-    ArchivedChatsIcon,
-    MessengerIcon,
-    PrivacyHomeIcon,
-    SegmentIcon,
-    FilesIcon,
-    LikeIcon,
-    NicknameIcon,
-} from "../Icons";
+import { ArchivedChatsIcon, MessengerIcon, PrivacyHomeIcon, SegmentIcon, FilesIcon, LikeIcon, NicknameIcon } from "../Icons";
 import { removeGroup } from "../features/ChatGroup/ChatGroupSlice";
-const AvatarMenu = [
+import { logout } from "../features/AuthSlice";
+import { useNavigate } from "react-router-dom";
+import { configRoutes } from "../routes/routes";
+const AvatarMenu = () => [
     {
         icon: <SettingsIcon />,
         title: "Preferences",
@@ -121,6 +116,10 @@ const AvatarMenu = [
         to: "/",
         child: null,
         groupIndex: 5,
+        onClickDispatch: () => logout(),
+        callback: (func) => {
+            func(configRoutes.login);
+        },
     },
 ];
 const MessageItemMenu = (data) => [

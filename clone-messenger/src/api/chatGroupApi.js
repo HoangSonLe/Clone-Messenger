@@ -2,11 +2,11 @@ import axiosClient from "./axiosClient";
 
 const chatGroupApi = {
     getList: (params) => {
-        const url = "/GetChatGroupList";
+        const url = "/chat/GetChatGroupList";
         return axiosClient.post(url, { ...params });
     },
     getChatGroupDetail: (params) => {
-        const url = "/GetChatGroupDetail";
+        const url = "/chat/GetChatGroupDetail";
         return axiosClient.post(url, { ...params });
     },
 };

@@ -3,12 +3,10 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import chatGroupApi from "../../api/chatGroupApi";
 import { addListGroup } from "../../features/ChatGroup/ChatGroupSlice";
-import { toastError } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
 import { EditIcon } from "../../Icons";
 import Header from "../Layouts/Header/Header";
@@ -29,16 +27,15 @@ export default function MessageList() {
     const [isLoading, setLoading] = useState(true);
 
     const _fetchGetGroupList = async () => {
-        let postData = {};
-        await chatGroupApi
-            .getList(postData)
-            .then((response) => {
+        try {
+            var response = await chatGroupApi.getList({});
+            if (response) {
                 dispatch(addListGroup(response.data));
                 setLoading(false);
-            })
-            .catch((err) => {
-                toastError(err);
-            });
+            }
+        } catch (err) {
+            console.log("err", err);
+        }
     };
     useEffect(() => {
         _fetchGetGroupList();
@@ -69,10 +66,7 @@ export default function MessageList() {
                     <ScrollLoadMore onScrollBottom={onScrollBottom}>
                         <>
                             {chatGroupList.map((i, index) => (
-                                <MessageItem
-                                    key={`${i.id}-${index}`}
-                                    data={i}
-                                />
+                                <MessageItem key={`${i.id}-${index}`} data={i} />
                             ))}
                             {isLoading ? (
                                 <>
@@ -82,16 +76,6 @@ export default function MessageList() {
                             ) : null}
                         </>
                     </ScrollLoadMore>
-                    <ToastContainer
-                        position="bottom-right"
-                        autoClose={1000}
-                        hideProgressBar
-                        newestOnTop={true}
-                        closeOnClick
-                        pauseOnFocusLoss
-                        pauseOnHover
-                        theme="colored"
-                    />
                 </div>
                 <div className={cx("app")}>
                     <div className={cx("app-install")}>

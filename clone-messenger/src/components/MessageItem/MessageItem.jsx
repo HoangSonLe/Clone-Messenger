@@ -3,16 +3,15 @@ import { Fab, Skeleton } from "@mui/material";
 import classNames from "classnames/bind";
 import { useDispatch, useSelector } from "react-redux";
 
-import { initConversation } from "../../features/Messages/MessageSlice";
 import chatGroupApi from "../../api/chatGroupApi";
 import images from "../../assets/img";
+import { initConversation } from "../../features/Messages/MessageSlice";
 import helper from "../../generals/helper";
 import { MessageItemMenu } from "../../HardData/MenuData";
 import { AvatarWithName } from "../ui-kit/Avatar/AvatarCustom";
 import MenuPopover from "../ui-kit/Menu/MenuPopover";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
 import styles from "./MessageItem.module.scss";
-import { toastError } from "../../generals/defaultActions";
 const cx = classNames.bind(styles);
 const styleAction = {
     height: 32,
@@ -38,28 +37,25 @@ export default function MessageItem({ data, isLoading }) {
     const { defaultModel } = useSelector((state) => state.pageDefault);
     const isActive = data && conversation?.id == data?.id;
     const _fetchGetConversation = async () => {
-        var post = {
-            ...defaultModel.chatMessagePaginationModel,
-            hasMore: true,
-            chatGroupId: data?.id,
-        };
-        await chatGroupApi
-            .getChatGroupDetail(post)
-            .then((response) => {
+        try {
+            var post = {
+                ...defaultModel.chatMessagePaginationModel,
+                hasMore: true,
+                chatGroupId: data?.id,
+            };
+            var response = await chatGroupApi.getChatGroupDetail(post);
+            if (response) {
                 dispatch(initConversation(response.data));
-            })
-            .catch((err) => {
-                toastError(err);
-            });
+            }
+        } catch (err) {
+            console.log("err", err);
+        }
     };
     const onClickGetConversation = () => {
         _fetchGetConversation();
     };
     return (
-        <div
-            onClick={onClickGetConversation}
-            className={cx("container", isActive ? "active" : undefined)}
-        >
+        <div onClick={onClickGetConversation} className={cx("container", isActive ? "active" : undefined)}>
             {isLoading ? (
                 <>
                     <Skeleton variant="circular" width={48} height={48} />
@@ -74,29 +70,18 @@ export default function MessageItem({ data, isLoading }) {
                         <AvatarWithName
                             title={data.name}
                             isActive={isActive}
-                            srcList={
-                                data.id % 2 !== 0
-                                    ? [images.defaultAvatar]
-                                    : [
-                                          images.defaultAvatar,
-                                          images.defaultAvatar,
-                                      ]
-                            }
+                            srcList={data.id % 2 !== 0 ? [images.defaultAvatar] : [images.defaultAvatar, images.defaultAvatar]}
                             height="48px"
                             width="48px"
                         >
                             <div style={{ height: "8px" }}></div>
                             <div className={cx("message")}>
                                 <EllipsisContent component="div">
-                                    <div>
-                                        {`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}
-                                    </div>
+                                    <div>{`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}</div>
                                 </EllipsisContent>
 
                                 <div className={cx("dot-space")}>.</div>
-                                <div className={cx("time")}>
-                                    {helper.timeNotification(data.createdDate)}
-                                </div>
+                                <div className={cx("time")}>{helper.timeNotification(data.createdDate)}</div>
                             </div>
                         </AvatarWithName>
                         <div className={cx("more")}></div>

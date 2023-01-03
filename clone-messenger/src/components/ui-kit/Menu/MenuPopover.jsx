@@ -6,6 +6,7 @@ import classNames from "classnames/bind.js";
 import * as React from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { defaultOnClick } from "../../../generals/defaultActions";
 import helper from "../../../generals/helper";
@@ -50,13 +51,13 @@ export default function MenuPopover({ children, options, customRenderItem }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [menuItemList, setMenuItemList] = useState([{ data: options }]);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     React.useDebugValue(menuItemList);
     //Check has function onClick=> No : disable(opacity)
     const checkHasOnClickFunction = (item) => {
         var onClick = item?.onClick && typeof item.onClick === "function";
-        var onClickDispatch =
-            item?.onClickDispatch && typeof item.onClickDispatch === "function";
+        var onClickDispatch = item?.onClickDispatch && typeof item.onClickDispatch === "function";
         if (onClick || onClickDispatch) return true;
         return false;
     };
@@ -75,12 +76,9 @@ export default function MenuPopover({ children, options, customRenderItem }) {
     const onClickMenuItem = (item, e) => {
         if (item?.onClick && typeof item.onClick === "function") {
             item.onClick(item);
-        } else if (
-            item?.onClickDispatch &&
-            typeof item.onClickDispatch === "function"
-        ) {
-            var i;
+        } else if (item?.onClickDispatch && typeof item.onClickDispatch === "function") {
             dispatch(item.onClickDispatch());
+            typeof item.callback && item.callback(navigate);
         } else {
             defaultOnClick(e);
         }
@@ -123,11 +121,7 @@ export default function MenuPopover({ children, options, customRenderItem }) {
         return (
             <div style={{ padding: "2px 5px" }}>
                 {menuItemList.length > 1 && (
-                    <HeaderMenu
-                        customStyleMenuItem={customStyleMenuItem}
-                        title={current.title}
-                        onBack={handleBackMenu}
-                    />
+                    <HeaderMenu customStyleMenuItem={customStyleMenuItem} title={current.title} onBack={handleBackMenu} />
                 )}
                 {_renderBody(itemList)}
             </div>
@@ -153,10 +147,7 @@ export default function MenuPopover({ children, options, customRenderItem }) {
                         key={index}
                         onClick={(e) => {
                             if (_checkMenuHasChild(item)) {
-                                setMenuItemList((prev) => [
-                                    ...prev,
-                                    item.child,
-                                ]);
+                                setMenuItemList((prev) => [...prev, item.child]);
                             } else {
                                 onClickMenuItem(item, e);
                             }
@@ -169,11 +160,7 @@ export default function MenuPopover({ children, options, customRenderItem }) {
                         {
                             <div className={cx("menu-body")}>
                                 {typeof customRenderItem == "function"
-                                    ? customRenderItem(
-                                          item,
-                                          index,
-                                          handleBackMenu
-                                      )
+                                    ? customRenderItem(item, index, handleBackMenu)
                                     : _renderItem(item, index)}
                             </div>
                         }
