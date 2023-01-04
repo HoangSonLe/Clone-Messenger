@@ -1,4 +1,5 @@
 //Pages
+import React from "react";
 import { Navigate } from "react-router-dom";
 import ContactList from "../components/ContactList/ContactList";
 import MessageList from "../components/ConversationList/ConversationList";
@@ -22,11 +23,7 @@ const routes = (isLoggedIn) => [
     //root
     {
         path: configRoutes.home,
-        element: isLoggedIn ? (
-            <DefaultLayout />
-        ) : (
-            <Navigate to={configRoutes.login} />
-        ),
+        element: isLoggedIn ? <DefaultLayout /> : <Navigate to={configRoutes.login} />,
         errorElement: <ErrorPage />,
         children: [
             //nested routes

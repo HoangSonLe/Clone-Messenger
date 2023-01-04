@@ -4,7 +4,7 @@ import classNames from "classnames/bind";
 import { useDispatch, useSelector } from "react-redux";
 
 import chatGroupApi from "../../api/chatGroupApi";
-import images from "../../assets/img";
+import { defaultAvatar } from "../../assets/img";
 import { initConversation } from "../../features/Messages/MessageSlice";
 import helper from "../../generals/helper";
 import { MessageItemMenu } from "../../HardData/MenuData";
@@ -70,7 +70,7 @@ export default function MessageItem({ data, isLoading }) {
                         <AvatarWithName
                             title={data.name}
                             isActive={isActive}
-                            srcList={data.id % 2 !== 0 ? [images.defaultAvatar] : [images.defaultAvatar, images.defaultAvatar]}
+                            srcList={data.id % 2 !== 0 ? [defaultAvatar] : [defaultAvatar, defaultAvatar]}
                             height="48px"
                             width="48px"
                         >

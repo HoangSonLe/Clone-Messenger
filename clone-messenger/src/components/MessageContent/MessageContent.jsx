@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import chatMessageApi from "../../api/chatMessageApi";
-import images from "../../assets/img";
+import { defaultAvatar } from "../../assets/img";
 import { loadMoreMessage } from "../../features/Messages/MessageSlice";
 import { defaultOnClick } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
@@ -154,7 +154,7 @@ export default function MessageContent() {
                                 <AvatarCustom
                                     height={72}
                                     width={72}
-                                    srcList={conversation.isGroup ? [images.defaultAvatar, images.defaultAvatar] : [images.defaultAvatar]}
+                                    srcList={conversation.isGroup ? [defaultAvatar, defaultAvatar] : [defaultAvatar]}
                                     styleWrapper={{ cursor: "default" }}
                                 />
                             </div>

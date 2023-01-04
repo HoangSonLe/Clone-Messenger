@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import classNames from "classnames/bind";
 import { Link } from "react-router-dom";
 
-import images from "../../../assets/img";
+import { logo } from "../../../assets/img";
 import helper from "../../../generals/helper";
 import { configRoutes } from "../../../routes/routes";
 import styles from "./ErrorPage.module.scss";
@@ -10,7 +10,7 @@ const cx = classNames.bind(styles);
 function ErrorPage() {
   return (
     <div className={cx("wrapper")}>
-      <img src={images.logo} alt="logo" />
+      <img src={logo} alt="logo" />
       <div className={cx("content")}>
         <p className={cx("title")}>This page isn't available</p>
         <p className={cx("text")}>

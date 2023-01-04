@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import authApi from "../../api/authApi";
-import images from "../../assets/img";
+import { logo } from "../../assets/img";
 import { login } from "../../features/AuthSlice";
 import helper from "../../generals/helper";
 import { configRoutes } from "../../routes/routes";
@@ -40,7 +40,7 @@ function LoginPage() {
     return (
         <div className={cx("wrapper")}>
             <div className={cx("logo")}>
-                <img src={images.logo} alt="logo" />
+                <img src={logo} alt="logo" />
             </div>
             <p className={cx("title")}>Connect with your favourite people</p>
             <div className={cx("content")}>

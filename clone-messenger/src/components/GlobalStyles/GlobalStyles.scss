@@ -3,11 +3,11 @@
 // , Segoe UI, Helvetica, Arial, sans-serif
 @font-face {
     font-family: Segoe UI Historic;
-    src: url('/assets/fonts/SEGOEUI.TTF');
+    src: url('../../assets/fonts/SEGOEUI.TTF');
 }
 
 :root {
-    --font-family: 'Segoe UI Historic', , ' sans-serif';
+    --font-family: 'Segoe UI Historic', ' sans-serif';
     --font-size-input : .9375rem;
     --font-size-message-name : 17px;
 }

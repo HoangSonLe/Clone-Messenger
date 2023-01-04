@@ -2,7 +2,7 @@ import axios from "axios";
 import { toastError } from "../generals/defaultActions";
 
 const axiosClient = axios.create({
-    baseURL: process.env.REACT_APP_BASE_API_URL,
+    baseURL: process.env.API_URL,
     headers: {
         "Content-Type": "application/json; charset=utf-8",
         "Access-Control-Allow-Origin": "*",
@@ -11,7 +11,6 @@ const axiosClient = axios.create({
 
 axiosClient.interceptors.request.use(async (config) => {
     var token = localStorage.getItem("jwtToken");
-    console.log(config);
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }

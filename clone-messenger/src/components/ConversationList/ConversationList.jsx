@@ -3,8 +3,6 @@ import VideoCallIcon from "@mui/icons-material/VideoCall";
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import "react-toastify/dist/ReactToastify.css";
-
 import chatGroupApi from "../../api/chatGroupApi";
 import { addListGroup } from "../../features/ChatGroup/ChatGroupSlice";
 import helper from "../../generals/helper";
@@ -38,6 +36,7 @@ export default function MessageList() {
         }
     };
     useEffect(() => {
+        console.log("render");
         _fetchGetGroupList();
     }, []);
 
@@ -49,41 +48,39 @@ export default function MessageList() {
         }
     };
     return (
-        <>
-            <div className={cx("wrapper")}>
-                <Header title={"Chats"}>
-                    <IconButtonCustom sx={styleIcon}>
-                        <VideoCallIcon />
-                    </IconButtonCustom>
-                    <IconButtonCustom sx={styleIcon}>
-                        <EditIcon />
-                    </IconButtonCustom>
-                </Header>
-                <div className={cx("search")}>
-                    <Search />
-                </div>
-                <div className={cx("message-list")}>
-                    <ScrollLoadMore onScrollBottom={onScrollBottom}>
-                        <>
-                            {chatGroupList.map((i, index) => (
-                                <MessageItem key={`${i.id}-${index}`} data={i} />
-                            ))}
-                            {isLoading ? (
-                                <>
-                                    <MessageItem isLoading={true} />
-                                    <MessageItem isLoading={true} />
-                                </>
-                            ) : null}
-                        </>
-                    </ScrollLoadMore>
-                </div>
-                <div className={cx("app")}>
-                    <div className={cx("app-install")}>
-                        <BrowserUpdatedIcon />
-                        <p>Install Messenger app</p>
-                    </div>
+        <div className={cx("wrapper")}>
+            <Header title={"Chats"}>
+                <IconButtonCustom sx={styleIcon}>
+                    <VideoCallIcon />
+                </IconButtonCustom>
+                <IconButtonCustom sx={styleIcon}>
+                    <EditIcon />
+                </IconButtonCustom>
+            </Header>
+            <div className={cx("search")}>
+                <Search />
+            </div>
+            <div className={cx("message-list")}>
+                <ScrollLoadMore onScrollBottom={onScrollBottom}>
+                    <>
+                        {chatGroupList.map((i, index) => (
+                            <MessageItem key={`${i.id}-${index}`} data={i} />
+                        ))}
+                        {isLoading ? (
+                            <>
+                                <MessageItem isLoading={true} />
+                                <MessageItem isLoading={true} />
+                            </>
+                        ) : null}
+                    </>
+                </ScrollLoadMore>
+            </div>
+            <div className={cx("app")}>
+                <div className={cx("app-install")}>
+                    <BrowserUpdatedIcon />
+                    <p>Install Messenger app</p>
                 </div>
             </div>
-        </>
+        </div>
     );
 }
