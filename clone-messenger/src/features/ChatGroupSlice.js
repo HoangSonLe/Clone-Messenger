@@ -17,6 +17,7 @@ const chatGroupSlice = createSlice({
     name: "chatGroup",
     initialState: initialState,
     reducers: {
+        resetState: () => initialState,
         addGroup: (state, action) => {
             var data = action.payload;
             state.chatGroupList.unshift(data);
@@ -29,9 +30,7 @@ const chatGroupSlice = createSlice({
         },
         removeGroup: (state, action) => {
             var data = action.payload;
-            state.chatGroupList = state.chatGroupList.filter(
-                (i) => i.id != data.id
-            );
+            state.chatGroupList = state.chatGroupList.filter((i) => i.id != data.id);
         },
         setLoadMore: (state, action) => {
             state.hasMore = action.payload;
@@ -39,6 +38,6 @@ const chatGroupSlice = createSlice({
     },
 });
 const { actions, reducer } = chatGroupSlice;
-export const { addGroup, addListGroup, removeGroup, setLoadMore } = actions;
+export const { addGroup, addListGroup, removeGroup, setLoadMore, resetState } = actions;
 
 export default reducer;

@@ -4,7 +4,7 @@ import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import chatGroupApi from "../../api/chatGroupApi";
-import { addListGroup } from "../../features/ChatGroup/ChatGroupSlice";
+import { addListGroup, resetState } from "../../features/ChatGroupSlice";
 import helper from "../../generals/helper";
 import { EditIcon } from "../../Icons";
 import Header from "../Layouts/Header/Header";
@@ -36,7 +36,7 @@ export default function MessageList() {
         }
     };
     useEffect(() => {
-        console.log("render");
+        dispatch(resetState());
         _fetchGetGroupList();
     }, []);
 

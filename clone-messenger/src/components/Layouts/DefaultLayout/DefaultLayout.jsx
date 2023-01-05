@@ -3,6 +3,8 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import pageDefaultApi from "../../../api/pageDefaultApi";
 import { setPageDefaultModel } from "../../../features/PageDefaultSlice";
 import { configRoutes } from "../../../routes/routes";

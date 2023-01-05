@@ -8,6 +8,7 @@ const messageSlice = createSlice({
     name: "message",
     initialState: initialState,
     reducers: {
+        resetState: () => initialState,
         initConversation: (state, action) => {
             var data = action.payload;
             state.conversation = data;
@@ -22,17 +23,14 @@ const messageSlice = createSlice({
             //GROUP TIME: Item cuối messages mới mà chung GROUPTIME với item đầu messages hiện tại
             if (firstOld.continuityKeyByTime == lastNew.continuityKeyByTime) {
                 let firstOldMess = firstOld.groupMessageListByUser.at(0);
-                let newLastIndex = lastNew.groupMessageListByUser.length -1;
-                let lastNewMess =lastNew.groupMessageListByUser.at(newLastIndex);
+                let newLastIndex = lastNew.groupMessageListByUser.length - 1;
+                let lastNewMess = lastNew.groupMessageListByUser.at(newLastIndex);
                 //GROUP USER: Item cuối messages mới chung GROUP USER với item đầu messsages hiện tại
-                if(firstOldMess.continuityKeyByUser == lastNewMess.continuityKeyByUser){
+                if (firstOldMess.continuityKeyByUser == lastNewMess.continuityKeyByUser) {
                     //Merge list messages
-                    firstOld.groupMessageListByUser[0].messages = [
-                        ...lastNewMess.messages,
-                        ...firstOld.groupMessageListByUser[0].messages
-                    ];
+                    firstOld.groupMessageListByUser[0].messages = [...lastNewMess.messages, ...firstOld.groupMessageListByUser[0].messages];
                     //Remove item trùng user đã thêm ở trên
-                    lastNew.groupMessageListByUser.splice(newLastIndex,1);
+                    lastNew.groupMessageListByUser.splice(newLastIndex, 1);
                 }
                 //Merge list messages by time
                 state.conversation.groupMessageListByTime.data[0].groupMessageListByUser = [
@@ -49,6 +47,6 @@ const messageSlice = createSlice({
     },
 });
 const { actions, reducer } = messageSlice;
-export const { initConversation, sendMessage, loadMoreMessage } = actions;
+export const { initConversation, sendMessage, loadMoreMessage, resetState } = actions;
 
 export default reducer;

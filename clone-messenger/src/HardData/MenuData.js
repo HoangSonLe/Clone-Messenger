@@ -1,27 +1,27 @@
-import SettingsIcon from "@mui/icons-material/Settings";
-import InfoIcon from "@mui/icons-material/Info";
-import GppGoodIcon from "@mui/icons-material/GppGood";
-import ReportProblemIcon from "@mui/icons-material/ReportProblem";
-import LogoutIcon from "@mui/icons-material/Logout";
-import HelpIcon from "@mui/icons-material/Help";
-import LockIcon from "@mui/icons-material/Lock";
-import ShieldIcon from "@mui/icons-material/Shield";
-import CheckIcon from "@mui/icons-material/Check";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import PersonIcon from "@mui/icons-material/Person";
 import CallIcon from "@mui/icons-material/Call";
-import VideocamIcon from "@mui/icons-material/Videocam";
+import CheckIcon from "@mui/icons-material/Check";
 import DeleteIcon from "@mui/icons-material/Delete";
+import GppGoodIcon from "@mui/icons-material/GppGood";
+import HelpIcon from "@mui/icons-material/Help";
+import InfoIcon from "@mui/icons-material/Info";
+import LockIcon from "@mui/icons-material/Lock";
+import LogoutIcon from "@mui/icons-material/Logout";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import PermMediaOutlinedIcon from "@mui/icons-material/PermMediaOutlined";
-import TextSnippetSharpIcon from "@mui/icons-material/TextSnippetSharp";
+import PersonIcon from "@mui/icons-material/Person";
 import RadioButtonCheckedSharpIcon from "@mui/icons-material/RadioButtonCheckedSharp";
-import { ArchivedChatsIcon, MessengerIcon, PrivacyHomeIcon, SegmentIcon, FilesIcon, LikeIcon, NicknameIcon } from "../Icons";
-import { removeGroup } from "../features/ChatGroup/ChatGroupSlice";
+import ReportProblemIcon from "@mui/icons-material/ReportProblem";
+import SettingsIcon from "@mui/icons-material/Settings";
+import ShieldIcon from "@mui/icons-material/Shield";
+import TextSnippetSharpIcon from "@mui/icons-material/TextSnippetSharp";
+import VideocamIcon from "@mui/icons-material/Videocam";
 import { logout } from "../features/AuthSlice";
-import { useNavigate } from "react-router-dom";
+import { removeGroup } from "../features/ChatGroupSlice";
+import { ArchivedChatsIcon, FilesIcon, LikeIcon, MessengerIcon, NicknameIcon, PrivacyHomeIcon, SegmentIcon } from "../Icons";
 import { configRoutes } from "../routes/routes";
 const AvatarMenu = () => [
     {
+        id:1,
         icon: <SettingsIcon />,
         title: "Preferences",
         to: "/",
@@ -29,6 +29,7 @@ const AvatarMenu = () => [
         groupIndex: 1,
     },
     {
+        id:2,
         icon: <PrivacyHomeIcon />,
         title: "Privacy & safety",
         to: "/",
@@ -37,6 +38,7 @@ const AvatarMenu = () => [
             title: "Privacy & safety",
             data: [
                 {
+                    id:11,
                     icon: <GppGoodIcon />,
                     title: "End-to-end encrypted chats",
                     to: "/",
@@ -44,12 +46,14 @@ const AvatarMenu = () => [
                         title: "End-to-end encrypted chats",
                         data: [
                             {
+                                id:12,
                                 icon: <LockIcon />,
                                 title: "Security alerts",
                                 to: "/",
                                 child: null,
                             },
                             {
+                                id:13,
                                 icon: <ShieldIcon />,
                                 title: "Login",
                                 to: "/",
@@ -62,6 +66,7 @@ const AvatarMenu = () => [
         },
     },
     {
+        id:3,
         icon: <HelpIcon />,
         title: "Help",
         to: "/",
@@ -69,6 +74,7 @@ const AvatarMenu = () => [
         groupIndex: 3,
     },
     {
+        id:4,
         icon: <ReportProblemIcon />,
         title: "Report a problem",
         to: "/",
@@ -76,6 +82,7 @@ const AvatarMenu = () => [
         groupIndex: 3,
     },
     {
+        id:5,
         icon: <InfoIcon />,
         title: "About",
         to: "/",
@@ -83,6 +90,7 @@ const AvatarMenu = () => [
         groupIndex: 4,
     },
     {
+        id:6,
         icon: <SegmentIcon />,
         title: "Terms",
         to: "/",
@@ -90,6 +98,7 @@ const AvatarMenu = () => [
         groupIndex: 4,
     },
     {
+        id:7,
         icon: <SegmentIcon />,
         title: "Data Policy",
         to: "/",
@@ -97,6 +106,7 @@ const AvatarMenu = () => [
         groupIndex: 4,
     },
     {
+        id:8,
         icon: <SegmentIcon />,
         title: "Cookie Policy",
         to: "/",
@@ -104,6 +114,7 @@ const AvatarMenu = () => [
         groupIndex: 4,
     },
     {
+        id:9,
         icon: <MessengerIcon />,
         title: "New! Messenger for Windows",
         to: "/",
@@ -111,6 +122,7 @@ const AvatarMenu = () => [
         groupIndex: 5,
     },
     {
+        id:10,
         icon: <LogoutIcon />,
         title: "Log out",
         to: "/",
@@ -124,6 +136,7 @@ const AvatarMenu = () => [
 ];
 const MessageItemMenu = (data) => [
     {
+        id:1,
         icon: <CheckIcon />,
         title: "Mark as read",
         to: "/",
@@ -131,6 +144,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 1,
     },
     {
+        id:2,
         icon: <NotificationsIcon />,
         title: "Mute notifications",
         to: "/",
@@ -138,6 +152,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 1,
     },
     {
+        id:3,
         icon: <PersonIcon />,
         title: "View profile",
         to: "/",
@@ -145,6 +160,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 1,
     },
     {
+        id:4,
         icon: <LockIcon />,
         title: "Start end-to-end encrypted chat",
         to: "/",
@@ -152,6 +168,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 2,
     },
     {
+        id:5,
         icon: <CallIcon />,
         title: "Audio call",
         to: "/",
@@ -159,6 +176,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 3,
     },
     {
+        id:6,
         icon: <VideocamIcon />,
         title: "Video chat",
         to: "/",
@@ -166,6 +184,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 3,
     },
     {
+        id:7,
         icon: <ArchivedChatsIcon />,
         title: "Archive chat",
         to: "/",
@@ -173,6 +192,7 @@ const MessageItemMenu = (data) => [
         groupIndex: 4,
     },
     {
+        id:8,
         icon: <DeleteIcon />,
         title: "Delete chat",
         to: "/",
@@ -181,6 +201,7 @@ const MessageItemMenu = (data) => [
         onClickDispatch: () => removeGroup(data),
     },
     {
+        id:9,
         icon: <ReportProblemIcon />,
         title: "Report",
         to: "/",
@@ -240,3 +261,4 @@ const ConversationMenu = [
     },
 ];
 export { AvatarMenu, MessageItemMenu, ConversationMenu };
+

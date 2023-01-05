@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 
 import chatMessageApi from "../../api/chatMessageApi";
 import { defaultAvatar } from "../../assets/img";
-import { loadMoreMessage } from "../../features/Messages/MessageSlice";
+import { loadMoreMessage } from "../../features/MessageSlice";
 import { defaultOnClick } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
 import { ConversationMenu } from "../../HardData/MenuData";

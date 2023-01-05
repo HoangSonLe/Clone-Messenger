@@ -47,7 +47,7 @@ const customStyleMenuItem = {
 
 const cx = classNames.bind(styles);
 
-export default function MenuPopover({ children, options, customRenderItem }) {
+export default function MenuPopover({ children, options, customRenderItem, onCloseCallback }) {
     const [anchorEl, setAnchorEl] = useState(null);
     const [menuItemList, setMenuItemList] = useState([{ data: options }]);
     const dispatch = useDispatch();
@@ -71,6 +71,7 @@ export default function MenuPopover({ children, options, customRenderItem }) {
     const handleClose = () => {
         setMenuItemList((prev) => prev.slice(0, 1));
         setAnchorEl(null);
+        typeof onCloseCallback === "function" && onCloseCallback();
     };
     // Handle action menu
     const onClickMenuItem = (item, e) => {
@@ -133,7 +134,7 @@ export default function MenuPopover({ children, options, customRenderItem }) {
         let prevIndex = null;
         return items?.map((item, index) => {
             return (
-                <div key={`${index}-${item.groupIndex}`}>
+                <div key={`${item.id}`}>
                     {prevIndex && prevIndex !== item.groupIndex
                         ? (() => {
                               prevIndex = item.groupIndex;
@@ -144,7 +145,7 @@ export default function MenuPopover({ children, options, customRenderItem }) {
                               return null;
                           })()}
                     <MenuItem
-                        key={index}
+                        key={item.id}
                         onClick={(e) => {
                             if (_checkMenuHasChild(item)) {
                                 setMenuItemList((prev) => [...prev, item.child]);

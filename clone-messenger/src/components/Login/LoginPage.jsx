@@ -2,9 +2,10 @@ import { Button } from "@mui/material";
 import classNames from "classnames/bind";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-
 import { useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import authApi from "../../api/authApi";
 import { logo } from "../../assets/img";
 import { login } from "../../features/AuthSlice";

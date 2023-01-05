@@ -1,11 +1,13 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Fab, Skeleton } from "@mui/material";
 import classNames from "classnames/bind";
+import { useDebugValue } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import chatGroupApi from "../../api/chatGroupApi";
 import { defaultAvatar } from "../../assets/img";
-import { initConversation } from "../../features/Messages/MessageSlice";
+import { initConversation } from "../../features/MessageSlice";
 import helper from "../../generals/helper";
 import { MessageItemMenu } from "../../HardData/MenuData";
 import { AvatarWithName } from "../ui-kit/Avatar/AvatarCustom";
@@ -33,6 +35,7 @@ export default function MessageItem({ data, isLoading }) {
     //     lastMessageId,
     //     name,
     const dispatch = useDispatch();
+    const [isDisplayButton, setDisplayButton] = useState("false");
     const { conversation } = useSelector((state) => state.message);
     const { defaultModel } = useSelector((state) => state.pageDefault);
     const isActive = data && conversation?.id == data?.id;
@@ -54,8 +57,10 @@ export default function MessageItem({ data, isLoading }) {
     const onClickGetConversation = () => {
         _fetchGetConversation();
     };
+    useDebugValue(isDisplayButton);
+    console.log("MessageItem");
     return (
-        <div onClick={onClickGetConversation} className={cx("container", isActive ? "active" : undefined)}>
+        <div className={cx("container", isActive ? "active" : undefined)}>
             {isLoading ? (
                 <>
                     <Skeleton variant="circular" width={48} height={48} />
@@ -66,7 +71,7 @@ export default function MessageItem({ data, isLoading }) {
                 </>
             ) : (
                 <>
-                    <div className={cx("wrapper")}>
+                    <div className={cx("wrapper")} onClick={onClickGetConversation}>
                         <AvatarWithName
                             title={data.name}
                             isActive={isActive}
@@ -87,12 +92,13 @@ export default function MessageItem({ data, isLoading }) {
                         <div className={cx("more")}></div>
                     </div>
                     <div
-                        className={cx("action-button")}
+                        className={cx("action-button", !isDisplayButton ? "visible" : "invisible")}
                         onClick={(e) => {
                             e.preventDefault();
+                            setDisplayButton((prev) => !prev);
                         }}
                     >
-                        <MenuPopover options={MessageItemMenu(data)}>
+                        <MenuPopover onCloseCallback={setDisplayButton} options={MessageItemMenu(data)}>
                             <Fab sx={styleAction}>
                                 <MoreHorizIcon fontSize="medium" />
                             </Fab>

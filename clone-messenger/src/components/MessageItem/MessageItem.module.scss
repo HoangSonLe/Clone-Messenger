@@ -7,12 +7,14 @@
     align-items: center;
     position: relative;
     padding: 8px 6px;
-    margin: 1px 8px;
+    margin: 1px 0px;
     border-radius: 8px;
     cursor: pointer;
+
     &:hover {
         background-color: $webWash;
     }
+
     &.active {
         background-color: $webWash;
     }
@@ -38,9 +40,11 @@
     align-items: center;
     justify-content: flex-start;
 }
-.time{
+
+.time {
     min-width: fit-content;
 }
+
 .dot-space {
     margin: 0px 3px;
 }
@@ -50,18 +54,29 @@
         display: none;
     }
 }
+
 .action-button {
     position: absolute;
     right: 20px;
-    display: none;
+
+    // visibility: hidden;
     .container:hover & {
-        display: flex;
+        visibility: visible;
     }
+
     @media (max-width : $media-width-breakpoint) {
         display: none;
+
         .container:hover & {
             display: none;
         }
     }
 }
 
+.invisible {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}
