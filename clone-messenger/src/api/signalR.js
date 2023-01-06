@@ -1,11 +1,23 @@
 import $ from "jquery";
+import { useDispatch } from "react-redux";
 import "signalr";
-const signalR = () => {
+import { test } from "../features/MessageSlice";
+const SignalRInit = () => {
+    const token = localStorage.getItem("jwtToken");
+    var dispatch = useDispatch();
     var connection = $.hubConnection();
     connection.url = process.env.API_URL + "/signalr";
-    var chatHubProxy = connection.createHubProxy("ChatHub");
+    connection.qs = { token: `${token}` };
+    var chatHubProxy = connection.createHubProxy("chatHub");
     chatHubProxy.on("test", function (name, message) {
         console.log(name + " " + message);
+    });
+    chatHubProxy.on("updateStatusMessage", function (model) {
+        console.log(model);
+    });
+    chatHubProxy.on("sendMessage", function (name) {
+        console.log(name);
+        // dispatch(test(data));
     });
     connection
         .start()
@@ -18,4 +30,4 @@ const signalR = () => {
 
     return <></>;
 };
-export default signalR;
+export default SignalRInit;

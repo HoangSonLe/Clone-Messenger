@@ -53,6 +53,9 @@ export default function MessageContent() {
             }
         }
     };
+    const sendMessage = (data) => {
+        dispatch(test(data));
+    };
     const onScrollTop = () => {
         setLoading(true);
         _fetchGetMessageList();
