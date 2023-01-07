@@ -1,0 +1,3 @@
+start : webpack serve 
+    --open : ko cần vì đã có setting bên webpack.config devServer
+    --process : hiện thanh phần trăm khi buid 10%, 20%

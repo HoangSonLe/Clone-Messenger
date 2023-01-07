@@ -32,12 +32,16 @@ const chatGroupSlice = createSlice({
             var data = action.payload;
             state.chatGroupList = state.chatGroupList.filter((i) => i.id != data.id);
         },
+        updateLastMesage: (state, action) => {
+            var data = action.payload;
+            console.log(data);
+        },
         setLoadMore: (state, action) => {
             state.hasMore = action.payload;
         },
     },
 });
 const { actions, reducer } = chatGroupSlice;
-export const { addGroup, addListGroup, removeGroup, setLoadMore, resetState } = actions;
+export const { addGroup,updateLastMesage, addListGroup, removeGroup, setLoadMore, resetState } = actions;
 
 export default reducer;

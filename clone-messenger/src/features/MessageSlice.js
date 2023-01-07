@@ -9,28 +9,31 @@ const messageSlice = createSlice({
     initialState: initialState,
     reducers: {
         resetState: () => initialState,
-        test: (state, action) => {
-            console.log(action.payload);
-        },
         initConversation: (state, action) => {
             let data = action.payload;
             state.conversation = data;
         },
         sendMessage: (state, action) => {
             let data = action.payload;
-            let stateGroupList = state.conversation.groupMessageListByTime.data;
-            if (data.isGroup) {
-                stateGroupList.push(data.messageGroupByTime);
-            } else {
-                let index = stateGroupList.findIndex((i) => i.continuityKeyByTime);
-                if (index) {
-                    let lastItemGroup = stateGroupList[index];
-                    let lastIndex = lastItemGroup.groupMessageListByUser.length - 1;
-                    if (data.isMessage) {
-                        let lastIndexMess = lastItemGroup.groupMessageListByUser[lastIndex].messages.length - 1;
-                        lastItemGroup.groupMessageListByUser.messages.splice(lastIndexMess, 0, data.messageGroupByUser.messages);
-                    } else {
-                        lastItemGroup.groupMessageListByUser.splice(lastIndex, data.messageGroupByUser, data.messageGroupByUser);
+            let { chatGroupId, isNewGroupByTime, isNewGroupByUser, messageGroupByTime, messageGroupByUser } = data;
+            console.log(data);
+            if (state.conversation && state.conversation.id == chatGroupId) {
+                //Nếu đang mở đoạn chat
+                let stateGroupList = state.conversation.groupMessageListByTime.data;
+                if (isNewGroupByTime) {
+                    // Check nếu tạo group time mới
+                    stateGroupList.push(messageGroupByTime);
+                } else {
+                    let index = stateGroupList.findIndex((i) => i.continuityKeyByTime == messageGroupByTime.continuityKeyByTime);
+                    if (index != -1) {
+                        let lastItemGroup = stateGroupList[index];
+                        let lastIndex = lastItemGroup.groupMessageListByUser.length - 1;
+                        if (isNewGroupByUser == false) {
+                            let lastItemMessage = lastItemGroup.groupMessageListByUser[lastIndex];
+                            lastItemMessage.messages.splice(lastItemMessage.messages.length, 0, ...messageGroupByUser.messages);
+                        } else {
+                            lastItemGroup.groupMessageListByUser.splice(lastIndex + 1, 0, messageGroupByUser);
+                        }
                     }
                 }
             }
@@ -66,6 +69,6 @@ const messageSlice = createSlice({
     },
 });
 const { actions, reducer } = messageSlice;
-export const { test, initConversation, sendMessage, loadMoreMessage, resetState } = actions;
+export const { initConversation, sendMessage, loadMoreMessage, resetState } = actions;
 
 export default reducer;

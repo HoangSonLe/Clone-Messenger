@@ -3,7 +3,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
 import { CircularProgress, Drawer } from "@mui/material";
 import classNames from "classnames/bind";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -32,6 +32,7 @@ const maxWidthDrawer = 300;
 const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
 export default function MessageContent() {
+    const childRef = useRef();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(true);
     const { conversation } = useSelector((state) => state.message);
@@ -52,9 +53,6 @@ export default function MessageContent() {
                 console.log("err", err);
             }
         }
-    };
-    const sendMessage = (data) => {
-        dispatch(test(data));
     };
     const onScrollTop = () => {
         setLoading(true);
@@ -108,12 +106,21 @@ export default function MessageContent() {
                         }}
                     >
                         {/* Header */}
-                        <MessageContentHeader title={conversation.name} href={"/"} isOpenDrawer handleToggleDrawer={handleToggleDrawer} />
+                        <MessageContentHeader
+                            title={conversation.name}
+                            href={"/"}
+                            isOpenDrawer
+                            handleToggleDrawer={handleToggleDrawer}
+                        />
                         {/* Header */}
                         {/* Messages */}
                         <div className={cx("content")}>
                             <div className={cx("message")}>
-                                <ScrollLoadMore beginBottom={true} onScrollTop={onScrollTop}>
+                                <ScrollLoadMore
+                                    ref={childRef}
+                                    beginBottom={true}
+                                    onScrollTop={onScrollTop}
+                                >
                                     {isLoading ? (
                                         <div
                                             style={{
@@ -123,7 +130,9 @@ export default function MessageContent() {
                                         >
                                             <CircularProgress
                                                 sx={{
-                                                    color: helper.getColorFromName("placeholderIcon"),
+                                                    color: helper.getColorFromName(
+                                                        "placeholderIcon"
+                                                    ),
                                                 }}
                                                 size={25}
                                             />
@@ -157,7 +166,11 @@ export default function MessageContent() {
                                 <AvatarCustom
                                     height={72}
                                     width={72}
-                                    srcList={conversation.isGroup ? [defaultAvatar, defaultAvatar] : [defaultAvatar]}
+                                    srcList={
+                                        conversation.isGroup
+                                            ? [defaultAvatar, defaultAvatar]
+                                            : [defaultAvatar]
+                                    }
                                     styleWrapper={{ cursor: "default" }}
                                 />
                             </div>
