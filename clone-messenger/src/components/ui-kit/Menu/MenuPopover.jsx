@@ -53,7 +53,6 @@ export default function MenuPopover({ children, options, customRenderItem, onClo
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    React.useDebugValue(menuItemList);
     //Check has function onClick=> No : disable(opacity)
     const checkHasOnClickFunction = (item) => {
         var onClick = item?.onClick && typeof item.onClick === "function";

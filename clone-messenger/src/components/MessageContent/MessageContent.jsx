@@ -1,33 +1,20 @@
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import SearchIcon from "@mui/icons-material/Search";
-import { CircularProgress, Drawer } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
 
 import chatMessageApi from "../../api/chatMessageApi";
-import { defaultAvatar } from "../../assets/img";
 import { loadMoreMessage } from "../../features/MessageSlice";
-import { defaultOnClick } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
-import { ConversationMenu } from "../../HardData/MenuData";
 import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
-import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
-import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
-import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
-import MenuTreeView from "./ConversationInformation/MenuTreeview";
 import DefaultMessageContent from "./DefaultMessageContent/DefaultMessageContent";
+import DrawerInfor from "./DrawerInfor";
 import styles from "./MessageContent.module.scss";
 import MessageContentHeader from "./MessageContentHeader";
 import MessageInput from "./MessageInput/MessageInput";
 import MessageList from "./MessageList.jsx/MessageList";
 const cx = classNames.bind(styles);
-const styleIcon = {
-    background: helper.getColorFromName("webWash"),
-};
 const maxWidthDrawer = 300;
 const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
@@ -54,7 +41,7 @@ export default function MessageContent() {
             }
         }
     };
-    const onScrollTop = () => {
+    const onScrollTop = (callback) => {
         setLoading(true);
         _fetchGetMessageList();
         setLoading(false);
@@ -82,6 +69,9 @@ export default function MessageContent() {
             needWidth !== widthDrawer && setWidthDrawer(needWidth);
         }
     };
+    const setAutoScrollBottom = () => {
+        childRef.current.scrollToBottom();
+    };
     //Add and remove event resize of window
     useEffect(() => {
         window.addEventListener("resize", handleWidthViewChange);
@@ -89,7 +79,6 @@ export default function MessageContent() {
             window.removeEventListener("resize", handleWidthViewChange);
         };
     }, [widthDrawer]);
-
     return (
         <>
             {conversation ? (
@@ -118,8 +107,10 @@ export default function MessageContent() {
                             <div className={cx("message")}>
                                 <ScrollLoadMore
                                     ref={childRef}
+                                    // spaceToTop={100}
                                     beginBottom={true}
                                     onScrollTop={onScrollTop}
+                                    spaceToBottomDisplayButtonScroll={10}
                                 >
                                     {isLoading ? (
                                         <div
@@ -137,73 +128,29 @@ export default function MessageContent() {
                                                 size={25}
                                             />
                                         </div>
-                                    ) : null}
+                                    ) : (
+                                        <div style={{ height: "10px" }}></div>
+                                    )}
                                     <MessageList />
                                 </ScrollLoadMore>
                             </div>
                             <div className={cx("input")}>
-                                <MessageInput isRemoveFromChatGroup={conversation.isRemoved} />
+                                <MessageInput
+                                    setAutoScrollBottom={setAutoScrollBottom}
+                                    isRemoveFromChatGroup={conversation.isRemoved}
+                                />
                             </div>
                         </div>
                         {/* Messages */}
                     </div>
                     {/* Drawer more information */}
-                    <Drawer
-                        sx={{
-                            width: widthDrawer,
-                            flexShrink: 1,
-                            "& .MuiDrawer-paper": {
-                                width: widthDrawer,
-                            },
-                        }}
-                        variant="persistent"
-                        anchor="right"
+                    <DrawerInfor
                         open={isOpenDrawer}
-                    >
-                        {/* More information content */}
-                        <div className={cx("message-more-wrapper")}>
-                            <div className={cx("avatar")}>
-                                <AvatarCustom
-                                    height={72}
-                                    width={72}
-                                    srcList={
-                                        conversation.isGroup
-                                            ? [defaultAvatar, defaultAvatar]
-                                            : [defaultAvatar]
-                                    }
-                                    styleWrapper={{ cursor: "default" }}
-                                />
-                            </div>
-                            <EllipsisContent component={"div"}>
-                                <Link to={"/"} target="_blank">
-                                    <div className={cx("name")}>{conversation.name}</div>
-                                </Link>
-                            </EllipsisContent>
-                            <div className={cx("action")}>
-                                <div className={cx("icon")}>
-                                    <IconButtonCustom sx={styleIcon} onClick={defaultOnClick}>
-                                        <AccountCircleIcon />
-                                    </IconButtonCustom>
-                                    <p>Profile</p>
-                                </div>
-                                <div className={cx("icon")}>
-                                    <IconButtonCustom sx={styleIcon} onClick={defaultOnClick}>
-                                        <NotificationsIcon />
-                                    </IconButtonCustom>
-                                    <p>Mute</p>
-                                </div>
-                                <div className={cx("icon")}>
-                                    <IconButtonCustom sx={styleIcon} onClick={defaultOnClick}>
-                                        <SearchIcon />
-                                    </IconButtonCustom>
-                                    <p>Search</p>
-                                </div>
-                            </div>
-                            <div className={cx("menu")}>
-                                <MenuTreeView data={ConversationMenu} />
-                            </div>
-                        </div>
-                    </Drawer>
+                        name={conversation.name}
+                        isGroup={conversation.isGroup}
+                        widthDrawer={widthDrawer}
+                        isOpenDrawer={isOpenDrawer}
+                    />
                 </div>
             ) : (
                 <DefaultMessageContent />

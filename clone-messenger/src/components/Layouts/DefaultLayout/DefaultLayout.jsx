@@ -6,7 +6,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import pageDefaultApi from "../../../api/pageDefaultApi";
-import SignalRInit from "../../../api/signalR";
 import { setPageDefaultModel } from "../../../features/PageDefaultSlice";
 import { configRoutes } from "../../../routes/routes";
 import MessageContent from "../../MessageContent/MessageContent";
@@ -31,10 +30,8 @@ export default function DefaultLayout() {
         isLoggedIn ? _fetchPageDefaultModel() : navigate(configRoutes.login);
     }, [isLoggedIn]);
 
-    
     return (
         <>
-            <SignalRInit />
             {isLoggedIn ? (
                 <div className={cx("wrapper")}>
                     <div className={cx("navigation")}>

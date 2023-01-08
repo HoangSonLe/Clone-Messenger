@@ -1,8 +1,7 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Fab, Skeleton } from "@mui/material";
 import classNames from "classnames/bind";
-import { useDebugValue } from "react";
-import { useState } from "react";
+import { memo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import chatGroupApi from "../../api/chatGroupApi";
@@ -26,14 +25,7 @@ const styleAction = {
         color: helper.getColorFromName("placeholderIcon"),
     },
 };
-export default function MessageItem({ data, isLoading }) {
-    // createdBy,
-    //     createdDate,
-    //     id,
-    //     isRead,
-    //     lastMessage,
-    //     lastMessageId,
-    //     name,
+ function MessageItem({ data, isLoading }) {
     const dispatch = useDispatch();
     const [isDisplayButton, setDisplayButton] = useState("false");
     const { conversation } = useSelector((state) => state.message);
@@ -57,8 +49,6 @@ export default function MessageItem({ data, isLoading }) {
     const onClickGetConversation = () => {
         _fetchGetConversation();
     };
-    useDebugValue(isDisplayButton);
-    console.log("MessageItem");
     return (
         <div className={cx("container", isActive ? "active" : undefined)}>
             {isLoading ? (
@@ -109,3 +99,5 @@ export default function MessageItem({ data, isLoading }) {
         </div>
     );
 }
+
+export default memo(MessageItem)

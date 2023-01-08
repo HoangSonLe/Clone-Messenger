@@ -19,7 +19,6 @@ const SignalRInit = () => {
         console.log(model);
     });
     chatHubProxy.on("sendMessage", function (data) {
-        console.log(JSON.stringify(data));
         dispatch(sendMessage(data));
         dispatch(updateLastMesage(data));
     });

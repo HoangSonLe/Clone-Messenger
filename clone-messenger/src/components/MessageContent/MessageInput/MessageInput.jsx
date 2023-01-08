@@ -17,7 +17,7 @@ const styleIcon = {
     color: helper.getColorFromName("blue"),
     padding: "4px",
 };
-function MessageInput({ isRemoveFromChatGroup }) {
+function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
     const dispatch = useDispatch();
     const [text, setText] = useState("");
     const [files, setFiles] = useState([]);
@@ -46,6 +46,7 @@ function MessageInput({ isRemoveFromChatGroup }) {
             var response = await chatMessageApi.sendMessage(data);
             if (response) {
                 setText("");
+                setAutoScrollBottom();
             }
         } catch (err) {
             console.log("err", err);
@@ -125,7 +126,8 @@ function MessageInput({ isRemoveFromChatGroup }) {
                 <div className={cx("leave-wrapper")}>
                     <div className={cx("title-leave")}>You can't message this group</div>
                     <div className={cx("content-leave")}>
-                        You're no longer in this group and can't send or receive calls or messages unless you are added back to it.
+                        You're no longer in this group and can't send or receive calls or messages
+                        unless you are added back to it.
                     </div>
                 </div>
             ) : (

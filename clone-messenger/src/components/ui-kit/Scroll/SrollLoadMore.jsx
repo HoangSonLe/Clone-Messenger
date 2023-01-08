@@ -1,10 +1,17 @@
 import classNames from "classnames/bind";
 import _ from "lodash";
-import { forwardRef, useEffect } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useRef } from "react";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 import styles from "./ScrollLoadMore.scss";
+import helper from "../../../generals/helper";
 const cx = classNames.bind(styles);
+const styleIcon = {
+    color: helper.getColorFromName("blue"),
+
+    fontSize: "22px",
+};
 const ScrollLoadMore = forwardRef((props, ref) => {
     const {
         debounce,
@@ -16,51 +23,69 @@ const ScrollLoadMore = forwardRef((props, ref) => {
         children,
         beginBottom,
         hideScroll = false,
+        spaceToBottomDisplayButtonScroll = 0,
         ...otherProps
     } = props;
+    const [showScroll, setShowScroll] = useState(false);
     const refDiv = useRef();
-    const _onScrollDebounce = _.debounce((scrollTop, offsetHeight, scrollHeight) => {
-        // console.log(
-        //     "scroll",
-        //     scrollTop,
-        //     offsetHeight,
-        //     spaceToBottom,
-        //     scrollHeight,
-        //     scrollTop + offsetHeight + spaceToBottom
-        // );
+    const _onScrollDebounce = _.debounce((e, scrollTop, offsetHeight, scrollHeight) => {
         typeof onScroll === "function" && onScroll();
         typeof onScrollTop === "function" && scrollTop - spaceToTop <= 0 && onScrollTop();
         typeof onScrollBottom === "function" &&
             scrollTop + offsetHeight + spaceToBottom >= scrollHeight &&
             onScrollBottom();
     }, debounce);
+    const _setToggleButtonScroll = (scrollTop, offsetHeight, scrollHeight) => {
+        if (offsetHeight + scrollTop + spaceToBottomDisplayButtonScroll < scrollHeight) {
+            setShowScroll(true);
+        } else {
+            setShowScroll(false);
+        }
+    };
     const _onScroll = (e) => {
         const scrollTop = e.target.scrollTop;
         const scrollHeight = e.target.scrollHeight;
         const offsetHeight = e.target.offsetHeight;
-        _onScrollDebounce(scrollTop, offsetHeight, scrollHeight);
+        if (spaceToBottomDisplayButtonScroll > 0) {
+            _setToggleButtonScroll(scrollTop, offsetHeight, scrollHeight);
+        }
+        _onScrollDebounce(e, scrollTop, offsetHeight, scrollHeight);
     };
-    const _scrollToBottom = () => {
+
+    const scrollToBottom = () => {
         if (beginBottom) {
             refDiv.current.scrollIntoView({
-                // behavior: "smooth",
+                behavior: showScroll ? "smooth" : "auto",
                 block: "end",
                 inline: "nearest",
             });
         }
     };
+    useImperativeHandle(ref, () => ({
+        scrollToBottom() {
+            scrollToBottom();
+        },
+    }));
     useEffect(() => {
-        _scrollToBottom();
+        scrollToBottom();
     }, []);
     return (
-        <div
-            ref={ref}
-            className={cx("scroll", hideScroll ? "hideScroll" : undefined)}
-            onScroll={_onScroll}
-            {...otherProps}
-        >
-            {children}
-            <div ref={refDiv}></div>
+        <div className={cx("wrapper")}>
+            <div
+                className={cx("scroll", hideScroll ? "hideScroll" : undefined)}
+                onScroll={_onScroll}
+                {...otherProps}
+            >
+                {children}
+                <div ref={refDiv}></div>
+            </div>
+
+            <div
+                onClick={scrollToBottom}
+                className={cx("scroll-button", showScroll ? "active" : undefined)}
+            >
+                <ArrowDownwardIcon sx={styleIcon} />
+            </div>
         </div>
     );
 });

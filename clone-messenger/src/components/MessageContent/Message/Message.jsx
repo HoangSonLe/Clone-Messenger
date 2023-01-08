@@ -1,14 +1,13 @@
-import { IconButton } from "@mui/material";
-import classNames from "classnames/bind";
-import React, { memo } from "react";
+import MoodIcon from "@mui/icons-material/Mood";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ReplyIcon from "@mui/icons-material/Reply";
-import MoodIcon from "@mui/icons-material/Mood";
+import classNames from "classnames/bind";
+import React, { memo } from "react";
 
-import styles from "./Message.module.scss";
-import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import AvatarCustom from "../../ui-kit/Avatar/AvatarCustom";
+import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import ToolTipCustom from "../../ui-kit/IconButton/ToolTipCustom";
+import styles from "./Message.module.scss";
 
 const cx = classNames.bind(styles);
 function Message({ data }) {

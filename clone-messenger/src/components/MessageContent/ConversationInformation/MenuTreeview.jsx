@@ -1,23 +1,13 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
-import Box from "@mui/material/Box";
-import TreeView from "@mui/lab/TreeView";
-import TreeItem, { treeItemClasses } from "@mui/lab/TreeItem";
-import Typography from "@mui/material/Typography";
-import MailIcon from "@mui/icons-material/Mail";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Label from "@mui/icons-material/Label";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import InfoIcon from "@mui/icons-material/Info";
-import ForumIcon from "@mui/icons-material/Forum";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import helper from "../../../generals/helper";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import TreeItem from "@mui/lab/TreeItem";
+import TreeView from "@mui/lab/TreeView";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import PropTypes from "prop-types";
+import * as React from "react";
 import { defaultOnClick } from "../../../generals/defaultActions";
+import helper from "../../../generals/helper";
 
 function StyledTreeItem(props) {
     const {
