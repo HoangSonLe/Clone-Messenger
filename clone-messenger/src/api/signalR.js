@@ -1,26 +1,28 @@
 import $ from "jquery";
 import { useDispatch } from "react-redux";
 import "signalr";
-import { sendMessage } from "../features/MessageSlice";
-import { updateLastMesage } from "../features/ChatGroupSlice";
+import { sendMessage, updateStatusReadMessage, updateMessageInfor } from "../features/MessageSlice";
+import { updateLastMessage } from "../features/ChatGroupSlice";
 const SignalRInit = () => {
     const token = localStorage.getItem("jwtToken");
-    var dispatch = useDispatch();
-    var connection = $.hubConnection();
-    // connection.url = "https://localhost:44344/signalr";
+    let dispatch = useDispatch();
+    let connection = $.hubConnection();
     connection.url = process.env.API_URL + "/signalr";
 
     connection.qs = { token: `${token}` };
-    var chatHubProxy = connection.createHubProxy("chatHub");
+    let chatHubProxy = connection.createHubProxy("chatHub");
     chatHubProxy.on("test", function (object) {
         console.log(object);
     });
-    chatHubProxy.on("updateStatusMessage", function (model) {
-        console.log(model);
+    chatHubProxy.on("updateMessageInfo", function (data) {
+        dispatch(updateMessageInfor(data));
+    });
+    chatHubProxy.on("updateStatusReadMessage", function (data) {
+        dispatch(updateStatusReadMessage(data));
     });
     chatHubProxy.on("sendMessage", function (data) {
         dispatch(sendMessage(data));
-        dispatch(updateLastMesage(data));
+        dispatch(updateLastMessage(data));
     });
     connection
         .start()

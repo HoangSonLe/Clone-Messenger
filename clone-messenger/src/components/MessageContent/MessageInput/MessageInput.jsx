@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import chatMessageApi from "../../../api/chatMessageApi";
 import helper from "../../../generals/helper";
-import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../Icons";
+import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../assets/Icons";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import styles from "./MessageInput.module.scss";
 
@@ -43,23 +43,25 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
 
     const _sendMessage = async (data) => {
         try {
-            var response = await chatMessageApi.sendMessage(data);
+            let response = await chatMessageApi.sendMessage(data);
             if (response) {
                 setText("");
-                setAutoScrollBottom();
             }
+            setAutoScrollBottom();
         } catch (err) {
             console.log("err", err);
         }
     };
     const onSubmitForm = (e) => {
         e.preventDefault();
-        var postData = {
+        let postData = {
             ...messagePostData,
             groupId: conversation.id,
             text: text,
         };
-        _sendMessage(postData);
+        if (checkCanSend) {
+            _sendMessage(postData);
+        }
     };
     //Handle change text
     const handleKeyDown = (event) => {

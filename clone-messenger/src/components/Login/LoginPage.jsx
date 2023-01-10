@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -17,6 +17,7 @@ function LoginPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
+    const [pendingLogin, setPendingLogin] = useState(false);
     const [isLogin, setLogin] = useState(true);
     const [userName, setUserName] = useState("");
     const [passWord, setPassWord] = useState("");
@@ -28,12 +29,14 @@ function LoginPage() {
                 userName: userName,
                 passWord: passWord,
             };
+            setPendingLogin(true);
             let response = await authApi.login(postData);
             if (response) {
                 dispatch(login(response.data));
                 navigate(configRoutes.home);
             }
         } catch (err) {
+            setPendingLogin(false);
             console.log("err", err);
         }
     };
@@ -46,10 +49,25 @@ function LoginPage() {
             <p className={cx("title")}>Connect with your favourite people</p>
             <div className={cx("content")}>
                 {!isLogin ? (
-                    <input value={displayName} placeholder="Display name" type={"text"} onChange={(e) => setDisplayName(e.target.value)} />
+                    <input
+                        value={displayName}
+                        placeholder="Display name"
+                        type={"text"}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                    />
                 ) : null}
-                <input value={userName} placeholder="Username" type={"text"} onChange={(e) => setUserName(e.target.value)} />
-                <input value={passWord} placeholder="Password" type={"password"} onChange={(e) => setPassWord(e.target.value)} />
+                <input
+                    value={userName}
+                    placeholder="Username"
+                    type={"text"}
+                    onChange={(e) => setUserName(e.target.value)}
+                />
+                <input
+                    value={passWord}
+                    placeholder="Password"
+                    type={"password"}
+                    onChange={(e) => setPassWord(e.target.value)}
+                />
             </div>
             <Button
                 sx={{
@@ -62,6 +80,15 @@ function LoginPage() {
                 size="large"
                 onClick={isLogin ? handleLogin : handleRegister}
             >
+                {pendingLogin ? (
+                    <CircularProgress
+                        sx={{
+                            color: helper.getColorFromName("secondaryIcon"),
+                            marginRight: "10px",
+                        }}
+                        size={15}
+                    />
+                ) : null}
                 Continue
             </Button>
             <div className={cx("buttons")}>
@@ -95,7 +122,8 @@ function LoginPage() {
                         fontSize: "15px",
                         textTransform: "none",
                         background: "rgb(13,77,210)",
-                        background: "linear-gradient(22deg, rgba(13,77,210,0.9363095580028886) 0%, rgba(250,45,253,1) 100%)",
+                        background:
+                            "linear-gradient(22deg, rgba(13,77,210,0.9363095580028886) 0%, rgba(250,45,253,1) 100%)",
                     }}
                     variant="contained"
                     size="large"
@@ -108,7 +136,10 @@ function LoginPage() {
                     Not on Facebook?
                 </a>
                 <span className={cx("divide")}>|</span>
-                <a data-track="Forgot Password" href="https://www.facebook.com/login/identify?ctx=recover">
+                <a
+                    data-track="Forgot Password"
+                    href="https://www.facebook.com/login/identify?ctx=recover"
+                >
                     Forgotten password
                 </a>
                 <span className={cx("divide")}>|</span>

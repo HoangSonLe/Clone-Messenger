@@ -8,7 +8,7 @@ import chatGroupApi from "../../api/chatGroupApi";
 import { defaultAvatar } from "../../assets/img";
 import { initConversation } from "../../features/MessageSlice";
 import helper from "../../generals/helper";
-import { MessageItemMenu } from "../../HardData/MenuData";
+import { MessageItemMenu } from "../../const/MenuData";
 import { AvatarWithName } from "../ui-kit/Avatar/AvatarCustom";
 import MenuPopover from "../ui-kit/Menu/MenuPopover";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
@@ -33,12 +33,12 @@ const styleAction = {
     const isActive = data && conversation?.id == data?.id;
     const _fetchGetConversation = async () => {
         try {
-            var post = {
+            let post = {
                 ...defaultModel.chatMessagePaginationModel,
                 hasMore: true,
                 chatGroupId: data?.id,
             };
-            var response = await chatGroupApi.getChatGroupDetail(post);
+            let response = await chatGroupApi.getChatGroupDetail(post);
             if (response) {
                 dispatch(initConversation(response.data));
             }

@@ -1,6 +1,12 @@
 @import "../../GlobalStyles/colors.scss";
 
 .wrapper {
+    max-width: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.message-wrapper {
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -11,63 +17,119 @@
 
 }
 
+.message-group-container {
+    margin-bottom: 2px;
+
+    &:not(:first-of-type, :last-of-type) {
+        .message {
+            .message-row {
+                .user-content {
+                    border-top-left-radius: 18px;
+                    border-bottom-left-radius: 18px;
+                }
+
+                .receiver-content {
+                    border-top-right-radius: 18px;
+                    border-bottom-right-radius: 18px;
+                }
+            }
+        }
+
+    }
+
+    &:first-of-type {
+        .message {
+            .message-row {
+                .user-content {
+                    border-top-right-radius: 18px;
+                    border-top-left-radius: 18px;
+                    border-bottom-left-radius: 18px;
+                }
+
+                .receiver-content {
+                    border-top-right-radius: 18px;
+                    border-top-left-radius: 18px;
+                    border-bottom-right-radius: 18px;
+                }
+            }
+        }
+    }
+
+    &:last-of-type {
+        .message {
+            .message-row {
+                .user-content {
+                    border-bottom-right-radius: 18px;
+                    border-top-left-radius: 18px;
+                    border-bottom-left-radius: 18px;
+                }
+
+                .receiver-content {
+                    border-top-right-radius: 18px;
+                    border-bottom-right-radius: 18px;
+                    border-bottom-left-radius: 18px;
+                }
+            }
+        }
+    }
+}
+
 .message {
     padding-right: 2px;
-    margin-bottom: 2px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: flex-end;
     flex: 1;
 
     &:hover .action-menu {
         visibility: visible;
     }
-    
-    &:not(:first-of-type, :last-of-type) {
-        .message-row {
-            .user-content {
-                border-top-left-radius: 18px;
-                border-bottom-left-radius: 18px;
-            }
 
-            .receiver-content {
-                border-top-right-radius: 18px;
-                border-bottom-right-radius: 18px;
-            }
-        }
-    }
+    // &:not(:first-of-type, :last-of-type) {
+    //     .message-row {
+    //         .user-content {
+    //             border-top-left-radius: 18px;
+    //             border-bottom-left-radius: 18px;
+    //         }
 
-    &:first-of-type{
-        .message-row {
-            .user-content {
-                border-top-right-radius: 18px;
-                border-top-left-radius: 18px;
-                border-bottom-left-radius: 18px;
-            }
+    //         .receiver-content {
+    //             border-top-right-radius: 18px;
+    //             border-bottom-right-radius: 18px;
+    //         }
+    //     }
+    // }
 
-            .receiver-content {
-                border-top-right-radius: 18px;
-                border-top-left-radius: 18px;
-                border-bottom-right-radius: 18px;
-            }
-        }
-    }
+    // &:first-of-type {
+    //     .message-row {
+    //         .user-content {
+    //             border-top-right-radius: 18px;
+    //             border-top-left-radius: 18px;
+    //             border-bottom-left-radius: 18px;
+    //         }
 
-    &:last-of-type {
-        .message-row {
-            .user-content {
-                border-bottom-right-radius: 18px;
-                border-top-left-radius: 18px;
-                border-bottom-left-radius: 18px;
-            }
+    //         .receiver-content {
+    //             border-top-right-radius: 18px;
+    //             border-top-left-radius: 18px;
+    //             border-bottom-right-radius: 18px;
+    //         }
+    //     }
+    // }
 
-            .receiver-content {
-                border-top-right-radius: 18px;
-                border-bottom-right-radius: 18px;
-                border-bottom-left-radius: 18px;
-            }
-        }
-    }
+    // &:last-of-type {
+    //     .message-row {
+    //         .user-content {
+    //             border-bottom-right-radius: 18px;
+    //             border-top-left-radius: 18px;
+    //             border-bottom-left-radius: 18px;
+    //         }
+
+    //         .receiver-content {
+    //             border-top-right-radius: 18px;
+    //             border-bottom-right-radius: 18px;
+    //             border-bottom-left-radius: 18px;
+    //         }
+    //     }
+    // }
 }
 
 
@@ -99,9 +161,18 @@
     flex-shrink: 0;
 }
 
+.status-line {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 4px 6px 2px 0px;
+    height: 20px;
+}
+
 .status {
-    width: 22px;
+    width: 20px;
     margin-bottom: 2px;
+    margin-left: 4px;
 }
 
 
@@ -111,7 +182,7 @@
 }
 
 .receiver-avatar {
-    padding: 0px 8px 0px 10px;
+    padding: 0px 8px 30px 10px;
     height: 100%;
 }
 

@@ -15,27 +15,67 @@ const messageSlice = createSlice({
         },
         sendMessage: (state, action) => {
             let data = action.payload;
-            let { chatGroupId, isNewGroupByTime, isNewGroupByUser, messageGroupByTime, messageGroupByUser } = data;
-            console.log(data);
-            if (state.conversation && state.conversation.id == chatGroupId) {
+            let {
+                chatGroupId,
+                isNewGroupByTime,
+                isNewGroupByUser,
+                messageGroupByTime,
+                messageGroupByUser,
+            } = data;
+            if (state.conversation != null && state.conversation.id == chatGroupId) {
                 //Nếu đang mở đoạn chat
                 let stateGroupList = state.conversation.groupMessageListByTime.data;
                 if (isNewGroupByTime) {
                     // Check nếu tạo group time mới
                     stateGroupList.push(messageGroupByTime);
                 } else {
-                    let index = stateGroupList.findIndex((i) => i.continuityKeyByTime == messageGroupByTime.continuityKeyByTime);
+                    let index = stateGroupList.findIndex(
+                        (i) => i.continuityKeyByTime == messageGroupByTime.continuityKeyByTime
+                    );
                     if (index != -1) {
                         let lastItemGroup = stateGroupList[index];
                         let lastIndex = lastItemGroup.groupMessageListByUser.length - 1;
                         if (isNewGroupByUser == false) {
                             let lastItemMessage = lastItemGroup.groupMessageListByUser[lastIndex];
-                            lastItemMessage.messages.splice(lastItemMessage.messages.length, 0, ...messageGroupByUser.messages);
+                            lastItemMessage.messages.splice(
+                                lastItemMessage.messages.length,
+                                0,
+                                ...messageGroupByUser.messages
+                            );
                         } else {
-                            lastItemGroup.groupMessageListByUser.splice(lastIndex + 1, 0, messageGroupByUser);
+                            lastItemGroup.groupMessageListByUser.splice(
+                                lastIndex + 1,
+                                0,
+                                messageGroupByUser
+                            );
                         }
                     }
                 }
+            }
+        },
+        updateMessageInfor: (state, action) => {
+            let data = action.payload;
+            if (state.conversation != null) {
+                let group = state.conversation.groupMessageListByTime.data.find(
+                    (i) => i.continuityKeyByTime == data.keyGroupByTime
+                );
+                if (group) {
+                    let u = group.groupMessageListByUser.find(
+                        (i) => i.continuityKeyByUser == data.keyGroupByUser
+                    );
+                    if (u) {
+                        let message = u.messages.find((i) => i.id == data.messageId);
+                        if (message) {
+                            message.messageStatus = data.status;
+                        }
+                    }
+                }
+            }
+        },
+        updateStatusReadMessage: (state, action) => {
+            let data = action.payload;
+            if (state.conversation != null) {
+                state.conversation.messageStatus = data;
             }
         },
         loadMoreMessage: (state, action) => {
@@ -50,7 +90,10 @@ const messageSlice = createSlice({
                 //GROUP USER: Item cuối messages mới chung GROUP USER với item đầu messsages hiện tại
                 if (firstOldMess.continuityKeyByUser == lastNewMess.continuityKeyByUser) {
                     //Merge list messages
-                    firstOld.groupMessageListByUser[0].messages = [...lastNewMess.messages, ...firstOld.groupMessageListByUser[0].messages];
+                    firstOld.groupMessageListByUser[0].messages = [
+                        ...lastNewMess.messages,
+                        ...firstOld.groupMessageListByUser[0].messages,
+                    ];
                     //Remove item trùng user đã thêm ở trên
                     lastNew.groupMessageListByUser.splice(newLastIndex, 1);
                 }
@@ -62,13 +105,23 @@ const messageSlice = createSlice({
                 //Remove item trùng time đã thêm ở trên
                 action.payload.data.splice(actionLastIndex, 1);
             }
-            state.conversation.groupMessageListByTime.data = [...action.payload.data, ...state.conversation.groupMessageListByTime.data];
+            state.conversation.groupMessageListByTime.data = [
+                ...action.payload.data,
+                ...state.conversation.groupMessageListByTime.data,
+            ];
             state.conversation.groupMessageListByTime.skip = action.payload.skip;
             state.conversation.groupMessageListByTime.hasMore = action.payload.hasMore;
         },
     },
 });
 const { actions, reducer } = messageSlice;
-export const { initConversation, sendMessage, loadMoreMessage, resetState } = actions;
+export const {
+    initConversation,
+    updateMessageInfor,
+    updateStatusReadMessage,
+    sendMessage,
+    loadMoreMessage,
+    resetState,
+} = actions;
 
 export default reducer;

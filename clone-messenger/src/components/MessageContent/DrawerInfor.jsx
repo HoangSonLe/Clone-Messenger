@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 import { defaultAvatar } from "../../assets/img";
 import { defaultOnClick } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
-import { ConversationMenu } from "../../HardData/MenuData";
+import { ConversationMenu } from "../../const/MenuData";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
@@ -21,7 +21,6 @@ const styleIcon = {
 };
 
 function DrawerInfor({ name, isGroup, widthDrawer, isOpenDrawer }) {
-    console.log("drawer");
     return (
         <Drawer
             sx={{

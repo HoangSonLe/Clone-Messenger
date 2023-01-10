@@ -18,7 +18,7 @@ export default function DefaultLayout() {
     const navigate = useNavigate();
     const _fetchPageDefaultModel = async () => {
         try {
-            var response = await pageDefaultApi.getPageDefaultModel();
+            let response = await pageDefaultApi.getPageDefaultModel();
             if (response) {
                 dispatch(setPageDefaultModel(response.data));
             }

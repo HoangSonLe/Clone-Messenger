@@ -19,22 +19,35 @@ const chatGroupSlice = createSlice({
     reducers: {
         resetState: () => initialState,
         addGroup: (state, action) => {
-            var data = action.payload;
+            let data = action.payload;
             state.chatGroupList.unshift(data);
         },
         addListGroup: (state, action) => {
-            var response = action.payload;
-            var { hasMore, data } = response;
+            let response = action.payload;
+            let { hasMore, data } = response;
             state.chatGroupList = [...state.chatGroupList, ...data];
             state.hasMore = hasMore;
         },
         removeGroup: (state, action) => {
-            var data = action.payload;
+            let data = action.payload;
             state.chatGroupList = state.chatGroupList.filter((i) => i.id != data.id);
         },
-        updateLastMesage: (state, action) => {
-            var data = action.payload;
+        updateLastMessage: (state, action) => {
+            let data = action.payload;
+            var g = state.chatGroupList.find((i) => i.id == data.chatGroupId);
+            if (g) {
+                var t = data.messageGroupByUser.messages;
+                var lastIndex = t.length - 1;
+                g.lastMessage = t[lastIndex];
+            }
+        },
+        updateStatusMessage: (state, action) => {
+            let data = action.payload;
             console.log(data);
+            // var g = state.chatGroupList.find(i=> i.id == data.chatGroupId);
+            // if(g){
+            //     g.lastMessage =
+            // }
         },
         setLoadMore: (state, action) => {
             state.hasMore = action.payload;
@@ -42,6 +55,7 @@ const chatGroupSlice = createSlice({
     },
 });
 const { actions, reducer } = chatGroupSlice;
-export const { addGroup,updateLastMesage, addListGroup, removeGroup, setLoadMore, resetState } = actions;
+export const { addGroup, updateLastMessage, addListGroup, removeGroup, setLoadMore, resetState } =
+    actions;
 
 export default reducer;

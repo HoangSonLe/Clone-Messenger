@@ -55,8 +55,8 @@ export default function MenuPopover({ children, options, customRenderItem, onClo
 
     //Check has function onClick=> No : disable(opacity)
     const checkHasOnClickFunction = (item) => {
-        var onClick = item?.onClick && typeof item.onClick === "function";
-        var onClickDispatch = item?.onClickDispatch && typeof item.onClickDispatch === "function";
+        let onClick = item?.onClick && typeof item.onClick === "function";
+        let onClickDispatch = item?.onClickDispatch && typeof item.onClickDispatch === "function";
         if (onClick || onClickDispatch) return true;
         return false;
     };

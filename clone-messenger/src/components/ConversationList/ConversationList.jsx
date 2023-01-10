@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import chatGroupApi from "../../api/chatGroupApi";
 import { addListGroup, resetState } from "../../features/ChatGroupSlice";
 import helper from "../../generals/helper";
-import { EditIcon } from "../../Icons";
+import { EditIcon } from "../../assets/Icons";
 import Header from "../Layouts/Header/Header";
 import MessageItem from "../MessageItem/MessageItem";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
@@ -26,11 +26,11 @@ export default function MessageList() {
 
     const _fetchGetGroupList = async () => {
         try {
-            var response = await chatGroupApi.getList({});
+            let response = await chatGroupApi.getList({});
             if (response) {
                 dispatch(addListGroup(response.data));
-                setLoading(false);
             }
+            setLoading(false);
         } catch (err) {
             console.log("err", err);
         }
@@ -44,7 +44,6 @@ export default function MessageList() {
         if (hasMore) {
             setLoading(true);
             _fetchGetGroupList();
-            setLoading(false);
         }
     };
     return (

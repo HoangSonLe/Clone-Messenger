@@ -17,9 +17,11 @@ const Colors = {
     grayText: "#595959",
     gray2Text: "#E4E6EB",
     primaryText: " #050505",
+    disabledText: "#BCC0C4",
     //Border
     mediaInnerBorder: "rgba(0, 0, 0, 0.1)",
     //Icon
+    disabledIcon: "#BCC0C4",
     placeholderIcon: "#65676B",
     primaryIcon: "#050505",
     secondaryIcon: "#f5f5f5",

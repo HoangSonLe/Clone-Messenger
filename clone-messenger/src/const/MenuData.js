@@ -17,7 +17,7 @@ import TextSnippetSharpIcon from "@mui/icons-material/TextSnippetSharp";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { logout } from "../features/AuthSlice";
 import { removeGroup } from "../features/ChatGroupSlice";
-import { ArchivedChatsIcon, FilesIcon, LikeIcon, MessengerIcon, NicknameIcon, PrivacyHomeIcon, SegmentIcon } from "../Icons";
+import { ArchivedChatsIcon, FilesIcon, LikeIcon, MessengerIcon, NicknameIcon, PrivacyHomeIcon, SegmentIcon } from "../assets/Icons";
 import { configRoutes } from "../routes/routes";
 const AvatarMenu = () => [
     {

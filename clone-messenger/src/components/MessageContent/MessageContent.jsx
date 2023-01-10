@@ -2,6 +2,7 @@ import { CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
 
 import chatMessageApi from "../../api/chatMessageApi";
 import { loadMoreMessage } from "../../features/MessageSlice";
@@ -24,28 +25,6 @@ export default function MessageContent() {
     const [isLoading, setLoading] = useState(true);
     const { conversation } = useSelector((state) => state.message);
     const { chatMessagePaginationModel } = useSelector((state) => state.pageDefault);
-    const _fetchGetMessageList = async () => {
-        if (conversation.groupMessageListByTime.hasMore) {
-            try {
-                let postData = {
-                    ...chatMessagePaginationModel,
-                    skip: conversation.groupMessageListByTime.skip,
-                    chatGroupId: conversation.id,
-                };
-                var response = await chatMessageApi.getMessages(postData);
-                if (response) {
-                    dispatch(loadMoreMessage(response.data));
-                }
-            } catch (err) {
-                console.log("err", err);
-            }
-        }
-    };
-    const onScrollTop = (callback) => {
-        setLoading(true);
-        _fetchGetMessageList();
-        setLoading(false);
-    };
     //Check breakpoint responsive drawer
     const breakpointWidth = useMemo(() => helper.getNumberInString(mediaWidthBreakpoint2));
     const [isOpenDrawer, setOpenDrawer] = useState(false);
@@ -65,7 +44,6 @@ export default function MessageContent() {
     const handleWidthViewChange = (force = false) => {
         if (isOpenDrawer || force) {
             let needWidth = checkWidthView();
-            // console.log(isOpenDrawer, needWidth, widthDrawer);
             needWidth !== widthDrawer && setWidthDrawer(needWidth);
         }
     };
@@ -79,6 +57,39 @@ export default function MessageContent() {
             window.removeEventListener("resize", handleWidthViewChange);
         };
     }, [widthDrawer]);
+    const _fetchReadLastMessage = async () => {
+        try {
+            await chatMessageApi.readLastMessage({ chatGroupId: conversation.id });
+        } catch (err) {
+            console.log("err", err);
+        }
+    };
+    const readLastMessage = _.debounce(() => {
+        _fetchReadLastMessage();
+    }, 200);
+    const _fetchGetMessageList = async () => {
+        if (conversation.groupMessageListByTime.hasMore) {
+            try {
+                let postData = {
+                    ...chatMessagePaginationModel,
+                    skip: conversation.groupMessageListByTime.skip,
+                    chatGroupId: conversation.id,
+                };
+                let response = await chatMessageApi.getMessages(postData);
+                if (response) {
+                    dispatch(loadMoreMessage(response.data));
+                }
+                setLoading(false);
+            } catch (err) {
+                console.log("err", err);
+            }
+        }
+    };
+    const onScrollTop = () => {
+        setLoading(true);
+        _fetchGetMessageList();
+    };
+
     return (
         <>
             {conversation ? (

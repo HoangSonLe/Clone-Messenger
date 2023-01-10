@@ -44,7 +44,21 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
 }));
 
 const AvatarCustom = forwardRef(
-    ({ srcList, alt, height = 32, width = 32, groupHeight = 32, groupWidth = 32, styles, variant, styleWrapper, ...props }, ref) => {
+    (
+        {
+            srcList,
+            alt,
+            height = 32,
+            width = 32,
+            groupHeight = 32,
+            groupWidth = 32,
+            styles,
+            variant,
+            styleWrapper,
+            ...props
+        },
+        ref
+    ) => {
         const isGroupAvatar = srcList.length >= 2;
         let heightImage = helper.getNumberInString(isGroupAvatar ? groupHeight : height);
         let widthImage = helper.getNumberInString(isGroupAvatar ? groupWidth : width);
@@ -110,7 +124,15 @@ AvatarCustom.propTypes = {
     variant: PropTypes.oneOf(["dot", "standard"]),
 };
 export default AvatarCustom;
-const AvatarWithName = ({ title, onClickComponent = () => {}, children, isActive, srcList = [], forceContent, ...otherProps }) => {
+const AvatarWithName = ({
+    title,
+    onClickComponent = () => {},
+    children,
+    isActive,
+    srcList = [],
+    forceContent,
+    ...otherProps
+}) => {
     return (
         <div className={cx("wrapper")} onClick={onClickComponent}>
             <div className={cx("avatar")}>
