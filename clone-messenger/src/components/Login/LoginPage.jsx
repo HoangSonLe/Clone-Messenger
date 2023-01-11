@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import authApi from "../../api/authApi";
 import { logo } from "../../assets/img";
 import { login } from "../../features/AuthSlice";
+import { toastError } from "../../generals/defaultActions";
 import helper from "../../generals/helper";
 import { configRoutes } from "../../routes/routes";
 import styles from "./LoginPage.module.scss";
@@ -22,8 +23,25 @@ function LoginPage() {
     const [userName, setUserName] = useState("");
     const [passWord, setPassWord] = useState("");
     const [displayName, setDisplayName] = useState("");
-
+    const validate = () => {
+        if (!userName) {
+            toastError("UserName is null");
+            return false;
+        }
+        if (!passWord) {
+            toastError("Password is null");
+            return false;
+        }
+        if (isLogin == false) {
+            if (!displayName) {
+                toastError("DisplayName is null");
+                return false;
+            }
+        }
+        return true;
+    };
     const handleLogin = async () => {
+        if (validate() == false) return null;
         try {
             let postData = {
                 userName: userName,
@@ -40,7 +58,9 @@ function LoginPage() {
             console.log("err", err);
         }
     };
-    const handleRegister = () => {};
+    const handleRegister = () => {
+        if (validate()) return null;
+    };
     return (
         <div className={cx("wrapper")}>
             <div className={cx("logo")}>
@@ -79,6 +99,7 @@ function LoginPage() {
                 variant="contained"
                 size="large"
                 onClick={isLogin ? handleLogin : handleRegister}
+                disabled={pendingLogin}
             >
                 {pendingLogin ? (
                     <CircularProgress
@@ -101,6 +122,7 @@ function LoginPage() {
                     variant="outlined"
                     size="large"
                     onClick={(e) => setLogin((prevState) => !prevState)}
+                    disabled={pendingLogin}
                 >
                     {isLogin ? "Register new account" : "Have an account"}
                 </Button>
@@ -113,6 +135,7 @@ function LoginPage() {
                     color="error"
                     variant="contained"
                     size="large"
+                    disabled={pendingLogin}
                 >
                     Login with Gmail
                 </Button>
@@ -127,6 +150,7 @@ function LoginPage() {
                     }}
                     variant="contained"
                     size="large"
+                    disabled={pendingLogin}
                 >
                     Login with Facebook
                 </Button>

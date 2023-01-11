@@ -41,13 +41,19 @@ const chatGroupSlice = createSlice({
                 g.lastMessage = t[lastIndex];
             }
         },
-        updateStatusMessage: (state, action) => {
+        updateLastMessageInfor: (state, action) => {
             let data = action.payload;
-            console.log(data);
-            // var g = state.chatGroupList.find(i=> i.id == data.chatGroupId);
-            // if(g){
-            //     g.lastMessage =
-            // }
+            var g = state.chatGroupList.find((i) => i.id == data.chatGroupId);
+            if (g) {
+                g.lastMessage.messageStatus = data.status;
+            }
+        },
+        updateStatusReadLastMessage: (state, action) => {
+            let data = action.payload;
+            var g = state.chatGroupList.find((i) => i.id == data.chatGroupId);
+            if (g) {
+                g.messageStatus = data;
+            }
         },
         setLoadMore: (state, action) => {
             state.hasMore = action.payload;
@@ -55,7 +61,15 @@ const chatGroupSlice = createSlice({
     },
 });
 const { actions, reducer } = chatGroupSlice;
-export const { addGroup, updateLastMessage, addListGroup, removeGroup, setLoadMore, resetState } =
-    actions;
+export const {
+    addGroup,
+    updateStatusReadLastMessage,
+    updateLastMessageInfor,
+    updateLastMessage,
+    addListGroup,
+    removeGroup,
+    setLoadMore,
+    resetState,
+} = actions;
 
 export default reducer;

@@ -1,30 +1,23 @@
-import { CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
+import { useEffect, useMemo, useState } from "react";
+import { useSelector } from "react-redux";
 
 import chatMessageApi from "../../api/chatMessageApi";
-import { loadMoreMessage } from "../../features/MessageSlice";
 import helper from "../../generals/helper";
 import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
-import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
 import DefaultMessageContent from "./DefaultMessageContent/DefaultMessageContent";
 import DrawerInfor from "./DrawerInfor";
 import styles from "./MessageContent.module.scss";
 import MessageContentHeader from "./MessageContentHeader";
-import MessageInput from "./MessageInput/MessageInput";
-import MessageList from "./MessageList.jsx/MessageList";
+import Messages from "./Messages";
+import NewMessage from "./NewMessage/NewMessage";
 const cx = classNames.bind(styles);
 const maxWidthDrawer = 300;
 const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
 export default function MessageContent() {
-    const childRef = useRef();
-    const dispatch = useDispatch();
-    const [isLoading, setLoading] = useState(true);
     const { conversation } = useSelector((state) => state.message);
-    const { chatMessagePaginationModel } = useSelector((state) => state.pageDefault);
     //Check breakpoint responsive drawer
     const breakpointWidth = useMemo(() => helper.getNumberInString(mediaWidthBreakpoint2));
     const [isOpenDrawer, setOpenDrawer] = useState(false);
@@ -47,9 +40,6 @@ export default function MessageContent() {
             needWidth !== widthDrawer && setWidthDrawer(needWidth);
         }
     };
-    const setAutoScrollBottom = () => {
-        childRef.current.scrollToBottom();
-    };
     //Add and remove event resize of window
     useEffect(() => {
         window.addEventListener("resize", handleWidthViewChange);
@@ -67,29 +57,7 @@ export default function MessageContent() {
     const readLastMessage = _.debounce(() => {
         _fetchReadLastMessage();
     }, 200);
-    const _fetchGetMessageList = async () => {
-        if (conversation.groupMessageListByTime.hasMore) {
-            try {
-                let postData = {
-                    ...chatMessagePaginationModel,
-                    skip: conversation.groupMessageListByTime.skip,
-                    chatGroupId: conversation.id,
-                };
-                let response = await chatMessageApi.getMessages(postData);
-                if (response) {
-                    dispatch(loadMoreMessage(response.data));
-                }
-                setLoading(false);
-            } catch (err) {
-                console.log("err", err);
-            }
-        }
-    };
-    const onScrollTop = () => {
-        setLoading(true);
-        _fetchGetMessageList();
-    };
-
+    return <NewMessage />;
     return (
         <>
             {conversation ? (
@@ -114,44 +82,7 @@ export default function MessageContent() {
                         />
                         {/* Header */}
                         {/* Messages */}
-                        <div className={cx("content")}>
-                            <div className={cx("message")}>
-                                <ScrollLoadMore
-                                    ref={childRef}
-                                    // spaceToTop={100}
-                                    beginBottom={true}
-                                    onScrollTop={onScrollTop}
-                                    spaceToBottomDisplayButtonScroll={10}
-                                >
-                                    {isLoading ? (
-                                        <div
-                                            style={{
-                                                textAlign: "center",
-                                                width: "100%",
-                                            }}
-                                        >
-                                            <CircularProgress
-                                                sx={{
-                                                    color: helper.getColorFromName(
-                                                        "placeholderIcon"
-                                                    ),
-                                                }}
-                                                size={25}
-                                            />
-                                        </div>
-                                    ) : (
-                                        <div style={{ height: "10px" }}></div>
-                                    )}
-                                    <MessageList />
-                                </ScrollLoadMore>
-                            </div>
-                            <div className={cx("input")}>
-                                <MessageInput
-                                    setAutoScrollBottom={setAutoScrollBottom}
-                                    isRemoveFromChatGroup={conversation.isRemoved}
-                                />
-                            </div>
-                        </div>
+                        <Messages />
                         {/* Messages */}
                     </div>
                     {/* Drawer more information */}

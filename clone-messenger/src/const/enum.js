@@ -5,4 +5,10 @@ const EMessageStatus = {
     Read: 3,
 };
 
-export { EMessageStatus };
+const EMessageReadStatus = {
+    Undefine: 0,
+    ReadOne: 1,
+    ReadAll: 2,
+};
+
+export { EMessageStatus, EMessageReadStatus };

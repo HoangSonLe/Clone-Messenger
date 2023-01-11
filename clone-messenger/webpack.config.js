@@ -44,13 +44,25 @@ module.exports = {
                 use: "babel-loader",
             },
             {
-                //Load scss 
+                //Load scss
                 test: /\.s[ac]ss$/i,
                 use: [
                     // Creates `style` nodes from JS strings
                     "style-loader",
                     // Translates CSS into CommonJS
-                    "css-loader",
+                    // "css-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            modules: {
+                                // localIdentName: "[name]--[hash:base64:5]",
+                                // exportLocalsConvention: "camelCase",
+                                localIdentName: "[name]__[local]--[hash:base64:5]",
+                                localIdentContext: path.resolve(__dirname, "src"),
+                                localIdentHashSalt: "my-custom-hash",
+                            },
+                        },
+                    },
                     // Compiles Sass to CSS
                     "sass-loader",
                 ],

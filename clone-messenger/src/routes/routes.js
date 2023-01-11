@@ -33,7 +33,7 @@ const routes = (isLoggedIn) => [
             },
             {
                 path: configRoutes.message,
-                element: <MessageList />,
+                element: <MessageList />,   
             },
             {
                 path: configRoutes.active,

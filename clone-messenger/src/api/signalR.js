@@ -2,7 +2,7 @@ import $ from "jquery";
 import { useDispatch } from "react-redux";
 import "signalr";
 import { sendMessage, updateStatusReadMessage, updateMessageInfor } from "../features/MessageSlice";
-import { updateLastMessage } from "../features/ChatGroupSlice";
+import { updateLastMessage, updateLastMessageInfor, updateStatusReadLastMessage } from "../features/ChatGroupSlice";
 const SignalRInit = () => {
     const token = localStorage.getItem("jwtToken");
     let dispatch = useDispatch();
@@ -16,9 +16,13 @@ const SignalRInit = () => {
     });
     chatHubProxy.on("updateMessageInfo", function (data) {
         dispatch(updateMessageInfor(data));
+        dispatch(updateLastMessageInfor(data));
+
     });
     chatHubProxy.on("updateStatusReadMessage", function (data) {
         dispatch(updateStatusReadMessage(data));
+        dispatch(updateStatusReadLastMessage(data));
+
     });
     chatHubProxy.on("sendMessage", function (data) {
         dispatch(sendMessage(data));

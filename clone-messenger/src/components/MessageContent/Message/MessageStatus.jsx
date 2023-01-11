@@ -1,15 +1,17 @@
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { CircularProgress } from "@mui/material";
+import { red } from "@mui/material/colors";
 
 import { EMessageStatus } from "../../../const/enum";
 import helper from "../../../generals/helper";
 
 const styleIcon = {
     color: helper.getColorFromName("disabledIcon"),
-    background: helper.getColorFromName("background"),
+    background: "transparent",
     height: "14px",
     width: "14px",
 };
+
 function MessageStatus({ status }) {
     let statusDiv = null;
     switch (status) {

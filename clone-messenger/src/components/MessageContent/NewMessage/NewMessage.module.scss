@@ -1,0 +1,21 @@
+@use "sass:map";
+@import '../../GlobalStyles/colors.scss';
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wrapper-message {
+    width: 100%;
+    height: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: $background;
+}

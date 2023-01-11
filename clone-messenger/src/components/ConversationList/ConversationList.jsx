@@ -8,7 +8,7 @@ import { addListGroup, resetState } from "../../features/ChatGroupSlice";
 import helper from "../../generals/helper";
 import { EditIcon } from "../../assets/Icons";
 import Header from "../Layouts/Header/Header";
-import MessageItem from "../MessageItem/MessageItem";
+import ConversationItem from "../ConversationItem/ConversationItem";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
 import Search from "../ui-kit/Search/Search";
@@ -63,12 +63,12 @@ export default function MessageList() {
                 <ScrollLoadMore onScrollBottom={onScrollBottom}>
                     <>
                         {chatGroupList.map((i, index) => (
-                            <MessageItem key={`${i.id}-${index}`} data={i} />
+                            <ConversationItem key={`${i.id}-${index}`} data={i} />
                         ))}
                         {isLoading ? (
                             <>
-                                <MessageItem isLoading={true} />
-                                <MessageItem isLoading={true} />
+                                <ConversationItem isLoading={true} />
+                                <ConversationItem isLoading={true} />
                             </>
                         ) : null}
                     </>

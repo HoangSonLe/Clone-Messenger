@@ -10,6 +10,7 @@
     padding-left: 12px;
     border-radius: 8px;
     color: $primaryText;
+    flex: 1;
     & .content {
         @media (max-width : $media-width-breakpoint) {
             display: none;
