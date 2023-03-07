@@ -1,4 +1,6 @@
+import { Tooltip } from "@mui/material";
 import classNames from "classnames/bind";
+import { useSelector } from "react-redux";
 import { MessageIcon, UserGroupIcon } from "../../assets/Icons";
 import { AvatarMenu } from "../../const/MenuData";
 import { configRoutes } from "../../routes/routes";
@@ -10,6 +12,8 @@ import MenuItem from "./MenuItem/MenuItem";
 import styles from "./Navigation.module.scss";
 const cx = classNames.bind(styles);
 export default function Navigation() {
+    const { displayUserName } = useSelector((state) => state.auth);
+
     return (
         <div className={cx("wrapper")}>
             <div className={cx("menu")}>
@@ -48,7 +52,9 @@ export default function Navigation() {
             </div>
             <div className={cx("avatar")}>
                 <MenuPopover options={AvatarMenu()}>
-                    <AvatarCustom height="36px" width="36px" />
+                    <Tooltip title={displayUserName}>
+                        <AvatarCustom height="36px" width="36px" />
+                    </Tooltip>
                 </MenuPopover>
             </div>
         </div>

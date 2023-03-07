@@ -4,7 +4,12 @@ import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import chatGroupApi from "../../api/chatGroupApi";
-import { addListGroup, resetState } from "../../features/ChatGroupSlice";
+import {
+    addGroup,
+    addListGroup,
+    resetState,
+    setLastConversationId,
+} from "../../features/ChatGroupSlice";
 import helper from "../../generals/helper";
 import { EditIcon } from "../../assets/Icons";
 import Header from "../Layouts/Header/Header";
@@ -13,6 +18,7 @@ import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
 import Search from "../ui-kit/Search/Search";
 import styles from "./ConversationList.module.scss";
+import { initConversation } from "../../features/MessageSlice";
 const cx = classNames.bind(styles);
 const styleIcon = {
     color: helper.getColorFromName("primaryText"),
@@ -22,8 +28,21 @@ const styleIcon = {
 export default function MessageList() {
     const dispatch = useDispatch();
     const { chatGroupList, hasMore } = useSelector((state) => state.chatGroup);
+    const { conversation } = useSelector((state) => state.message);
+    const { chatGroupViewModel, chatGroupDetailViewModel } = useSelector(
+        (state) => state.pageDefault.defaultModel
+    );
     const [isLoading, setLoading] = useState(true);
-
+    const handleAddNewConversation = () => {
+        let tmp = { ...chatGroupViewModel };
+        let tmpCon = { ...chatGroupDetailViewModel };
+        if (chatGroupList.some((i) => i.isTmp == true)) return;
+        if (conversation) {
+            dispatch(setLastConversationId(conversation.id));
+        }
+        dispatch(addGroup(tmp));
+        dispatch(initConversation(tmpCon));
+    };
     const _fetchGetGroupList = async () => {
         try {
             let response = await chatGroupApi.getList({});
@@ -52,7 +71,7 @@ export default function MessageList() {
                 <IconButtonCustom sx={styleIcon}>
                     <VideoCallIcon />
                 </IconButtonCustom>
-                <IconButtonCustom sx={styleIcon}>
+                <IconButtonCustom sx={styleIcon} onClick={handleAddNewConversation}>
                     <EditIcon />
                 </IconButtonCustom>
             </Header>

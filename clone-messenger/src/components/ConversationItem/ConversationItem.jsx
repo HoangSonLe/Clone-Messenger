@@ -3,6 +3,7 @@ import { Fab, Skeleton } from "@mui/material";
 import classNames from "classnames/bind";
 import { memo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import ClearIcon from "@mui/icons-material/Clear";
 
 import chatGroupApi from "../../api/chatGroupApi";
 import { defaultAvatar } from "../../assets/img";
@@ -16,6 +17,8 @@ import styles from "./ConversationItem.module.scss";
 import { processMessageReadStatus } from "../MessageContent/Message/Message";
 import { EMessageReadStatus } from "../../const/enum";
 import MessageStatus from "../MessageContent/Message/MessageStatus";
+import { removeGroup } from "../../features/ChatGroupSlice";
+import chatMessageApi from "../../api/chatMessageApi";
 const cx = classNames.bind(styles);
 const styleAction = {
     height: 32,
@@ -33,16 +36,36 @@ function ConversationItem({ data, isLoading }) {
     const { userId } = useSelector((state) => state.auth);
     const [isDisplayButton, setDisplayButton] = useState("false");
     const { conversation } = useSelector((state) => state.message);
+    const { lastConversationId } = useSelector((state) => state.chatGroup);
     const { defaultModel } = useSelector((state) => state.pageDefault);
     const isActive = data && conversation?.id == data?.id;
-    const _fetchGetConversation = async () => {
+    const isTmp = data && data.isTmp == true;
+    const _fetchGetConversation = async (callback) => {
         try {
-            let post = {
-                ...defaultModel.chatMessagePaginationModel,
-                hasMore: true,
-                chatGroupId: data?.id,
-            };
-            let response = await chatGroupApi.getChatGroupDetail(post);
+            let id = lastConversationId ?? data?.id;
+            if (!id || id == "00000000-0000-0000-0000-000000000000") {
+                typeof callback == "function" && callback();
+                dispatch(initConversation(null));
+            } else {
+                let post = {
+                    ...defaultModel.chatMessagePaginationModel,
+                    hasMore: true,
+                    chatGroupId: id,
+                };
+                let response = await chatGroupApi.getChatGroupDetail(post);
+                if (response) {
+                    typeof callback == "function" && callback();
+                    dispatch(initConversation(response.data));
+                }
+            }
+        } catch (err) {
+            console.log("err", err);
+        }
+    };
+    const _fetchGetTmpConversation = async () => {
+        try {
+            let memberIds = data.listMembers.map((i) => i.id);
+            let response = await chatMessageApi.searchChatGroup(memberIds);
             if (response) {
                 dispatch(initConversation(response.data));
             }
@@ -51,22 +74,26 @@ function ConversationItem({ data, isLoading }) {
         }
     };
     const onClickGetConversation = () => {
-        _fetchGetConversation();
+        if (isTmp) _fetchGetTmpConversation();
+        else _fetchGetConversation();
+    };
+    const removeConversation = () => {
+        _fetchGetConversation(() => dispatch(removeGroup(data)));
     };
     let process = null;
     let inlineStatus = null;
-    if (!isLoading && data) {
+    if (!isLoading && data && !isTmp && data.lastMessage) {
         process = processMessageReadStatus(
             userId,
             data.listMembers,
             data.lastMessage,
-            data.messageStatus.messageStatusItemList
+            data.messageStatus?.messageStatusItemList
         );
 
         if (process.status == EMessageReadStatus.ReadOne) {
             //Render avatar -- chỉ render 1 avatar
             //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
-            inlineStatus = <AvatarCustom height={14} width={14} variant="standard" />;
+            inlineStatus = <AvatarCustom height={14} width={14} />;
         } else if (process.status == EMessageReadStatus.ReadAll) {
             //Đã đọc hết
             // inlineStatus = (
@@ -93,7 +120,7 @@ function ConversationItem({ data, isLoading }) {
             }
         }
     }
-
+    console.log(isTmp);
     return (
         <div className={cx("container", isActive ? "active" : undefined)}>
             {isLoading ? (
@@ -109,7 +136,14 @@ function ConversationItem({ data, isLoading }) {
                     <div className={cx("wrapper")} onClick={onClickGetConversation}>
                         <AvatarWithName
                             title={data.name}
-                            isActive={isActive}
+                            isActive={isActive && isTmp == false}
+                            isBoldTitle={true && isTmp == false}
+                            isOnline={
+                                isTmp == false &&
+                                data.listMembers.some(
+                                    (i) => i.isOnline == true && i.userId != userId
+                                )
+                            }
                             srcList={
                                 data.id % 2 !== 0 ? [defaultAvatar] : [defaultAvatar, defaultAvatar]
                             }
@@ -117,35 +151,52 @@ function ConversationItem({ data, isLoading }) {
                             width="48px"
                         >
                             <div style={{ height: "8px" }}></div>
-                            <div className={cx("message")}>
-                                <EllipsisContent component="div">
-                                    <div>{`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}</div>
-                                </EllipsisContent>
+                            {isTmp == true ? null : data.lastMessage ? (
+                                <div className={cx("message")}>
+                                    <EllipsisContent component="div">
+                                        <div>{`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}</div>
+                                    </EllipsisContent>
 
-                                <div className={cx("dot-space")}>.</div>
-                                <div className={cx("time")}>
-                                    {helper.timeNotification(data.createdDate)}
+                                    <div className={cx("dot-space")}>.</div>
+                                    <div className={cx("time")}>
+                                        {helper.timeNotification(data.createdDate)}
+                                    </div>
                                 </div>
-                            </div>
+                            ) : null}
                         </AvatarWithName>
                         <div className={cx("more")}>{inlineStatus}</div>
                     </div>
-                    <div
-                        className={cx("action-button", !isDisplayButton ? "visible" : "invisible")}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setDisplayButton((prev) => !prev);
-                        }}
-                    >
-                        <MenuPopover
-                            onCloseCallback={setDisplayButton}
-                            options={MessageItemMenu(data)}
+                    {isTmp ? (
+                        <div
+                            className={cx("action-button-icon")}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                removeConversation();
+                            }}
                         >
-                            <Fab sx={styleAction}>
-                                <MoreHorizIcon fontSize="medium" />
-                            </Fab>
-                        </MenuPopover>
-                    </div>
+                            <ClearIcon />
+                        </div>
+                    ) : (
+                        <div
+                            className={cx(
+                                "action-button",
+                                !isDisplayButton ? "visible" : "invisible"
+                            )}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                setDisplayButton((prev) => !prev);
+                            }}
+                        >
+                            <MenuPopover
+                                onCloseCallback={setDisplayButton}
+                                options={MessageItemMenu(data)}
+                            >
+                                <Fab sx={styleAction}>
+                                    <MoreHorizIcon fontSize="medium" />
+                                </Fab>
+                            </MenuPopover>
+                        </div>
+                    )}
                 </>
             )}
         </div>

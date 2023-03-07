@@ -6,7 +6,7 @@
     display: flex;
     align-items: center;
     position: relative;
-    padding: 8px 6px;
+    padding: 5px;
     margin: 1px 0px;
     border-radius: 8px;
     cursor: pointer;
@@ -80,4 +80,26 @@
 
 .visible {
     visibility: visible;
+}
+
+.action-button-icon {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    padding: 1px;
+
+    svg {
+        height: 16px;
+        width: 16px;
+        background-color: transparent;
+        color: $primaryIcon;
+    }
+
+    &:hover {
+        background-color: $disabledIcon;
+    }
+
+    position: absolute;
+    right: 12px;
+    top:25px
 }

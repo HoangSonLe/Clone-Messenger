@@ -26,6 +26,9 @@ axiosClient.interceptors.response.use(
     (err) => {
         // Handle errors
         console.log(err);
+        if (err.response.status == 401) {
+            window.location.href = "/login";
+        }
         if (err?.response.data.length > 0) {
             err?.response.data.forEach((e) => {
                 toastError(e);

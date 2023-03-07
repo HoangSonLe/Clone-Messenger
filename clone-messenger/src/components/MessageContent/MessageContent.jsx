@@ -47,53 +47,57 @@ export default function MessageContent() {
             window.removeEventListener("resize", handleWidthViewChange);
         };
     }, [widthDrawer]);
-    const _fetchReadLastMessage = async () => {
-        try {
-            await chatMessageApi.readLastMessage({ chatGroupId: conversation.id });
-        } catch (err) {
-            console.log("err", err);
-        }
-    };
-    const readLastMessage = _.debounce(() => {
-        _fetchReadLastMessage();
-    }, 200);
-    return <NewMessage />;
+    // const _fetchReadLastMessage = async () => {
+    //     try {
+    //         await chatMessageApi.readLastMessage({ chatGroupId: conversation.id });
+    //     } catch (err) {
+    //         console.log("err", err);
+    //     }
+    // };
+
+    // const readLastMessage = _.debounce(() => {
+    //     _fetchReadLastMessage();
+    // }, 200);
     return (
         <>
             {conversation ? (
-                <div className={cx("wrapper")}>
-                    <div
-                        className={cx("wrapper-message")}
-                        style={{
-                            marginRight: -widthDrawer,
-                            transition: "margin ease-in-out 200ms",
-                            ...(isOpenDrawer && {
-                                marginRight: 0,
+                !conversation.isTmp ? (
+                    <div className={cx("wrapper")}>
+                        <div
+                            className={cx("wrapper-message")}
+                            style={{
+                                marginRight: -widthDrawer,
                                 transition: "margin ease-in-out 200ms",
-                            }),
-                        }}
-                    >
-                        {/* Header */}
-                        <MessageContentHeader
-                            title={conversation.name}
-                            href={"/"}
-                            isOpenDrawer
-                            handleToggleDrawer={handleToggleDrawer}
+                                ...(isOpenDrawer && {
+                                    marginRight: 0,
+                                    transition: "margin ease-in-out 200ms",
+                                }),
+                            }}
+                        >
+                            {/* Header */}
+                            <MessageContentHeader
+                                title={conversation.name}
+                                href={"/"}
+                                isOpenDrawer
+                                handleToggleDrawer={handleToggleDrawer}
+                            />
+                            {/* Header */}
+                            {/* Messages */}
+                            <Messages />
+                            {/* Messages */}
+                        </div>
+                        {/* Drawer more information */}
+                        <DrawerInfor
+                            open={isOpenDrawer}
+                            name={conversation.name}
+                            isGroup={conversation.isGroup}
+                            widthDrawer={widthDrawer}
+                            isOpenDrawer={isOpenDrawer}
                         />
-                        {/* Header */}
-                        {/* Messages */}
-                        <Messages />
-                        {/* Messages */}
                     </div>
-                    {/* Drawer more information */}
-                    <DrawerInfor
-                        open={isOpenDrawer}
-                        name={conversation.name}
-                        isGroup={conversation.isGroup}
-                        widthDrawer={widthDrawer}
-                        isOpenDrawer={isOpenDrawer}
-                    />
-                </div>
+                ) : (
+                    <NewMessage />
+                )
             ) : (
                 <DefaultMessageContent />
             )}

@@ -7,8 +7,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import chatMessageApi from "../../../api/chatMessageApi";
-import helper from "../../../generals/helper";
 import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../assets/Icons";
+import helper from "../../../generals/helper";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import styles from "./MessageInput.module.scss";
 
@@ -40,7 +40,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
         return false;
     };
     const checkCanSend = checkEnableSendButton();
-
+    //Send Message in exist chat group
     const _sendMessage = async (data) => {
         try {
             let response = await chatMessageApi.sendMessage(data);
@@ -52,15 +52,35 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
             console.log("err", err);
         }
     };
+    //Send message and create new chat group
+    const _sendMessageAndCreateConversation = async (data) => {
+        try {
+            let response = await chatMessageApi.sendMessageWithCreateConversation(data);
+            if (response) {
+                setText("");
+            }
+            setAutoScrollBottom();
+        } catch (err) {
+            console.log("err", err);
+        }
+    };
     const onSubmitForm = (e) => {
         e.preventDefault();
-        let postData = {
-            ...messagePostData,
-            groupId: conversation.id,
-            text: text,
-        };
-        if (checkCanSend) {
-            _sendMessage(postData);
+        if (conversation.isTmp) {
+            let postData = {
+                userIds: conversation.listMembers.map((i) => i.userId),
+                text: text,
+            };
+            _sendMessageAndCreateConversation(postData);
+        } else {
+            let postData = {
+                ...messagePostData,
+                groupId: conversation.id,
+                text: text,
+            };
+            if (checkCanSend) {
+                _sendMessage(postData);
+            }
         }
     };
     //Handle change text

@@ -11,6 +11,7 @@ const initialState = {
     chatGroupList: [],
     // chatGroupList: [...Array(10).keys()].map((i) => ({ ...mockData, id: i })),
     hasMore: true,
+    lastConversationId: null,
 };
 
 const chatGroupSlice = createSlice({
@@ -18,9 +19,18 @@ const chatGroupSlice = createSlice({
     initialState: initialState,
     reducers: {
         resetState: () => initialState,
-        addGroup: (state, action) => {
+        setLastConversationId: (state, action) => {
             let data = action.payload;
-            state.chatGroupList.unshift(data);
+            state.lastConversationId = data;
+        },
+        addNewGroupAndRemoveTmp: (state, action, index = 0) => {
+            let data = action.payload;
+            state.chatGroupList = state.chatGroupList.filter((i) => i.isTmp == true);
+            state.chatGroupList.splice(index, 0, data);
+        },
+        addGroup: (state, action, index = 0) => {
+            let data = action.payload;
+            state.chatGroupList.splice(index, 0, data);
         },
         addListGroup: (state, action) => {
             let response = action.payload;
@@ -55,6 +65,14 @@ const chatGroupSlice = createSlice({
                 g.messageStatus = data;
             }
         },
+        updateTmpChatGroup: (state, action) => {
+            let data = action.payload;
+            var g = state.chatGroupList.find((i) => i.isTmp == true);
+            if (g) {
+                g.name = data.name;
+                g.listMembers = data.listMembers;
+            }
+        },
         setLoadMore: (state, action) => {
             state.hasMore = action.payload;
         },
@@ -63,6 +81,9 @@ const chatGroupSlice = createSlice({
 const { actions, reducer } = chatGroupSlice;
 export const {
     addGroup,
+    addNewGroupAndRemoveTmp,
+    updateTmpChatGroup,
+    setLastConversationId,
     updateStatusReadLastMessage,
     updateLastMessageInfor,
     updateLastMessage,

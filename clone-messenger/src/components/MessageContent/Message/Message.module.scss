@@ -147,6 +147,7 @@
     overflow-y: hidden;
     padding: 7px 12px 8px;
     border-radius: 4px;
+    min-height: 25px;
     background-color: $blueBackgroundMessage;
     font-size: var(--font-size-input);
 }
@@ -182,7 +183,7 @@
 }
 
 .receiver-avatar {
-    padding: 0px 8px 30px 10px;
+    padding: 0px 8px 0px 10px;
     height: 100%;
 }
 

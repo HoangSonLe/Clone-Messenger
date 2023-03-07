@@ -14,14 +14,14 @@ const cx = classNames.bind(styles);
 export default function Messages() {
     const childRef = useRef();
     const dispatch = useDispatch();
-    const [isLoading, setLoading] = useState(true);
+    const [isLoading, setLoading] = useState(false);
     const { conversation } = useSelector((state) => state.message);
     const { chatMessagePaginationModel } = useSelector((state) => state.pageDefault);
-   
+
     const setAutoScrollBottom = () => {
         childRef.current.scrollToBottom();
     };
-    
+
     const _fetchGetMessageList = async () => {
         if (conversation.groupMessageListByTime.hasMore) {
             try {
@@ -38,6 +38,8 @@ export default function Messages() {
             } catch (err) {
                 console.log("err", err);
             }
+        } else {
+            setLoading(false);
         }
     };
     const onScrollTop = () => {
@@ -58,13 +60,16 @@ export default function Messages() {
                     {isLoading ? (
                         <div
                             style={{
-                                textAlign: "center",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
                                 width: "100%",
+                                // height: "100%",
                             }}
                         >
                             <CircularProgress
                                 sx={{
-                                    color: helper.getColorFromName("placeholderIcon"),
+                                    color: helper.getColorFromName("disabledIcon"),
                                 }}
                                 size={25}
                             />

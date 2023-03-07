@@ -16,6 +16,97 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     background-color: $background;
+}
+
+.header {
+    width: inherit;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    border-bottom: 1px solid $mediaInnerBorder;
+    padding: 8px 0px;
+}
+
+.popup {
+    width: 328px;
+    min-height: 407px;
+    max-height: 407px;
+    background-color: $background;
+    box-shadow: 0 0 4px $shadow2;
+    border-radius: 8px;
+    padding: 8px 6px;
+    overflow-y: auto;
+}
+
+.title {
+    color: $primaryText;
+    font-size: .9375rem;
+    margin-top: 8px;
+    margin-left: 16px;
+    margin-right: 4px;
+
+}
+
+.input {
+    outline: none;
+    border: none;
+    background-color: transparent;
+    box-sizing: border-box;
+    color: $primaryText;
+    display: block;
+    font-family: Helvetica Neue, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 1rem;
+    height: 38px;
+    // margin: 8px;
+    padding: 1px 2px 3px;
+    width: 200px;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+.search {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.chip {
+    padding: 3px 6px;
+    background-color: $secondaryBackground;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    margin-right: 6px;
+    margin-top: 6px;
+    & .name {
+        font-weight: map.get($FontWeights, 600);
+        margin-right: 4px;
+        cursor: text;
+        font-size: .9375rem;
+
+    }
+
+    & .icon {
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        padding: 1px;
+
+        svg {
+            height: 16px;
+            width: 16px;
+            background-color: transparent;
+            color: $primaryIcon;
+        }
+
+        &:hover {
+            background-color: $disabledIcon;
+        }
+    }
+
 }

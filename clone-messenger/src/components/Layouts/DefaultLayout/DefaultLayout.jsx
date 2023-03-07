@@ -1,5 +1,6 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -14,6 +15,11 @@ import styles from "./DefaultLayout.module.scss";
 const cx = classNames.bind(styles);
 export default function DefaultLayout() {
     const { isLoggedIn } = useSelector((state) => state.auth);
+    const { defaultModel } = useSelector((state) => state.pageDefault);
+    const [open, setOpen] = useState(false);
+    const handleClose = () => {
+        setOpen(false);
+    };
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const _fetchPageDefaultModel = async () => {
@@ -29,11 +35,14 @@ export default function DefaultLayout() {
     useEffect(() => {
         isLoggedIn ? _fetchPageDefaultModel() : navigate(configRoutes.login);
     }, [isLoggedIn]);
-
+    //TODO : xu ly case api bi dung vaf nhan nut them chat group loi
     return (
         <>
             {isLoggedIn ? (
                 <div className={cx("wrapper")}>
+                    <Backdrop sx={{ zIndex: 99 }} open={open}>
+                        <CircularProgress />
+                    </Backdrop>
                     <div className={cx("navigation")}>
                         <div className={cx("menu")}>
                             <Navigation />

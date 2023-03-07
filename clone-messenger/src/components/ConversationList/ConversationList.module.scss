@@ -10,6 +10,8 @@
 
 .search {
     flex-shrink: 0;
+    border-bottom: 1px solid $mediaInnerBorder;
+    margin-bottom: 2px;
 }
 
 .message-list {

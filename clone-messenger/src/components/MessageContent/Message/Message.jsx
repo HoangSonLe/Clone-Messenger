@@ -39,7 +39,7 @@ function Message({ data }) {
                         if (process.status == EMessageReadStatus.ReadOne) {
                             //Render avatar -- chỉ render 1 avatar
                             //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
-                            let item = process.lastReadExceptCurrentUser[0];
+                            let item = process.lastReadExceptSender[0];
                             inlineStatus = (
                                 <ToolTipCustom
                                     placement="top"
@@ -115,7 +115,6 @@ function Message({ data }) {
                                             styleWrapper={{ margin: "0px 0px 0px 2px" }}
                                             height={14}
                                             width={14}
-                                            variant="standard"
                                         />
                                     </ToolTipCustom>
                                     <ToolTipCustom
@@ -126,7 +125,6 @@ function Message({ data }) {
                                             styleWrapper={{ margin: "0px 0px 0px 2px" }}
                                             height={14}
                                             width={14}
-                                            variant="standard"
                                         />
                                     </ToolTipCustom>
                                     <ToolTipCustom
@@ -137,7 +135,6 @@ function Message({ data }) {
                                             styleWrapper={{ margin: "0px 0px 0px 2px" }}
                                             height={14}
                                             width={14}
-                                            variant="standard"
                                         />
                                     </ToolTipCustom>
                                 </div> */}
@@ -151,17 +148,19 @@ function Message({ data }) {
 }
 const processMessageReadStatus = (userId, listMembers, message, messageStatusItemList) => {
     let status = EMessageReadStatus.Undefine;
-    let beforeLastRead = messageStatusItemList.filter((j) => {
+    //Mảng ds những người đã đọc tin nhắn
+    let beforeLastReadUsers = messageStatusItemList?.filter((j) => {
         return message.createdDate <= j.readTime;
     });
-    let lastReadExceptCurrentUser = messageStatusItemList.filter(
-        (j) => j.chatMessageId == message.id && j.userId != userId
+    //Mảng ds những người đọc tin nhắn(trừ người gửi)
+    let lastReadExceptSender  = messageStatusItemList?.filter(
+        (j) => j.chatMessageId == message.id && j.userId != message.createdBy
     );
-    if (lastReadExceptCurrentUser.length == 1) {
+    if (lastReadExceptSender.length == 1) {
         //Render avatar -- chỉ render 1 avatar
-        //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
+        //=> nếu trên 2 người đã đọc(trừ người gửi) thì ko vào case này- để hiện thì 1 avatar kế bên tin nhắn
         status = EMessageReadStatus.ReadOne;
-    } else if (beforeLastRead.length == listMembers.length) {
+    } else if (beforeLastReadUsers.length == listMembers.length) {
         //Đã đọc hết
         status = EMessageReadStatus.ReadAll;
     } else {
@@ -169,7 +168,7 @@ const processMessageReadStatus = (userId, listMembers, message, messageStatusIte
         status = EMessageReadStatus.Undefine; //Dựa vào status message
     }
     return {
-        lastReadExceptCurrentUser,
+        lastReadExceptSender,
         status,
     };
 };

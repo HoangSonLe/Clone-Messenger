@@ -1,8 +1,18 @@
 import $ from "jquery";
 import { useDispatch } from "react-redux";
 import "signalr";
-import { sendMessage, updateStatusReadMessage, updateMessageInfor } from "../features/MessageSlice";
-import { updateLastMessage, updateLastMessageInfor, updateStatusReadLastMessage } from "../features/ChatGroupSlice";
+import {
+    sendMessage,
+    updateStatusReadMessage,
+    updateMessageInfor,
+    initConversation,
+} from "../features/MessageSlice";
+import {
+    addNewGroupAndRemoveTmp,
+    updateLastMessage,
+    updateLastMessageInfor,
+    updateStatusReadLastMessage,
+} from "../features/ChatGroupSlice";
 const SignalRInit = () => {
     const token = localStorage.getItem("jwtToken");
     let dispatch = useDispatch();
@@ -17,16 +27,20 @@ const SignalRInit = () => {
     chatHubProxy.on("updateMessageInfo", function (data) {
         dispatch(updateMessageInfor(data));
         dispatch(updateLastMessageInfor(data));
-
     });
     chatHubProxy.on("updateStatusReadMessage", function (data) {
         dispatch(updateStatusReadMessage(data));
         dispatch(updateStatusReadLastMessage(data));
-
     });
     chatHubProxy.on("sendMessage", function (data) {
         dispatch(sendMessage(data));
         dispatch(updateLastMessage(data));
+    });
+    chatHubProxy.on("sendMessageWithCreateConversation", function (data) {
+        dispatch(addNewGroupAndRemoveTmp(data.group));
+        if (data.isCreateUser) {
+            dispatch(initConversation(data.conversation));
+        }
     });
     connection
         .start()

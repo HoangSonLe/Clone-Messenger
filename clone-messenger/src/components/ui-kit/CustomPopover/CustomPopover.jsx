@@ -29,6 +29,11 @@ function CustomPopover({ renderItem, renderContent, vertical = "bottom", horizon
                     vertical,
                     horizontal,
                 }}
+                sx={{
+                    borderRadius: "8px",
+                    marginTop: "2px",
+                }}
+                disableAutoFocus
             >
                 {renderContent()}
             </Popover>

@@ -10,6 +10,7 @@ import { forwardRef } from "react";
 import { defaultAvatar } from "../../../assets/img";
 import helper from "../../../generals/helper";
 import EllipsisContent from "../TextEllipsis/EllipsisContent";
+import { Tooltip } from "@mui/material";
 const cx = classNames.bind(styles);
 const StyledBadge = styled(Badge)(({ theme }) => ({
     // cursor: "pointer",
@@ -53,7 +54,7 @@ const AvatarCustom = forwardRef(
             groupHeight = 32,
             groupWidth = 32,
             styles,
-            variant,
+            isOnline,
             styleWrapper,
             ...props
         },
@@ -72,6 +73,7 @@ const AvatarCustom = forwardRef(
             paddingLeft: `${smallImageLeft}px`,
             boxSizing: "border-box",
         };
+        let variant = isOnline ? "dot" : "standard";
         return (
             <StyledBadge
                 ref={ref}
@@ -116,39 +118,58 @@ const AvatarCustom = forwardRef(
 );
 AvatarCustom.defaultProps = {
     srcList: [defaultAvatar],
-    variant: "dot",
+    isOnline: false,
 };
 AvatarCustom.propTypes = {
     styles: PropTypes.object,
     srcList: PropTypes.array,
-    variant: PropTypes.oneOf(["dot", "standard"]),
+    isOnline: PropTypes.bool,
+    // variant: PropTypes.oneOf(["dot", "standard"]),
 };
 export default AvatarCustom;
 const AvatarWithName = ({
+    data,
     title,
-    onClickComponent = () => {},
+    onClickComponent,
     children,
     isActive,
+    isOnline,
+    isBoldTitle,
+    noneBold,
     srcList = [],
     forceContent,
     ...otherProps
 }) => {
+    const WrappedMyComponent = React.forwardRef(function WrappedMyComponent(props, ref) {
+        return (
+            <EllipsisContent component={"div"}>
+                <div
+                    className={cx("name", {
+                        active: isActive && isBoldTitle,
+                        noBold: noneBold,
+                    })}
+                >
+                    {title}
+                </div>
+            </EllipsisContent>
+        );
+    });
     return (
-        <div className={cx("wrapper")} onClick={onClickComponent}>
+        <div
+            className={cx("wrapper", { action: typeof onClickComponent == "function" })}
+            onClick={() => {
+                typeof onClickComponent == "function" && onClickComponent(data);
+            }}
+        >
             <div className={cx("avatar")}>
                 {/* Lenght of data > 1 => group image */}
-                <AvatarCustom srcList={srcList} {...otherProps} />
+                <AvatarCustom isOnline={isOnline} srcList={srcList} {...otherProps} />
             </div>
             <div className={cx("content", { "force-content": forceContent })}>
-                <EllipsisContent component={"div"}>
-                    <div
-                        className={cx("name", {
-                            active: isActive ? "active" : undefined,
-                        })}
-                    >
-                        {title}
-                    </div>
-                </EllipsisContent>
+                {/* <Tooltip title={title}>WrappedMyComponent */}
+                <WrappedMyComponent />
+                {/* </Tooltip> */}
+
                 {children}
             </div>
         </div>

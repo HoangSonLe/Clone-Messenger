@@ -11,12 +11,18 @@
     border-radius: 8px;
     color: $primaryText;
     flex: 1;
+
     & .content {
         @media (max-width : $media-width-breakpoint) {
             display: none;
         }
     }
-    & .force-content{
+
+    &.action {
+        cursor: pointer;
+    }
+
+    & .force-content {
         display: unset;
     }
 
@@ -35,7 +41,12 @@
     color: $primaryText;
     text-align: left;
     font-size: var(--font-size-input);
+
     font-weight: map-get($FontWeights, 500);
+
+    &.noBold {
+        font-weight: normal !important;
+    }
 
     &.active {
         font-weight: map-get($FontWeights, 700);
