@@ -1,5 +1,5 @@
 import axios from "axios";
-import { toastError } from "../generals/defaultActions";
+import { toastError } from "../generals/utils.js";
 
 const axiosClient = axios.create({
     baseURL: process.env.API_URL,
@@ -10,7 +10,7 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use(async (config) => {
-    let token = localStorage.getItem("jwtToken");
+    let token = sessionStorage.getItem("jwtToken");
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
@@ -18,6 +18,7 @@ axiosClient.interceptors.request.use(async (config) => {
 });
 axiosClient.interceptors.response.use(
     (response) => {
+        response.isSuccess = true;
         if (response && response.data) {
             return response.data;
         }
@@ -36,6 +37,8 @@ axiosClient.interceptors.response.use(
         } else {
             toastError("Error.Please try again");
         }
+        err.response.isSuccess = false;
+        return err.response;
     }
 );
 

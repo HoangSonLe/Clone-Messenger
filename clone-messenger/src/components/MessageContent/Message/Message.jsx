@@ -6,6 +6,7 @@ import React, { memo } from "react";
 import { useSelector } from "react-redux";
 import { EMessageReadStatus, EMessageStatus } from "../../../const/enum";
 import helper from "../../../generals/helper";
+import { getImageAvatarSrc } from "../../../generals/utils";
 
 import AvatarCustom from "../../ui-kit/Avatar/AvatarCustom";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
@@ -16,20 +17,22 @@ import MessageStatus from "./MessageStatus";
 const cx = classNames.bind(styles);
 function Message({ data }) {
     const { conversation } = useSelector((state) => state.message);
-    const { userId } = useSelector((state) => state.auth);
+    const { currentUserId } = useSelector((state) => state.auth);
     const { messageStatus, listMembers } = conversation;
     const { messageStatusItemList } = messageStatus;
-    let { continuityKeyByUser, messages, isMyMessage } = data;
+    let { continuityKeyByUser, messages } = data;
+    let myAvatar = getImageAvatarSrc(conversation.listMembers, data.userId);
+    let isMyMessage = data.userId == currentUserId;
     return (
         <div className={cx("wrapper")}>
             <div className={cx("message-wrapper")}>
                 <div className={cx("receiver-avatar")}>
-                    {!isMyMessage ? <AvatarCustom /> : null}
+                    {!isMyMessage ? <AvatarCustom srcList={[myAvatar]} /> : null}
                 </div>
                 <div className={cx("messages-container")}>
                     {messages.map((i, index) => {
                         let process = processMessageReadStatus(
-                            userId,
+                            currentUserId,
                             listMembers,
                             i,
                             messageStatusItemList
@@ -40,6 +43,7 @@ function Message({ data }) {
                             //Render avatar -- chỉ render 1 avatar
                             //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
                             let item = process.lastReadExceptSender[0];
+                            let imageSrc = getImageAvatarSrc(conversation.listMembers, item.userId);
                             inlineStatus = (
                                 <ToolTipCustom
                                     placement="top"
@@ -47,7 +51,12 @@ function Message({ data }) {
                                         item.userName
                                     } at ${helper.messageTimeToolTipDisplay(item.readTime)}`}
                                 >
-                                    <AvatarCustom height={14} width={14} variant="standard" />
+                                    <AvatarCustom
+                                        srcList={[imageSrc]}
+                                        height={14}
+                                        width={14}
+                                        variant="standard"
+                                    />
                                 </ToolTipCustom>
                             );
                         } else if (process.status == EMessageReadStatus.ReadAll) {
@@ -58,7 +67,7 @@ function Message({ data }) {
                             //         status={EMessageStatus.Undefine}
                             //     />
                             // );
-                        } else if(process.status == EMessageReadStatus.Undefine) {
+                        } else if (process.status == EMessageReadStatus.Undefine) {
                             //Đang gửi hoặc đã gửi chưa đọc
                             inlineStatus = <MessageStatus status={i.messageStatus} />;
                         }
@@ -153,10 +162,11 @@ const processMessageReadStatus = (userId, listMembers, message, messageStatusIte
         return message.createdDate <= j.readTime;
     });
     //Mảng ds những người đọc tin nhắn(trừ người gửi)
-    let lastReadExceptSender  = messageStatusItemList?.filter(
+    let lastReadExceptSender = messageStatusItemList?.filter(
         (j) => j.chatMessageId == message.id && j.userId != message.createdBy
     );
     if (lastReadExceptSender.length == 1) {
+        console.log(lastReadExceptSender);
         //Render avatar -- chỉ render 1 avatar
         //=> nếu trên 2 người đã đọc(trừ người gửi) thì ko vào case này- để hiện thì 1 avatar kế bên tin nhắn
         status = EMessageReadStatus.ReadOne;

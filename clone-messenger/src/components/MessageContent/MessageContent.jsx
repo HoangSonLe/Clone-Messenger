@@ -1,9 +1,7 @@
 import classNames from "classnames/bind";
-import _ from "lodash";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 
-import chatMessageApi from "../../api/chatMessageApi";
 import helper from "../../generals/helper";
 import { mediaWidthBreakpoint2 } from "../GlobalStyles/colors";
 import DefaultMessageContent from "./DefaultMessageContent/DefaultMessageContent";
@@ -18,6 +16,8 @@ const minWidthDrawer = 250;
 const widthDrawerDefault = 255;
 export default function MessageContent() {
     const { conversation } = useSelector((state) => state.message);
+    const { currentUserId } = useSelector((state) => state.auth);
+
     //Check breakpoint responsive drawer
     const breakpointWidth = useMemo(() => helper.getNumberInString(mediaWidthBreakpoint2));
     const [isOpenDrawer, setOpenDrawer] = useState(false);
@@ -58,6 +58,9 @@ export default function MessageContent() {
     // const readLastMessage = _.debounce(() => {
     //     _fetchReadLastMessage();
     // }, 200);
+    let imageSrcList = conversation?.listMembers
+        .filter((i) => i.userId != currentUserId)
+        .map((i) => i.avatarFileSrc);
     return (
         <>
             {conversation ? (
@@ -76,8 +79,8 @@ export default function MessageContent() {
                         >
                             {/* Header */}
                             <MessageContentHeader
-                                title={conversation.name}
                                 href={"/"}
+                                imageSrcList={imageSrcList}
                                 isOpenDrawer
                                 handleToggleDrawer={handleToggleDrawer}
                             />
@@ -91,6 +94,7 @@ export default function MessageContent() {
                             open={isOpenDrawer}
                             name={conversation.name}
                             isGroup={conversation.isGroup}
+                            imageSrcList={imageSrcList}
                             widthDrawer={widthDrawer}
                             isOpenDrawer={isOpenDrawer}
                         />

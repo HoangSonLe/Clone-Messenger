@@ -11,6 +11,7 @@ import { defaultAvatar } from "../../../assets/img";
 import helper from "../../../generals/helper";
 import EllipsisContent from "../TextEllipsis/EllipsisContent";
 import { Tooltip } from "@mui/material";
+import { Skeleton } from "@mui/material";
 const cx = classNames.bind(styles);
 const StyledBadge = styled(Badge)(({ theme }) => ({
     // cursor: "pointer",
@@ -74,6 +75,14 @@ const AvatarCustom = forwardRef(
             boxSizing: "border-box",
         };
         let variant = isOnline ? "dot" : "standard";
+        let imageMain = defaultAvatar;
+        if (srcList.length > 0 && srcList[0]) {
+            imageMain = srcList[0];
+        }
+        let imageSub = defaultAvatar;
+        if (srcList.length > 1 && srcList[1]) {
+            imageSub = srcList[1];
+        }
         return (
             <StyledBadge
                 ref={ref}
@@ -94,7 +103,7 @@ const AvatarCustom = forwardRef(
                             ...styles,
                         }}
                         alt={alt}
-                        src={srcList[0]}
+                        src={imageMain}
                     />
                     {isGroupAvatar ? (
                         <Avatar
@@ -108,7 +117,7 @@ const AvatarCustom = forwardRef(
                                 ...styles,
                             }}
                             alt={alt}
-                            src={srcList[1]}
+                            src={imageSub}
                         />
                     ) : null}
                 </div>
@@ -137,7 +146,10 @@ const AvatarWithName = ({
     isBoldTitle,
     noneBold,
     srcList = [],
-    forceContent,
+    forceDisplayContent,
+    isLoading,
+    height,
+    width,
     ...otherProps
 }) => {
     const WrappedMyComponent = React.forwardRef(function WrappedMyComponent(props, ref) {
@@ -154,6 +166,19 @@ const AvatarWithName = ({
             </EllipsisContent>
         );
     });
+    if (isLoading) {
+        let heightImage = helper.getNumberInString(height);
+        let widthImage = helper.getNumberInString(width);
+        return (
+            <div className={cx("loading")}>
+                <Skeleton variant="circular" width={widthImage} height={heightImage} />
+                <div className={cx("more")} style={{ paddingLeft: 10 }}>
+                    <Skeleton variant="text" width={"50%"} height={20} />
+                    <Skeleton variant="rounded" width={"80%"} height={16} />
+                </div>
+            </div>
+        );
+    }
     return (
         <div
             className={cx("wrapper", { action: typeof onClickComponent == "function" })}
@@ -163,9 +188,15 @@ const AvatarWithName = ({
         >
             <div className={cx("avatar")}>
                 {/* Lenght of data > 1 => group image */}
-                <AvatarCustom isOnline={isOnline} srcList={srcList} {...otherProps} />
+                <AvatarCustom
+                    width={width}
+                    height={height}
+                    isOnline={isOnline}
+                    srcList={srcList}
+                    {...otherProps}
+                />
             </div>
-            <div className={cx("content", { "force-content": forceContent })}>
+            <div className={cx("content", { "force-display-content": forceDisplayContent })}>
                 {/* <Tooltip title={title}>WrappedMyComponent */}
                 <WrappedMyComponent />
                 {/* </Tooltip> */}

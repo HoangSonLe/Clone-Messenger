@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { defaultOnClick } from "../../../generals/defaultActions";
+import { defaultOnClick } from "../../../generals/utils.js";
 import helper from "../../../generals/helper";
 import HeaderMenu from "./HeaderMenu.jsx";
 import styles from "./Menu.module.scss";

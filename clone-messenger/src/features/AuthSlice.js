@@ -1,9 +1,18 @@
 import { createSlice } from "@reduxjs/toolkit";
+const tryParseLocalJSON = (key) => {
+    try {
+        var obj = sessionStorage.getItem(key);
+        return JSON.parse(obj);
+    } catch (e) {
+        console.log(e); // you can get error here
+    }
+    return {};
+};
 const initialState = {
-    token: localStorage.getItem("jwtToken"),
-    userId: localStorage.getItem("userId"),
-    displayUserName: localStorage.getItem("displayUserName"),
-    isLoggedIn: localStorage.getItem("jwtToken") ? true : false,
+    token: sessionStorage.getItem("jwtToken"),
+    currentUserId: sessionStorage.getItem("currentUserId"),
+    currentUserInfor: tryParseLocalJSON("currentUserInfor"),
+    isLoggedIn: sessionStorage.getItem("jwtToken") ? true : false,
 };
 
 const authSlice = createSlice({
@@ -11,20 +20,19 @@ const authSlice = createSlice({
     initialState: initialState,
     reducers: {
         login: (state, action) => {
-            debugger
-            let { token, userId, displayName } = action.payload;
-            localStorage.setItem("userId", userId);
-            localStorage.setItem("displayUserName", displayName);
-            localStorage.setItem("jwtToken", token);
+            let { token, userId } = action.payload;
+            sessionStorage.setItem("currentUserId", userId);
+            sessionStorage.setItem("currentUserInfor", JSON.stringify(action.payload));
+            sessionStorage.setItem("jwtToken", token);
             state.token = token;
-            state.userId = userId;
-            state.displayUserName = displayName;
+            state.currentUserId = userId;
+            state.currentUserInfor = action.payload;
             state.isLoggedIn = true;
         },
         logout: (state, action) => {
-            localStorage.removeItem("jwtToken");
-            localStorage.removeItem("userId");
-            localStorage.removeItem("displayUserName");
+            sessionStorage.removeItem("jwtToken");
+            sessionStorage.removeItem("currentUserId");
+            sessionStorage.removeItem("currentUserInfor");
             state.isLoggedIn = false;
         },
     },

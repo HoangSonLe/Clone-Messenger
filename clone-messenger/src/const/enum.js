@@ -10,5 +10,10 @@ const EMessageReadStatus = {
     ReadOne: 1,
     ReadAll: 2,
 };
+const EUploadType = {
+    OnlyClick: 1,
+    OnlyDrop: 2,
+    ClickAndDrop: 3,
+};
 
-export { EMessageStatus, EMessageReadStatus };
+export { EMessageStatus, EMessageReadStatus, EUploadType };

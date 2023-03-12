@@ -46,7 +46,7 @@ export default function MessageList() {
     const _fetchGetGroupList = async () => {
         try {
             let response = await chatGroupApi.getList({});
-            if (response) {
+            if (response.isSuccess == true) {
                 dispatch(addListGroup(response.data));
             }
             setLoading(false);

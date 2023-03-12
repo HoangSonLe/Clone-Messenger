@@ -1,3 +1,5 @@
 login thi signalr update online
 hotkey enter login
 
+xem lại redux thunk
+xem lại cách apply css trong react

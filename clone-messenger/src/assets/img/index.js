@@ -4,3 +4,4 @@
 
 export { default as logo } from "./logo.svg";
 export { default as defaultAvatar } from "./defaultAvatar.png";
+export { default as addAvatar } from "./addAvatar.png";

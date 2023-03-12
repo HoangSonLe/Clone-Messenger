@@ -22,7 +22,7 @@
         cursor: pointer;
     }
 
-    & .force-content {
+    & .force-display-content {
         display: unset;
     }
 
@@ -50,5 +50,19 @@
 
     &.active {
         font-weight: map-get($FontWeights, 700);
+    }
+}
+
+.loading{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 8px 16px;
+ 
+}
+.more{
+    width: 100%;
+    @media (max-width: $media-width-breakpoint) {
+        display: none;
     }
 }

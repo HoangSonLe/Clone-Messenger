@@ -3,6 +3,7 @@ import chatGroupSlice from "../features/ChatGroupSlice";
 import pageDefaultSlice from "../features/PageDefaultSlice";
 import messageSlice from "../features/MessageSlice";
 import authSlice from "../features/AuthSlice";
+import userSlice from "../features/UserSlice";
 
 const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ const store = configureStore({
         chatGroup: chatGroupSlice,
         message: messageSlice,
         auth: authSlice,
+        user: userSlice,
     },
 });
 

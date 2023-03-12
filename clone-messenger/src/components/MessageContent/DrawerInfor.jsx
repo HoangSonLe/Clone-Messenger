@@ -6,10 +6,9 @@ import classNames from "classnames/bind";
 import { memo } from "react";
 import { Link } from "react-router-dom";
 
-import { defaultAvatar } from "../../assets/img";
-import { defaultOnClick } from "../../generals/defaultActions";
-import helper from "../../generals/helper";
 import { ConversationMenu } from "../../const/MenuData";
+import helper from "../../generals/helper";
+import { defaultOnClick } from "../../generals/utils.js";
 import AvatarCustom from "../ui-kit/Avatar/AvatarCustom";
 import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 import EllipsisContent from "../ui-kit/TextEllipsis/EllipsisContent";
@@ -20,7 +19,7 @@ const styleIcon = {
     background: helper.getColorFromName("webWash"),
 };
 
-function DrawerInfor({ name, isGroup, widthDrawer, isOpenDrawer }) {
+function DrawerInfor({ name, imageSrcList, isGroup, widthDrawer, isOpenDrawer }) {
     return (
         <Drawer
             sx={{
@@ -40,7 +39,7 @@ function DrawerInfor({ name, isGroup, widthDrawer, isOpenDrawer }) {
                     <AvatarCustom
                         height={72}
                         width={72}
-                        srcList={isGroup ? [defaultAvatar, defaultAvatar] : [defaultAvatar]}
+                        srcList={imageSrcList}
                         styleWrapper={{ cursor: "default" }}
                     />
                 </div>

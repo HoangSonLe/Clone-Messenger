@@ -1,5 +1,5 @@
 import { IconButton } from "@mui/material";
-import { defaultOnClick } from "../../../generals/defaultActions";
+import { defaultOnClick } from "../../../generals/utils.js";
 import ToolTipCustom from "./ToolTipCustom";
 
 export default function IconButtonCustom({

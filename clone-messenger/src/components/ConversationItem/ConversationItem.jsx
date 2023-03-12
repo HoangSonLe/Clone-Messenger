@@ -33,7 +33,7 @@ const styleAction = {
 };
 function ConversationItem({ data, isLoading }) {
     const dispatch = useDispatch();
-    const { userId } = useSelector((state) => state.auth);
+    const { currentUserId } = useSelector((state) => state.auth);
     const [isDisplayButton, setDisplayButton] = useState("false");
     const { conversation } = useSelector((state) => state.message);
     const { lastConversationId } = useSelector((state) => state.chatGroup);
@@ -53,7 +53,7 @@ function ConversationItem({ data, isLoading }) {
                     chatGroupId: id,
                 };
                 let response = await chatGroupApi.getChatGroupDetail(post);
-                if (response) {
+                if (response.isSuccess == true) {
                     typeof callback == "function" && callback();
                     dispatch(initConversation(response.data));
                 }
@@ -66,7 +66,7 @@ function ConversationItem({ data, isLoading }) {
         try {
             let memberIds = data.listMembers.map((i) => i.id);
             let response = await chatMessageApi.searchChatGroup(memberIds);
-            if (response) {
+            if (response.isSuccess == true) {
                 dispatch(initConversation(response.data));
             }
         } catch (err) {
@@ -84,7 +84,7 @@ function ConversationItem({ data, isLoading }) {
     let inlineStatus = null;
     if (!isLoading && data && !isTmp && data.lastMessage) {
         process = processMessageReadStatus(
-            userId,
+            currentUserId,
             data.listMembers,
             data.lastMessage,
             data.messageStatus?.messageStatusItemList
@@ -104,7 +104,7 @@ function ConversationItem({ data, isLoading }) {
             // );
         } else if (process.status == EMessageReadStatus.Undefine) {
             //Đang gửi hoặc đã gửi chưa đọc
-            if (data.lastMessage.createdBy != userId) {
+            if (data.lastMessage.createdBy != currentUserId) {
                 inlineStatus = (
                     <div
                         style={{
@@ -120,7 +120,9 @@ function ConversationItem({ data, isLoading }) {
             }
         }
     }
-    console.log(isTmp);
+    let imageSrcList = data?.listMembers
+        .filter((i) => i.userId != currentUserId)
+        .map((i) => i.avatarFileSrc);
     return (
         <div className={cx("container", isActive ? "active" : undefined)}>
             {isLoading ? (
@@ -141,12 +143,10 @@ function ConversationItem({ data, isLoading }) {
                             isOnline={
                                 isTmp == false &&
                                 data.listMembers.some(
-                                    (i) => i.isOnline == true && i.userId != userId
+                                    (i) => i.isOnline == true && i.userId != currentUserId
                                 )
                             }
-                            srcList={
-                                data.id % 2 !== 0 ? [defaultAvatar] : [defaultAvatar, defaultAvatar]
-                            }
+                            srcList={isTmp == true ? [defaultAvatar] : imageSrcList}
                             height="48px"
                             width="48px"
                         >

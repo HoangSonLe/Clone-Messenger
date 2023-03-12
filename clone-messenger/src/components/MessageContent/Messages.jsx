@@ -31,7 +31,7 @@ export default function Messages() {
                     chatGroupId: conversation.id,
                 };
                 let response = await chatMessageApi.getMessages(postData);
-                if (response) {
+                if (response.isSuccess == true) {
                     dispatch(loadMoreMessage(response.data));
                 }
                 setLoading(false);

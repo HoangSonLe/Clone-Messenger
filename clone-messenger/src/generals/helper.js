@@ -1,8 +1,5 @@
 import moment from "moment/moment";
-import {
-    Colors as ColorObject,
-    FontWeights,
-} from "../components/GlobalStyles/colors";
+import { Colors as ColorObject, FontWeights } from "../components/GlobalStyles/colors";
 const helper = {};
 
 let getColorFromName = (name) => {
@@ -33,6 +30,10 @@ helper.isValidSearchString = (str) => {
     return str !== null && str !== undefined && str !== "";
 };
 helper.getNumberInString = (value) => {
+    if (value == null) {
+        console.log("Error value string", value);
+        return 0;
+    }
     let s = value.toString().replace(/[^0-9]/g, "");
     return parseInt(s);
 };
@@ -69,16 +70,14 @@ helper.timeNotification = (datetime) => {
     } else if (monthsDiff(time, now) > 0) {
         timeString = `${monthsDiff(time, now)} tháng`;
     } else if (dateDiff(time, now) > 0) {
-        if (dateDiff(time, now) >= 7)
-            timeString = `${Math.floor(dateDiff(time, now) / 7)} tuần`;
+        if (dateDiff(time, now) >= 7) timeString = `${Math.floor(dateDiff(time, now) / 7)} tuần`;
         else timeString = `${dateDiff(time, now)} ngày`;
     } else if (hoursDiff(time, now) > 0) {
         timeString = `${hoursDiff(time, now)} giờ`;
     } else if (minutesDiff(time, now) > 0) {
         timeString = `${minutesDiff(time, now)} phút`;
     } else if (secondsDiff(time, now) > 0) {
-        if (secondsDiff(time, now) > 30)
-            timeString = `${secondsDiff(time, now)} giây`;
+        if (secondsDiff(time, now) > 30) timeString = `${secondsDiff(time, now)} giây`;
         else timeString = "Vừa xong";
     }
     return timeString;

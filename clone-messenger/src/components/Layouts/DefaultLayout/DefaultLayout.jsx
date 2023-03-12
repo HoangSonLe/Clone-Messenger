@@ -25,7 +25,7 @@ export default function DefaultLayout() {
     const _fetchPageDefaultModel = async () => {
         try {
             let response = await pageDefaultApi.getPageDefaultModel();
-            if (response) {
+            if (response.isSuccess == true) {
                 dispatch(setPageDefaultModel(response.data));
             }
         } catch (err) {

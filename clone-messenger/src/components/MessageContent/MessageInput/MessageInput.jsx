@@ -44,7 +44,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
     const _sendMessage = async (data) => {
         try {
             let response = await chatMessageApi.sendMessage(data);
-            if (response) {
+            if (response.isSuccess == true) {
                 setText("");
             }
             setAutoScrollBottom();
@@ -56,7 +56,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
     const _sendMessageAndCreateConversation = async (data) => {
         try {
             let response = await chatMessageApi.sendMessageWithCreateConversation(data);
-            if (response) {
+            if (response.isSuccess == true) {
                 setText("");
             }
             setAutoScrollBottom();

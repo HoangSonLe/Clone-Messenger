@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import PropTypes from "prop-types";
 import * as React from "react";
-import { defaultOnClick } from "../../../generals/defaultActions";
+import { defaultOnClick } from "../../../generals/utils.js";
 import helper from "../../../generals/helper";
 
 function StyledTreeItem(props) {

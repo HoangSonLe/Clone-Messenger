@@ -1,12 +1,11 @@
 import ClearIcon from "@mui/icons-material/Clear";
 import classNames from "classnames/bind";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { useRef } from "react";
 import chatGroupApi from "../../../api/chatGroupApi";
 import chatMessageApi from "../../../api/chatMessageApi";
-import { defaultAvatar } from "../../../assets/img";
 import { updateTmpChatGroup } from "../../../features/ChatGroupSlice";
 import { initConversation } from "../../../features/MessageSlice";
 import { AvatarWithName } from "../../ui-kit/Avatar/AvatarCustom";
@@ -18,7 +17,7 @@ export default function NewMessage() {
     const dispatch = useDispatch();
     const [searchString, setSearchString] = useState("");
     const [searchList, setSearchList] = useState([]);
-    const { userId } = useSelector((state) => state.auth);
+    const { currentUserId } = useSelector((state) => state.auth);
     const { chatGroupList } = useSelector((state) => state.chatGroup);
     const { listMembers } = chatGroupList[0];
     const debounceRef = useRef(null);
@@ -27,7 +26,7 @@ export default function NewMessage() {
         try {
             let memberIds = memberList.map((i) => i.userId);
             let response = await chatMessageApi.searchChatGroup(memberIds);
-            if (response) {
+            if (response.isSuccess == true) {
                 dispatch(initConversation(response.data));
                 dispatch(updateTmpChatGroup(response.data));
             }
@@ -57,10 +56,10 @@ export default function NewMessage() {
                 data={item}
                 title={item.displayName}
                 isActive={item.isActive}
-                srcList={[defaultAvatar]}
+                srcList={[item.avatarFileSrc]}
                 height="48px"
                 width="48px"
-                forceContent={true}
+                forceDisplayContent={true}
                 noneBold={true}
                 onClickComponent={handleAddMember}
             />
@@ -77,7 +76,7 @@ export default function NewMessage() {
     const _fetchGetUserList = async (value) => {
         try {
             let response = await chatGroupApi.getUserList({ searchValue: value });
-            if (response) {
+            if (response.isSuccess == true) {
                 setSearchList(response.data);
             }
         } catch (err) {
@@ -93,7 +92,7 @@ export default function NewMessage() {
                     <div className={cx("title")}>To:</div>
                     <div className={cx("search")}>
                         {listMembers.map((i) => {
-                            if (i.userId == userId) return null;
+                            if (i.userId == currentUserId) return null;
                             return (
                                 <div className={cx("chip")} key={i.userId}>
                                     <div className={cx("name")}>{i.displayName}</div>

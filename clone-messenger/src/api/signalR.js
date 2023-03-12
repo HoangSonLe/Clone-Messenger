@@ -14,7 +14,7 @@ import {
     updateStatusReadLastMessage,
 } from "../features/ChatGroupSlice";
 const SignalRInit = () => {
-    const token = localStorage.getItem("jwtToken");
+    const token = sessionStorage.getItem("jwtToken");
     let dispatch = useDispatch();
     let connection = $.hubConnection();
     connection.url = process.env.API_URL + "/signalr";
