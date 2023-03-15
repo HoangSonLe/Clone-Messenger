@@ -9,11 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 import authApi from "../../api/authApi";
 import { addAvatar, defaultAvatar, logo } from "../../assets/img";
 import { login } from "../../features/AuthSlice";
-import { toastError, uploadFiles } from "../../generals/utils.js";
+import { toastError, toastErrorList, uploadFiles } from "../../generals/utils.js";
 import helper from "../../generals/helper";
 import { configRoutes } from "../../routes/routes";
 import UploadFile from "../ui-kit/UploadFile/UploadFile";
 import styles from "./LoginPage.module.scss";
+import useKey from "../../hooks/useKey";
 const cx = classNames.bind(styles);
 function LoginPage() {
     const dispatch = useDispatch();
@@ -65,7 +66,7 @@ function LoginPage() {
             }
         } catch (err) {
             setPendingLogin(false);
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
     const handleLoginFacebook = async () => {
@@ -87,7 +88,7 @@ function LoginPage() {
         try {
             let fileId = null;
             if (image.imageFile) {
-                var uploadFile = await uploadFiles([image.imageFile],"/chat/UploadImage");
+                var uploadFile = await uploadFiles([image.imageFile], "/chat/UploadImage");
                 fileId = uploadFile.data.data[0].id;
             }
             let postData = {
@@ -98,16 +99,16 @@ function LoginPage() {
             };
             setPendingLogin(true);
             let response = await authApi.register(postData);
+            debugger;
             if (response.isSuccess) {
                 dispatch(login(response.data));
                 navigate(configRoutes.home);
             } else {
                 setPendingLogin(false);
             }
-        } catch (error) {
+        } catch (err) {
             setPendingLogin(false);
-            toastError(error.response.data);
-            console.log("err", error);
+            toastErrorList(err?.response.data);
         }
     };
     const showPreview = (files) => {
@@ -124,6 +125,15 @@ function LoginPage() {
             reader.readAsDataURL(f);
         }
     };
+    useKey(
+        "Enter",
+        () => {
+            if (isLogin) {
+                handleLogin();
+            } else if (!isLogin) handleRegister();
+        },
+        [userName, passWord, displayName]
+    );
     return (
         <div className={cx("wrapper")}>
             <div className={cx("logo")}>

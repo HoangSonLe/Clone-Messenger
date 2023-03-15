@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { act } from "react-dom/test-utils";
 
 const initialState = {
     conversation: null,
@@ -112,10 +113,18 @@ const messageSlice = createSlice({
             state.conversation.groupMessageListByTime.skip = action.payload.skip;
             state.conversation.groupMessageListByTime.hasMore = action.payload.hasMore;
         },
+        updateMessageUser: (state, action) => {
+            let { id, isOnline } = action.payload;
+            let findUser = state.conversation?.listMembers.find((i) => i.userId == id);
+            if (findUser) {
+                findUser.isOnline = isOnline;
+            }
+        },
     },
 });
 const { actions, reducer } = messageSlice;
 export const {
+    updateMessageUser,
     initConversation,
     updateMessageInfor,
     updateStatusReadMessage,

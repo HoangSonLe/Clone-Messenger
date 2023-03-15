@@ -2,7 +2,7 @@ import classNames from "classnames/bind";
 import PropTypes from "prop-types";
 
 import { EUploadType } from "../../../const/enum";
-import { uploadFiles } from "../../../generals/utils";
+import { toastErrorList, uploadFiles } from "../../../generals/utils";
 import BaseUploadFile from "./BaseUploadFile";
 import styles from "./UploadFile.module.scss";
 
@@ -24,7 +24,7 @@ export default function UploadFile({
                     onUploaded(files);
                 }
             } catch (err) {
-                console.log("err", err);
+                toastErrorList(err?.response.data);
             }
         } else {
             onUploaded(files);

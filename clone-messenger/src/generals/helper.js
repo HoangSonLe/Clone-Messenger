@@ -76,7 +76,7 @@ helper.timeNotification = (datetime) => {
         timeString = `${hoursDiff(time, now)} giờ`;
     } else if (minutesDiff(time, now) > 0) {
         timeString = `${minutesDiff(time, now)} phút`;
-    } else if (secondsDiff(time, now) > 0) {
+    } else if (secondsDiff(time, now) >= 0) {
         if (secondsDiff(time, now) > 30) timeString = `${secondsDiff(time, now)} giây`;
         else timeString = "Vừa xong";
     }

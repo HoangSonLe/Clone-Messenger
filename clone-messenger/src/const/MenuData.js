@@ -15,200 +15,222 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ShieldIcon from "@mui/icons-material/Shield";
 import TextSnippetSharpIcon from "@mui/icons-material/TextSnippetSharp";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import { logout } from "../features/AuthSlice";
+import { logout, logoutAsync } from "../features/AuthSlice";
 import { removeGroup } from "../features/ChatGroupSlice";
-import { ArchivedChatsIcon, FilesIcon, LikeIcon, MessengerIcon, NicknameIcon, PrivacyHomeIcon, SegmentIcon } from "../assets/Icons";
+import {
+    ArchivedChatsIcon,
+    FilesIcon,
+    LikeIcon,
+    MessengerIcon,
+    NicknameIcon,
+    PrivacyHomeIcon,
+    SegmentIcon,
+} from "../assets/Icons";
 import { configRoutes } from "../routes/routes";
-const AvatarMenu = () => [
-    {
-        id:1,
-        icon: <SettingsIcon />,
-        title: "Preferences",
-        to: "/",
-        child: null,
-        groupIndex: 1,
-    },
-    {
-        id:2,
-        icon: <PrivacyHomeIcon />,
-        title: "Privacy & safety",
-        to: "/",
-        groupIndex: 2,
-        child: {
+import authApi from "../api/authApi";
+import { useDispatch } from "react-redux";
+const AvatarMenu = () => {
+    const dispatch = useDispatch();
+    return [
+        {
+            id: 1,
+            icon: <SettingsIcon />,
+            title: "Preferences",
+            to: "/",
+            child: null,
+            groupIndex: 1,
+        },
+        {
+            id: 2,
+            icon: <PrivacyHomeIcon />,
             title: "Privacy & safety",
-            data: [
-                {
-                    id:11,
-                    icon: <GppGoodIcon />,
-                    title: "End-to-end encrypted chats",
-                    to: "/",
-                    child: {
+            to: "/",
+            groupIndex: 2,
+            child: {
+                title: "Privacy & safety",
+                data: [
+                    {
+                        id: 11,
+                        icon: <GppGoodIcon />,
                         title: "End-to-end encrypted chats",
-                        data: [
-                            {
-                                id:12,
-                                icon: <LockIcon />,
-                                title: "Security alerts",
-                                to: "/",
-                                child: null,
-                            },
-                            {
-                                id:13,
-                                icon: <ShieldIcon />,
-                                title: "Login",
-                                to: "/",
-                                child: null,
-                            },
-                        ],
+                        to: "/",
+                        child: {
+                            title: "End-to-end encrypted chats",
+                            data: [
+                                {
+                                    id: 12,
+                                    icon: <LockIcon />,
+                                    title: "Security alerts",
+                                    to: "/",
+                                    child: null,
+                                },
+                                {
+                                    id: 13,
+                                    icon: <ShieldIcon />,
+                                    title: "Login",
+                                    to: "/",
+                                    child: null,
+                                },
+                            ],
+                        },
                     },
-                },
-            ],
+                ],
+            },
         },
-    },
-    {
-        id:3,
-        icon: <HelpIcon />,
-        title: "Help",
-        to: "/",
-        child: null,
-        groupIndex: 3,
-    },
-    {
-        id:4,
-        icon: <ReportProblemIcon />,
-        title: "Report a problem",
-        to: "/",
-        child: null,
-        groupIndex: 3,
-    },
-    {
-        id:5,
-        icon: <InfoIcon />,
-        title: "About",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-    },
-    {
-        id:6,
-        icon: <SegmentIcon />,
-        title: "Terms",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-    },
-    {
-        id:7,
-        icon: <SegmentIcon />,
-        title: "Data Policy",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-    },
-    {
-        id:8,
-        icon: <SegmentIcon />,
-        title: "Cookie Policy",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-    },
-    {
-        id:9,
-        icon: <MessengerIcon />,
-        title: "New! Messenger for Windows",
-        to: "/",
-        child: null,
-        groupIndex: 5,
-    },
-    {
-        id:10,
-        icon: <LogoutIcon />,
-        title: "Log out",
-        to: "/",
-        child: null,
-        groupIndex: 5,
-        onClickDispatch: () => logout(),
-        callback: (func) => {
-            func(configRoutes.login);
+        {
+            id: 3,
+            icon: <HelpIcon />,
+            title: "Help",
+            to: "/",
+            child: null,
+            groupIndex: 3,
         },
-    },
-];
-const MessageItemMenu = (data) => [
-    {
-        id:1,
-        icon: <CheckIcon />,
-        title: "Mark as read",
-        to: "/",
-        child: null,
-        groupIndex: 1,
-    },
-    {
-        id:2,
-        icon: <NotificationsIcon />,
-        title: "Mute notifications",
-        to: "/",
-        child: null,
-        groupIndex: 1,
-    },
-    {
-        id:3,
-        icon: <PersonIcon />,
-        title: "View profile",
-        to: "/",
-        child: null,
-        groupIndex: 1,
-    },
-    {
-        id:4,
-        icon: <LockIcon />,
-        title: "Start end-to-end encrypted chat",
-        to: "/",
-        child: null,
-        groupIndex: 2,
-    },
-    {
-        id:5,
-        icon: <CallIcon />,
-        title: "Audio call",
-        to: "/",
-        child: null,
-        groupIndex: 3,
-    },
-    {
-        id:6,
-        icon: <VideocamIcon />,
-        title: "Video chat",
-        to: "/",
-        child: null,
-        groupIndex: 3,
-    },
-    {
-        id:7,
-        icon: <ArchivedChatsIcon />,
-        title: "Archive chat",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-    },
-    {
-        id:8,
-        icon: <DeleteIcon />,
-        title: "Delete chat",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-        onClickDispatch: () => removeGroup(data),
-    },
-    {
-        id:9,
-        icon: <ReportProblemIcon />,
-        title: "Report",
-        to: "/",
-        child: null,
-        groupIndex: 4,
-    },
-];
+        {
+            id: 4,
+            icon: <ReportProblemIcon />,
+            title: "Report a problem",
+            to: "/",
+            child: null,
+            groupIndex: 3,
+        },
+        {
+            id: 5,
+            icon: <InfoIcon />,
+            title: "About",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+        },
+        {
+            id: 6,
+            icon: <SegmentIcon />,
+            title: "Terms",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+        },
+        {
+            id: 7,
+            icon: <SegmentIcon />,
+            title: "Data Policy",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+        },
+        {
+            id: 8,
+            icon: <SegmentIcon />,
+            title: "Cookie Policy",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+        },
+        {
+            id: 9,
+            icon: <MessengerIcon />,
+            title: "New! Messenger for Windows",
+            to: "/",
+            child: null,
+            groupIndex: 5,
+        },
+        {
+            id: 10,
+            icon: <LogoutIcon />,
+            title: "Log out",
+            to: "/",
+            child: null,
+            groupIndex: 5,
+            onClick: () => {
+                dispatch(logoutAsync());
+                window.location.href = "/login";
+            },
+            onClickDispatch: () => logout(),
+            callback: (func) => {
+                func(configRoutes.login);
+            },
+        },
+    ];
+};
+
+const MessageItemMenu = (data) => {
+    const dispatch = useDispatch();
+    return [
+        {
+            id: 1,
+            icon: <CheckIcon />,
+            title: "Mark as read",
+            to: "/",
+            child: null,
+            groupIndex: 1,
+        },
+        {
+            id: 2,
+            icon: <NotificationsIcon />,
+            title: "Mute notifications",
+            to: "/",
+            child: null,
+            groupIndex: 1,
+        },
+        {
+            id: 3,
+            icon: <PersonIcon />,
+            title: "View profile",
+            to: "/",
+            child: null,
+            groupIndex: 1,
+        },
+        {
+            id: 4,
+            icon: <LockIcon />,
+            title: "Start end-to-end encrypted chat",
+            to: "/",
+            child: null,
+            groupIndex: 2,
+        },
+        {
+            id: 5,
+            icon: <CallIcon />,
+            title: "Audio call",
+            to: "/",
+            child: null,
+            groupIndex: 3,
+        },
+        {
+            id: 6,
+            icon: <VideocamIcon />,
+            title: "Video chat",
+            to: "/",
+            child: null,
+            groupIndex: 3,
+        },
+        {
+            id: 7,
+            icon: <ArchivedChatsIcon />,
+            title: "Archive chat",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+        },
+        {
+            id: 8,
+            icon: <DeleteIcon />,
+            title: "Delete chat",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+            onClick: () => dispatch(removeGroup(data)),//TODO
+            // onClickDispatch: () => removeGroup(data),
+        },
+        {
+            id: 9,
+            icon: <ReportProblemIcon />,
+            title: "Report",
+            to: "/",
+            child: null,
+            groupIndex: 4,
+        },
+    ];
+};
 const ConversationMenu = [
     {
         nodeId: "1",
@@ -261,4 +283,3 @@ const ConversationMenu = [
     },
 ];
 export { AvatarMenu, MessageItemMenu, ConversationMenu };
-

@@ -14,7 +14,7 @@ import IconButtonCustom from "../ui-kit/IconButton/IconButtonCustom";
 
 const cx = classNames.bind(styles);
 
-function MessageContentHeader({ href,imageSrcList, isOpenDrawer, handleToggleDrawer }) {
+function MessageContentHeader({ href,imageSrcList, isOnline, isOpenDrawer, handleToggleDrawer }) {
     const { conversation } = useSelector((state) => state.message);
     return (
         <div className={cx("header")}>
@@ -23,6 +23,7 @@ function MessageContentHeader({ href,imageSrcList, isOpenDrawer, handleToggleDra
                     srcList={imageSrcList}
                     forceDisplayContent={true}
                     title={conversation.name}
+                    isOnline = {isOnline}
                 />
             </Link>
             <div className={cx("btn-icon")}>

@@ -1,8 +1,7 @@
 import classNames from "classnames/bind";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import userApi from "../../api/userApi";
-import { getOnlineUserList } from "../../features/UserSlice";
+import { fetchGetOnlineUserList } from "../../features/UserSlice";
 import helper from "../../generals/helper";
 import Header from "../Layouts/Header/Header";
 import { AvatarWithName } from "../ui-kit/Avatar/AvatarCustom";
@@ -14,30 +13,23 @@ const styleIcon = {
     background: helper.getColorFromName("webWash"),
     marginLeft: "12px",
 };
+
 export default function ContactList() {
     const dispatch = useDispatch();
     const { onlineUserList } = useSelector((state) => state.user);
     const { conversation } = useSelector((state) => state.message);
     const [isLoading, setLoading] = useState(true);
 
-    const _fetchGetOnlineUserList = async () => {
-        try {
-            let response = await userApi.getOnlineUserList();
-            if (response.isSuccess == true) {
-                dispatch(getOnlineUserList(response.data));
-            }
-            setLoading(false);
-        } catch (err) {
-            console.log("err", err);
-        }
-    };
     useEffect(() => {
-        _fetchGetOnlineUserList();
+        dispatch(fetchGetOnlineUserList());
+        setLoading(false);
     }, []);
 
     const onScrollBottom = () => {
         setLoading(true);
-        _fetchGetOnlineUserList();
+        dispatch(fetchGetOnlineUserList());
+        setLoading(false);
+
     };
     return (
         <div className={cx("wrapper")}>
@@ -51,7 +43,7 @@ export default function ContactList() {
                                 key={i.id}
                                 title={i.displayName}
                                 isActive={false} //TODO
-                                isOnline={true}
+                                isOnline={i.isOnline}
                                 srcList={[i.avatarFileSrc]}
                                 height="40px"
                                 width="40px"

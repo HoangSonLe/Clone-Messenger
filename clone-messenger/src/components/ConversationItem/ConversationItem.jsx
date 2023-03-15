@@ -1,7 +1,7 @@
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { Fab, Skeleton } from "@mui/material";
 import classNames from "classnames/bind";
-import { memo, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ClearIcon from "@mui/icons-material/Clear";
 
@@ -19,6 +19,8 @@ import { EMessageReadStatus } from "../../const/enum";
 import MessageStatus from "../MessageContent/Message/MessageStatus";
 import { removeGroup } from "../../features/ChatGroupSlice";
 import chatMessageApi from "../../api/chatMessageApi";
+import { getImageAvatarSrc, toastErrorList } from "../../generals/utils";
+import AvatarGroup from "../ui-kit/Avatar/AvatarGroup";
 const cx = classNames.bind(styles);
 const styleAction = {
     height: 32,
@@ -38,15 +40,30 @@ function ConversationItem({ data, isLoading }) {
     const { conversation } = useSelector((state) => state.message);
     const { lastConversationId } = useSelector((state) => state.chatGroup);
     const { defaultModel } = useSelector((state) => state.pageDefault);
+
+    const filterOnlineUserList = () => {
+        return data?.listMembers.filter((i) => i.isOnline == true && i.userId != currentUserId);
+    };
+    const filterImageSrcList = () => {
+        return data?.listMembers
+            .filter((i) => i.userId != currentUserId)
+            .map((i) => i.avatarFileSrc);
+    };
+    const [imageSrcList, setImageSrcList] = useState(filterImageSrcList());
+    const [onlineUserList, setOnlineUserList] = useState(filterOnlineUserList());
+
     const isActive = data && conversation?.id == data?.id;
     const isTmp = data && data.isTmp == true;
+    //Get data conversation
     const _fetchGetConversation = async (callback) => {
         try {
+            //Case conversationTmp
             let id = lastConversationId ?? data?.id;
             if (!id || id == "00000000-0000-0000-0000-000000000000") {
                 typeof callback == "function" && callback();
                 dispatch(initConversation(null));
             } else {
+                //Case conversation is existed in database
                 let post = {
                     ...defaultModel.chatMessagePaginationModel,
                     hasMore: true,
@@ -59,9 +76,10 @@ function ConversationItem({ data, isLoading }) {
                 }
             }
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
+    //Get data conversation tmp
     const _fetchGetTmpConversation = async () => {
         try {
             let memberIds = data.listMembers.map((i) => i.id);
@@ -70,16 +88,21 @@ function ConversationItem({ data, isLoading }) {
                 dispatch(initConversation(response.data));
             }
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
+    //
     const onClickGetConversation = () => {
-        if (isTmp) _fetchGetTmpConversation();
-        else _fetchGetConversation();
+        if (data) {
+            if (isTmp) _fetchGetTmpConversation();
+            else _fetchGetConversation();
+        }
     };
+    //
     const removeConversation = () => {
         _fetchGetConversation(() => dispatch(removeGroup(data)));
     };
+    //Handle status message (READ,SENT)
     let process = null;
     let inlineStatus = null;
     if (!isLoading && data && !isTmp && data.lastMessage) {
@@ -89,42 +112,79 @@ function ConversationItem({ data, isLoading }) {
             data.lastMessage,
             data.messageStatus?.messageStatusItemList
         );
+        switch (process.status) {
+            case EMessageReadStatus.ReadOne:
+                //Render avatar -- chỉ render 1 avatar
+                //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
+                let item = process.lastReadExceptSender[0];
+                let imageSrc = getImageAvatarSrc(data.listMembers, item.userId);
+                inlineStatus = <AvatarCustom srcList={[imageSrc]} height={14} width={14} />;
 
-        if (process.status == EMessageReadStatus.ReadOne) {
-            //Render avatar -- chỉ render 1 avatar
-            //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
-            inlineStatus = <AvatarCustom height={14} width={14} />;
-        } else if (process.status == EMessageReadStatus.ReadAll) {
-            //Đã đọc hết
-            // inlineStatus = (
-            //     <MessageStatus
-            //         data={lastReadExceptCurrentUser}
-            //         status={EMessageStatus.Undefine}
-            //     />
-            // );
-        } else if (process.status == EMessageReadStatus.Undefine) {
-            //Đang gửi hoặc đã gửi chưa đọc
-            if (data.lastMessage.createdBy != currentUserId) {
-                inlineStatus = (
-                    <div
-                        style={{
-                            height: 10,
-                            width: 10,
-                            backgroundColor: helper.getColorFromName("blue"),
-                            borderRadius: "50%",
-                        }}
-                    ></div>
-                );
-            } else {
-                inlineStatus = <MessageStatus status={data.lastMessage.messageStatus} />;
-            }
+            case EMessageReadStatus.ReadSome:
+            case EMessageReadStatus.ReadAllLast:
+                if (process.lastReadExceptSender.length > 0) {
+                    let tmp = process.lastReadExceptSender.map((j) => {
+                        return {
+                            ...j,
+                            imageSrc: getImageAvatarSrc(data.listMembers, j.userId),
+                        };
+                    });
+                    inlineStatus = (
+                        <div className={cx("status-line")}>
+                            <AvatarGroup
+                                max={3}
+                                data={tmp}
+                                customRender={(data) => (
+                                    <AvatarCustom
+                                        key={data.userId}
+                                        styleWrapper={{
+                                            margin: "0px 0px 0px 2px",
+                                        }}
+                                        srcList={[data.imageSrc]}
+                                        height={14}
+                                        width={14}
+                                    />
+                                )}
+                            ></AvatarGroup>
+                        </div>
+                    );
+                }
+
+                break;
+            case EMessageReadStatus.Undefine:
+                //Đang gửi hoặc đã gửi chưa đọc
+                if (data.lastMessage.createdBy != currentUserId) {
+                    inlineStatus = (
+                        <div
+                            style={{
+                                height: 10,
+                                width: 10,
+                                backgroundColor: helper.getColorFromName("blue"),
+                                borderRadius: "50%",
+                            }}
+                        ></div>
+                    );
+                } else {
+                    inlineStatus = <MessageStatus status={data.lastMessage.messageStatus} />;
+                }
+                break;
+            case EMessageReadStatus.ReadAll:
+                break;
+            default:
+                break;
         }
     }
-    let imageSrcList = data?.listMembers
-        .filter((i) => i.userId != currentUserId)
-        .map((i) => i.avatarFileSrc);
+    //Handle fill data image and filter online user
+    useEffect(() => {
+        setImageSrcList(filterImageSrcList());
+        setOnlineUserList(filterOnlineUserList());
+    }, [data?.listMembers]);
+
     return (
-        <div className={cx("container", isActive ? "active" : undefined)}>
+        <div
+            className={cx("container", isActive ? "active" : undefined)}
+            onClick={onClickGetConversation}
+        >
             {isLoading ? (
                 <>
                     <Skeleton variant="circular" width={48} height={48} />
@@ -135,17 +195,12 @@ function ConversationItem({ data, isLoading }) {
                 </>
             ) : (
                 <>
-                    <div className={cx("wrapper")} onClick={onClickGetConversation}>
+                    <div className={cx("wrapper")}>
                         <AvatarWithName
                             title={data.name}
                             isActive={isActive && isTmp == false}
                             isBoldTitle={true && isTmp == false}
-                            isOnline={
-                                isTmp == false &&
-                                data.listMembers.some(
-                                    (i) => i.isOnline == true && i.userId != currentUserId
-                                )
-                            }
+                            isOnline={isTmp == false && onlineUserList.length > 0}
                             srcList={isTmp == true ? [defaultAvatar] : imageSrcList}
                             height="48px"
                             width="48px"
@@ -159,7 +214,7 @@ function ConversationItem({ data, isLoading }) {
 
                                     <div className={cx("dot-space")}>.</div>
                                     <div className={cx("time")}>
-                                        {helper.timeNotification(data.createdDate)}
+                                        {helper.timeNotification(data.lastMessage.createdDate)}
                                     </div>
                                 </div>
                             ) : null}

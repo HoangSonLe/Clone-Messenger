@@ -19,7 +19,8 @@
 
 .message-group-container {
     margin-bottom: 2px;
-
+    position: relative;
+    
     &:not(:first-of-type, :last-of-type) {
         .message {
             .message-row {
@@ -168,6 +169,12 @@
     justify-content: flex-end;
     margin: 4px 6px 2px 0px;
     height: 20px;
+}
+
+.status-line-float {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
 }
 
 .status {

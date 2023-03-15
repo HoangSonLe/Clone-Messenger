@@ -19,6 +19,7 @@ import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
 import Search from "../ui-kit/Search/Search";
 import styles from "./ConversationList.module.scss";
 import { initConversation } from "../../features/MessageSlice";
+import { toastErrorList } from "../../generals/utils";
 const cx = classNames.bind(styles);
 const styleIcon = {
     color: helper.getColorFromName("primaryText"),
@@ -51,7 +52,7 @@ export default function MessageList() {
             }
             setLoading(false);
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
     useEffect(() => {

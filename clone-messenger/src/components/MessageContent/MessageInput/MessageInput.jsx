@@ -8,7 +8,9 @@ import { useDispatch, useSelector } from "react-redux";
 
 import chatMessageApi from "../../../api/chatMessageApi";
 import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../assets/Icons";
+import { removeGroup } from "../../../features/ChatGroupSlice";
 import helper from "../../../generals/helper";
+import { toastErrorList } from "../../../generals/utils";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import styles from "./MessageInput.module.scss";
 
@@ -49,7 +51,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
             }
             setAutoScrollBottom();
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
     //Send message and create new chat group
@@ -58,10 +60,11 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
             let response = await chatMessageApi.sendMessageWithCreateConversation(data);
             if (response.isSuccess == true) {
                 setText("");
+                dispatch(removeGroup(data));
             }
-            setAutoScrollBottom();
+            // setAutoScrollBottom();
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
     const onSubmitForm = (e) => {

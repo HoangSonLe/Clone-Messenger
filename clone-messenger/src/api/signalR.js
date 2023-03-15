@@ -2,17 +2,21 @@ import $ from "jquery";
 import { useDispatch } from "react-redux";
 import "signalr";
 import {
-    sendMessage,
-    updateStatusReadMessage,
-    updateMessageInfor,
-    initConversation,
-} from "../features/MessageSlice";
-import {
     addNewGroupAndRemoveTmp,
+    updateChatGroupUser,
     updateLastMessage,
     updateLastMessageInfor,
     updateStatusReadLastMessage,
 } from "../features/ChatGroupSlice";
+import {
+    initConversation,
+    sendMessage,
+    updateMessageInfor,
+    updateMessageUser,
+    updateStatusReadMessage,
+} from "../features/MessageSlice";
+import { fetchGetOnlineUserList, getOnlineUserList } from "../features/UserSlice";
+import userApi from "./userApi";
 const SignalRInit = () => {
     const token = sessionStorage.getItem("jwtToken");
     let dispatch = useDispatch();
@@ -22,7 +26,10 @@ const SignalRInit = () => {
     connection.qs = { token: `${token}` };
     let chatHubProxy = connection.createHubProxy("chatHub");
     chatHubProxy.on("test", function (object) {
-        console.log(object);
+        // console.log(object);
+    });
+    chatHubProxy.on("logout", function () {
+        // connection.stop();
     });
     chatHubProxy.on("updateMessageInfo", function (data) {
         dispatch(updateMessageInfor(data));
@@ -42,6 +49,12 @@ const SignalRInit = () => {
             dispatch(initConversation(data.conversation));
         }
     });
+    chatHubProxy.on("updateUser", function (data) {
+        dispatch(fetchGetOnlineUserList());
+        dispatch(updateChatGroupUser(data));
+        dispatch(updateMessageUser(data));
+    });
+
     connection
         .start()
         .done(function () {

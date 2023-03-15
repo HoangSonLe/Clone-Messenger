@@ -9,6 +9,7 @@ import helper from "../../../generals/helper";
 import { getImageAvatarSrc } from "../../../generals/utils";
 
 import AvatarCustom from "../../ui-kit/Avatar/AvatarCustom";
+import AvatarGroup from "../../ui-kit/Avatar/AvatarGroup";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
 import ToolTipCustom from "../../ui-kit/IconButton/ToolTipCustom";
 import styles from "./Message.module.scss";
@@ -23,11 +24,17 @@ function Message({ data }) {
     let { continuityKeyByUser, messages } = data;
     let myAvatar = getImageAvatarSrc(conversation.listMembers, data.userId);
     let isMyMessage = data.userId == currentUserId;
+    let isOnline = conversation?.listMembers.some(
+        (i) => i.isOnline == true && i.userId != currentUserId
+    );
+
     return (
         <div className={cx("wrapper")}>
             <div className={cx("message-wrapper")}>
                 <div className={cx("receiver-avatar")}>
-                    {!isMyMessage ? <AvatarCustom srcList={[myAvatar]} /> : null}
+                    {!isMyMessage ? (
+                        <AvatarCustom isOnline={isOnline} srcList={[myAvatar]} />
+                    ) : null}
                 </div>
                 <div className={cx("messages-container")}>
                     {messages.map((i, index) => {
@@ -39,37 +46,89 @@ function Message({ data }) {
                         );
 
                         let inlineStatus = null;
-                        if (process.status == EMessageReadStatus.ReadOne) {
-                            //Render avatar -- chỉ render 1 avatar
-                            //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
-                            let item = process.lastReadExceptSender[0];
-                            let imageSrc = getImageAvatarSrc(conversation.listMembers, item.userId);
-                            inlineStatus = (
-                                <ToolTipCustom
-                                    placement="top"
-                                    title={`Seen by ${
-                                        item.userName
-                                    } at ${helper.messageTimeToolTipDisplay(item.readTime)}`}
-                                >
-                                    <AvatarCustom
-                                        srcList={[imageSrc]}
-                                        height={14}
-                                        width={14}
-                                        variant="standard"
-                                    />
-                                </ToolTipCustom>
-                            );
-                        } else if (process.status == EMessageReadStatus.ReadAll) {
-                            //Đã đọc hết
-                            // inlineStatus = (
-                            //     <MessageStatus
-                            //         data={lastReadExceptCurrentUser}
-                            //         status={EMessageStatus.Undefine}
-                            //     />
-                            // );
-                        } else if (process.status == EMessageReadStatus.Undefine) {
-                            //Đang gửi hoặc đã gửi chưa đọc
-                            inlineStatus = <MessageStatus status={i.messageStatus} />;
+                        let outStatus = null;
+                        switch (process.status) {
+                            case EMessageReadStatus.ReadOne:
+                                //Render avatar -- chỉ render 1 avatar
+                                //=> nếu trên 2 người đã đọc -- trừ người gửi thì ko vào case này
+                                let item = process.lastReadExceptSender[0];
+                                let imageSrc = getImageAvatarSrc(
+                                    conversation.listMembers,
+                                    item.userId
+                                );
+                                inlineStatus = (
+                                    <ToolTipCustom
+                                        placement="top"
+                                        title={`Seen by ${
+                                            item.userName
+                                        } at ${helper.messageTimeToolTipDisplay(item.readTime)}`}
+                                    >
+                                        <AvatarCustom
+                                            srcList={[imageSrc]}
+                                            height={14}
+                                            width={14}
+                                            variant="standard"
+                                        />
+                                    </ToolTipCustom>
+                                );
+                                break;
+                            case EMessageReadStatus.ReadSome:
+                            case EMessageReadStatus.ReadAllLast:
+                                if (process.lastReadExceptSender.length > 0) {
+                                    let tmp = process.lastReadExceptSender.map((j) => {
+                                        let t = {
+                                            ...j,
+                                            imageSrc: getImageAvatarSrc(
+                                                conversation.listMembers,
+                                                j.userId
+                                            ),
+                                        };
+                                        return t;
+                                    });
+                                    outStatus = (
+                                        <>
+                                            <div
+                                                className={cx("status-line", {
+                                                    "status-line-float": !isMyMessage,
+                                                })}
+                                            >
+                                                <AvatarGroup
+                                                    max={5}
+                                                    data={tmp}
+                                                    customRender={(item) => (
+                                                        <ToolTipCustom
+                                                            key={item.userId}
+                                                            placement="top"
+                                                            title={`Seen by ${
+                                                                item.displayName
+                                                            } at ${helper.messageTimeToolTipDisplay(
+                                                                item.readTime
+                                                            )}`}
+                                                        >
+                                                            <AvatarCustom
+                                                                styleWrapper={{
+                                                                    margin: "0px 0px 0px 2px",
+                                                                }}
+                                                                srcList={[item.imageSrc]}
+                                                                height={14}
+                                                                width={14}
+                                                            />
+                                                        </ToolTipCustom>
+                                                    )}
+                                                ></AvatarGroup>
+                                            </div>
+                                        </>
+                                    );
+                                }
+                                break;
+                            case EMessageReadStatus.Undefine:
+                                //Đang gửi hoặc đã gửi chưa đọc
+                                inlineStatus = <MessageStatus status={i.messageStatus} />;
+                                break;
+                            case EMessageReadStatus.ReadAll:
+                                break;
+                            default:
+                                break;
                         }
                         return (
                             <div key={i.id} className={cx("message-group-container")}>
@@ -114,39 +173,7 @@ function Message({ data }) {
                                     </div>
                                     <div className={cx("status")}>{inlineStatus}</div>
                                 </div>
-                                {/* <div style={{ height: "4px" }}></div>
-                                <div className={cx("status-line")}>
-                                    <ToolTipCustom
-                                        placement="top"
-                                        title={"Seen by Hoang Huy at ....."}
-                                    >
-                                        <AvatarCustom
-                                            styleWrapper={{ margin: "0px 0px 0px 2px" }}
-                                            height={14}
-                                            width={14}
-                                        />
-                                    </ToolTipCustom>
-                                    <ToolTipCustom
-                                        placement="top"
-                                        title={"Seen by Hoang Huy at ....."}
-                                    >
-                                        <AvatarCustom
-                                            styleWrapper={{ margin: "0px 0px 0px 2px" }}
-                                            height={14}
-                                            width={14}
-                                        />
-                                    </ToolTipCustom>
-                                    <ToolTipCustom
-                                        placement="top"
-                                        title={"Seen by Hoang Huy at ....."}
-                                    >
-                                        <AvatarCustom
-                                            styleWrapper={{ margin: "0px 0px 0px 2px" }}
-                                            height={14}
-                                            width={14}
-                                        />
-                                    </ToolTipCustom>
-                                </div> */}
+                                {outStatus}
                             </div>
                         );
                     })}
@@ -155,24 +182,40 @@ function Message({ data }) {
         </div>
     );
 }
-const processMessageReadStatus = (userId, listMembers, message, messageStatusItemList) => {
+const processMessageReadStatus = (userId, listMembers, message, messageStatusItemList = []) => {
     let status = EMessageReadStatus.Undefine;
-    //Mảng ds những người đã đọc tin nhắn
-    let beforeLastReadUsers = messageStatusItemList?.filter((j) => {
-        return message.createdDate <= j.readTime;
+    // if (message.id == "99ef7677-ff30-4408-adf4-650bad6a11bb") {
+    //     debugger;
+    // }
+    //Mảng ds những người đã đọc tin nhắn hiện tại (trừ người gửi)
+    let readUsers = messageStatusItemList.filter((j) => {
+        return message.createdDate <= j.readTime && j.userId != message.createdBy;
     });
-    //Mảng ds những người đọc tin nhắn(trừ người gửi)
-    let lastReadExceptSender = messageStatusItemList?.filter(
+
+    //Mảng ds những người có tin nhắn đã đọc mới nhất == tin nhắn hiện tại (trừ người gửi)
+    let lastReadExceptSender = [];
+    lastReadExceptSender = messageStatusItemList.filter(
         (j) => j.chatMessageId == message.id && j.userId != message.createdBy
     );
     if (lastReadExceptSender.length == 1) {
-        console.log(lastReadExceptSender);
         //Render avatar -- chỉ render 1 avatar
         //=> nếu trên 2 người đã đọc(trừ người gửi) thì ko vào case này- để hiện thì 1 avatar kế bên tin nhắn
         status = EMessageReadStatus.ReadOne;
-    } else if (beforeLastReadUsers.length == listMembers.length) {
-        //Đã đọc hết
+    } else if (
+        readUsers.length == listMembers.length - 1 &&
+        lastReadExceptSender.length != listMembers.length - 1
+    ) {
+        //Đã đọc hết và tin nhắn đọc cuối != tin nhắn hiện tại => Không hiện gì
         status = EMessageReadStatus.ReadAll;
+    } else if (
+        readUsers.length == listMembers.length - 1 &&
+        lastReadExceptSender.length == listMembers.length - 1
+    ) {
+        //Đã đọc hết và tin nhắn đọc cuối == tin nhắn hiện tại => Hiện tất cả những người đã đọc
+        status = EMessageReadStatus.ReadAllLast;
+    } else if (readUsers.length >= 1 && lastReadExceptSender.length <= readUsers.length) {
+        //Vài người đã đọc, vài người chưa đọc
+        status = EMessageReadStatus.ReadSome;
     } else {
         //Đang gửi hoặc đã gửi chưa đọc
         status = EMessageReadStatus.Undefine; //Dựa vào status message

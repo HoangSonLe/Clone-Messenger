@@ -73,6 +73,15 @@ const chatGroupSlice = createSlice({
                 g.listMembers = data.listMembers;
             }
         },
+        updateChatGroupUser: (state, action) => {
+            let { id, isOnline } = action.payload;
+            state.chatGroupList.forEach((i) => {
+                let findUser = i.listMembers.find((i) => i.userId == id);
+                if (findUser) {
+                    findUser.isOnline = isOnline;
+                }
+            });
+        },
         setLoadMore: (state, action) => {
             state.hasMore = action.payload;
         },
@@ -81,6 +90,7 @@ const chatGroupSlice = createSlice({
 const { actions, reducer } = chatGroupSlice;
 export const {
     addGroup,
+    updateChatGroupUser,
     addNewGroupAndRemoveTmp,
     updateTmpChatGroup,
     setLastConversationId,

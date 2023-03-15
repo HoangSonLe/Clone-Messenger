@@ -8,6 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import pageDefaultApi from "../../../api/pageDefaultApi";
 import { setPageDefaultModel } from "../../../features/PageDefaultSlice";
+import { toastErrorList } from "../../../generals/utils";
 import { configRoutes } from "../../../routes/routes";
 import MessageContent from "../../MessageContent/MessageContent";
 import Navigation from "../../Navigation/Navigation";
@@ -29,7 +30,7 @@ export default function DefaultLayout() {
                 dispatch(setPageDefaultModel(response.data));
             }
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
     useEffect(() => {

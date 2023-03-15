@@ -1,11 +1,12 @@
 import { CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
-import { useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import chatMessageApi from "../../api/chatMessageApi";
 import { loadMoreMessage } from "../../features/MessageSlice";
 import helper from "../../generals/helper";
+import { toastErrorList } from "../../generals/utils";
 import ScrollLoadMore from "../ui-kit/Scroll/SrollLoadMore";
 import styles from "./MessageContent.module.scss";
 import MessageInput from "./MessageInput/MessageInput";
@@ -13,13 +14,16 @@ import MessageList from "./MessageList.jsx/MessageList";
 const cx = classNames.bind(styles);
 export default function Messages() {
     const childRef = useRef();
+    const mounted = useRef();
     const dispatch = useDispatch();
     const [isLoading, setLoading] = useState(false);
     const { conversation } = useSelector((state) => state.message);
     const { chatMessagePaginationModel } = useSelector((state) => state.pageDefault);
-
     const setAutoScrollBottom = () => {
-        childRef.current.scrollToBottom();
+        childRef.current?.scrollToBottom();
+    };
+    const setAutoScrollTop = () => {
+        childRef.current?.scrollToTop();
     };
 
     const _fetchGetMessageList = async () => {
@@ -36,7 +40,7 @@ export default function Messages() {
                 }
                 setLoading(false);
             } catch (err) {
-                console.log("err", err);
+                toastErrorList(err?.response.data);
             }
         } else {
             setLoading(false);
@@ -46,7 +50,17 @@ export default function Messages() {
         setLoading(true);
         _fetchGetMessageList();
     };
-
+    useLayoutEffect(() => {
+        if (!mounted.current) {
+            // do componentDidMount logic
+            mounted.current = true;
+        } else {
+            // do componentDidUpdate logic
+            if (isLoading == false) {
+                setAutoScrollTop();
+            }
+        }
+    }, [isLoading]);
     return (
         <div className={cx("content")}>
             <div className={cx("message")}>
@@ -56,6 +70,7 @@ export default function Messages() {
                     beginBottom={true}
                     onScrollTop={onScrollTop}
                     spaceToBottomDisplayButtonScroll={10}
+                    dependencyAutoScrollToBottom={conversation.id}
                 >
                     {isLoading ? (
                         <div

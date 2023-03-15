@@ -1,5 +1,5 @@
 import classNames from "classnames/bind";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import helper from "../../generals/helper";
@@ -27,6 +27,20 @@ export default function MessageContent() {
         return window.innerWidth > breakpointWidth ? maxWidthDrawer : widthDrawerDefault;
     };
     const [widthDrawer, setWidthDrawer] = useState(checkWidthView);
+
+    const filterOnlineUserList = () => {
+        return conversation?.listMembers.filter(
+            (i) => i.isOnline == true && i.userId != currentUserId
+        );
+    };
+    const filterImageSrcList = () => {
+        return conversation?.listMembers
+            .filter((i) => i.userId != currentUserId)
+            .map((i) => i.avatarFileSrc);
+    };
+    const [onlineUserList, setOnlineUserList] = useState(filterOnlineUserList());
+    const [imageSrcList, setImageSrcList] = useState(filterImageSrcList());
+
     //Handle open close drawer
     const handleToggleDrawer = () => {
         setOpenDrawer((prev) => !prev);
@@ -58,9 +72,10 @@ export default function MessageContent() {
     // const readLastMessage = _.debounce(() => {
     //     _fetchReadLastMessage();
     // }, 200);
-    let imageSrcList = conversation?.listMembers
-        .filter((i) => i.userId != currentUserId)
-        .map((i) => i.avatarFileSrc);
+    useLayoutEffect(() => {
+        setImageSrcList(filterImageSrcList());
+        setOnlineUserList(filterOnlineUserList());
+    }, [conversation?.listMembers]);
     return (
         <>
             {conversation ? (
@@ -82,6 +97,7 @@ export default function MessageContent() {
                                 href={"/"}
                                 imageSrcList={imageSrcList}
                                 isOpenDrawer
+                                isOnline={onlineUserList?.length > 0}
                                 handleToggleDrawer={handleToggleDrawer}
                             />
                             {/* Header */}
@@ -93,7 +109,6 @@ export default function MessageContent() {
                         <DrawerInfor
                             open={isOpenDrawer}
                             name={conversation.name}
-                            isGroup={conversation.isGroup}
                             imageSrcList={imageSrcList}
                             widthDrawer={widthDrawer}
                             isOpenDrawer={isOpenDrawer}

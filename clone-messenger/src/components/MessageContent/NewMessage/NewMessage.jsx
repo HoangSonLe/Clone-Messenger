@@ -12,6 +12,7 @@ import { AvatarWithName } from "../../ui-kit/Avatar/AvatarCustom";
 import CustomPopover from "../../ui-kit/CustomPopover/CustomPopover";
 import Messages from "../Messages";
 import styles from "./NewMessage.module.scss";
+import { toastErrorList } from "../../../generals/utils";
 const cx = classNames.bind(styles);
 export default function NewMessage() {
     const dispatch = useDispatch();
@@ -31,7 +32,7 @@ export default function NewMessage() {
                 dispatch(updateTmpChatGroup(response.data));
             }
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
     const handleAddMember = (value) => {
@@ -55,7 +56,7 @@ export default function NewMessage() {
                 key={item.id}
                 data={item}
                 title={item.displayName}
-                isActive={item.isActive}
+                isOnline={item.isOnline}
                 srcList={[item.avatarFileSrc]}
                 height="48px"
                 width="48px"
@@ -80,7 +81,7 @@ export default function NewMessage() {
                 setSearchList(response.data);
             }
         } catch (err) {
-            console.log("err", err);
+            toastErrorList(err?.response.data);
         }
     };
 

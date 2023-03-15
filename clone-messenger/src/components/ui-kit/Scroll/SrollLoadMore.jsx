@@ -1,6 +1,6 @@
 import classNames from "classnames/bind";
 import _ from "lodash";
-import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useLayoutEffect, useState } from "react";
 import { useRef } from "react";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
@@ -24,10 +24,12 @@ const ScrollLoadMore = forwardRef((props, ref) => {
         beginBottom,
         hideScroll = false,
         spaceToBottomDisplayButtonScroll = 0,
+        dependencyAutoScrollToBottom,
         ...otherProps
     } = props;
     const [showScroll, setShowScroll] = useState(false);
     const refDiv = useRef();
+    const refTopDiv = useRef();
     const _onScrollDebounce = _.debounce((e, scrollTop, offsetHeight, scrollHeight) => {
         typeof onScroll === "function" && onScroll();
         typeof onScrollTop === "function" && scrollTop - spaceToTop <= 0 && onScrollTop();
@@ -61,17 +63,30 @@ const ScrollLoadMore = forwardRef((props, ref) => {
             });
         }
     };
+    const scrollToTop = () => {
+        refTopDiv.current.scrollTo({
+            behavior: showScroll ? "smooth" : "auto",
+            top: 10,
+        });
+    };
     useImperativeHandle(ref, () => ({
         scrollToBottom() {
             scrollToBottom();
         },
+        scrollToTop() {
+            scrollToTop();
+        },
     }));
-    useEffect(() => {
+
+    useLayoutEffect(() => {
         scrollToBottom();
-    }, []);
+    }, [dependencyAutoScrollToBottom]);
+
     return (
         <div className={cx("wrapper")}>
             <div
+                ref={refTopDiv}
+                id="scroll"
                 className={cx("scroll", hideScroll ? "hideScroll" : undefined)}
                 onScroll={_onScroll}
                 {...otherProps}
@@ -93,5 +108,6 @@ ScrollLoadMore.defaultProps = {
     debounce: 200,
     spaceToBottom: 0,
     spaceToTop: 0,
+    beginBottom: false,
 };
 export default ScrollLoadMore;

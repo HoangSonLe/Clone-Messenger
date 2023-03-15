@@ -10,6 +10,7 @@ const cx = classNames.bind(styles);
 
 function MessageList() {
     const { conversation } = useSelector((state) => state.message);
+
     return (
         <div className={cx("wrapper")}>
             {conversation.groupMessageListByTime?.data.map((i, index) => (

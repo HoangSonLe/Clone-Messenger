@@ -57,6 +57,7 @@ const AvatarCustom = forwardRef(
             styles,
             isOnline,
             styleWrapper,
+            customRender,
             ...props
         },
         ref
@@ -83,18 +84,11 @@ const AvatarCustom = forwardRef(
         if (srcList.length > 1 && srcList[1]) {
             imageSub = srcList[1];
         }
-        return (
-            <StyledBadge
-                ref={ref}
-                overlap="circular"
-                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-                variant={variant}
-                sx={{
-                    cursor: "pointer",
-                    ...styleWrapper,
-                }}
-                {...props}
-            >
+        let childrenComp = null;
+        if (typeof customRender == "function") {
+            childrenComp = customRender(heightImage,widthImage);
+        } else {
+            childrenComp = (
                 <div style={parentStyle}>
                     <Avatar
                         sx={{
@@ -121,6 +115,21 @@ const AvatarCustom = forwardRef(
                         />
                     ) : null}
                 </div>
+            );
+        }
+        return (
+            <StyledBadge
+                ref={ref}
+                overlap="circular"
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                variant={variant}
+                sx={{
+                    cursor: "pointer",
+                    ...styleWrapper,
+                }}
+                {...props}
+            >
+                {childrenComp}
             </StyledBadge>
         );
     }

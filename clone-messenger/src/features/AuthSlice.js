@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import authApi from "../api/authApi";
 const tryParseLocalJSON = (key) => {
     try {
         var obj = sessionStorage.getItem(key);
@@ -14,7 +15,16 @@ const initialState = {
     currentUserInfor: tryParseLocalJSON("currentUserInfor"),
     isLoggedIn: sessionStorage.getItem("jwtToken") ? true : false,
 };
-
+export const logoutAsync = createAsyncThunk("auth/logoutAsync", async () => {
+    try {
+        let response = await authApi.logout();
+        if (response.isSuccess == true) {
+            return response.data;
+        }
+    } catch (err) {
+        console.log("err", err);
+    }
+});
 const authSlice = createSlice({
     name: "auth",
     initialState: initialState,
@@ -33,7 +43,21 @@ const authSlice = createSlice({
             sessionStorage.removeItem("jwtToken");
             sessionStorage.removeItem("currentUserId");
             sessionStorage.removeItem("currentUserInfor");
+            state.token = null;
             state.isLoggedIn = false;
+            state.currentUserId = null;
+            state.currentUserInfor = null;
+        },
+        extraReducers: (builder) => {
+            builder.addCase(logoutAsync.fulfilled, (state, action) => {
+                sessionStorage.removeItem("jwtToken");
+                sessionStorage.removeItem("currentUserId");
+                sessionStorage.removeItem("currentUserInfor");
+                state.token = null;
+                state.isLoggedIn = false;
+                state.currentUserId = null;
+                state.currentUserInfor = null;
+            });
         },
     },
 });

@@ -7,7 +7,7 @@
     align-items: center;
     position: relative;
     padding: 5px;
-    margin: 1px 0px;
+    margin: 1px 7px;
     border-radius: 8px;
     cursor: pointer;
 
@@ -36,7 +36,7 @@
 }
 
 .message {
-    width: 100%;
+    width: fit-content;
     display: flex;
     align-items: center;
     justify-content: flex-start;

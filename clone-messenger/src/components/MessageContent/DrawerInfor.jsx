@@ -19,7 +19,7 @@ const styleIcon = {
     background: helper.getColorFromName("webWash"),
 };
 
-function DrawerInfor({ name, imageSrcList, isGroup, widthDrawer, isOpenDrawer }) {
+function DrawerInfor({ name, imageSrcList, widthDrawer, isOpenDrawer }) {
     return (
         <Drawer
             sx={{

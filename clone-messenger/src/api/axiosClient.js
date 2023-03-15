@@ -18,28 +18,28 @@ axiosClient.interceptors.request.use(async (config) => {
 });
 axiosClient.interceptors.response.use(
     (response) => {
-        response.isSuccess = true;
         if (response && response.data) {
+            response.isSuccess = true;
             return response.data;
         }
         return response;
     },
-    (err) => {
-        // Handle errors
-        console.log(err);
-        if (err.response.status == 401) {
-            window.location.href = "/login";
-        }
-        if (err?.response.data.length > 0) {
-            err?.response.data.forEach((e) => {
-                toastError(e);
-            });
-        } else {
-            toastError("Error.Please try again");
-        }
-        err.response.isSuccess = false;
-        return err.response;
-    }
+    // (err) => {
+    //     // Handle errors
+    //     console.log(err);
+    //     if (err.response.status == 401) {
+    //         window.location.href = "/login";
+    //     }
+    //     if (err?.response.data.length > 0) {
+    //         err?.response.data.forEach((e) => {
+    //             toastError(e);
+    //         });
+    //     } else {
+    //         toastError("Error.Please try again");
+    //     }
+    //     err.response.isSuccess = false;
+    //     return err.response;
+    // }
 );
 
 export default axiosClient;
