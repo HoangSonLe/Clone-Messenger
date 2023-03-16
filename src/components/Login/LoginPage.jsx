@@ -99,7 +99,6 @@ function LoginPage() {
             };
             setPendingLogin(true);
             let response = await authApi.register(postData);
-            debugger;
             if (response.isSuccess) {
                 dispatch(login(response.data));
                 navigate(configRoutes.home);

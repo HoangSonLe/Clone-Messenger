@@ -184,9 +184,6 @@ function Message({ data }) {
 }
 const processMessageReadStatus = (userId, listMembers, message, messageStatusItemList = []) => {
     let status = EMessageReadStatus.Undefine;
-    // if (message.id == "99ef7677-ff30-4408-adf4-650bad6a11bb") {
-    //     debugger;
-    // }
     //Mảng ds những người đã đọc tin nhắn hiện tại (trừ người gửi)
     let readUsers = messageStatusItemList.filter((j) => {
         return message.createdDate <= j.readTime && j.userId != message.createdBy;
