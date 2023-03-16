@@ -91,7 +91,8 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env": {
                 API_URL: JSON.stringify("https://clonemessenger.azurewebsites.net/api"),
-                // API_URL: JSON.stringify("https://localhost:44344/api"),            },
+                // API_URL: JSON.stringify("https://localhost:44344/api"),            
+            },
         }),
         new HtmlWebpackPlugin({
             // favicon: "./public/messenger.ico",
