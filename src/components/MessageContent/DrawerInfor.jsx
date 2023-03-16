@@ -1,7 +1,7 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import SearchIcon from "@mui/icons-material/Search";
-import { Drawer } from "@mui/material";
+import { Drawer, Tooltip } from "@mui/material";
 import classNames from "classnames/bind";
 import { memo } from "react";
 import { Link } from "react-router-dom";
@@ -43,11 +43,14 @@ function DrawerInfor({ name, imageSrcList, widthDrawer, isOpenDrawer }) {
                         styleWrapper={{ cursor: "default" }}
                     />
                 </div>
-                <EllipsisContent component={"div"}>
+
+                <Tooltip title={name}>
                     <Link to={"/"} target="_blank">
-                        <div className={cx("name")}>{name}</div>
+                        <div className={cx("name")}>
+                            <EllipsisContent component={"div"} text={name}></EllipsisContent>
+                        </div>
                     </Link>
-                </EllipsisContent>
+                </Tooltip>
                 <div className={cx("action")}>
                     <div className={cx("icon")}>
                         <IconButtonCustom sx={styleIcon} onClick={defaultOnClick}>

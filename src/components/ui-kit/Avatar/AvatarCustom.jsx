@@ -86,7 +86,7 @@ const AvatarCustom = forwardRef(
         }
         let childrenComp = null;
         if (typeof customRender == "function") {
-            childrenComp = customRender(heightImage,widthImage);
+            childrenComp = customRender(heightImage, widthImage);
         } else {
             childrenComp = (
                 <div style={parentStyle}>
@@ -163,16 +163,14 @@ const AvatarWithName = ({
 }) => {
     const WrappedMyComponent = React.forwardRef(function WrappedMyComponent(props, ref) {
         return (
-            <EllipsisContent component={"div"}>
-                <div
-                    className={cx("name", {
-                        active: isActive && isBoldTitle,
-                        noBold: noneBold,
-                    })}
-                >
-                    {title}
-                </div>
-            </EllipsisContent>
+            <div
+                className={cx("name", {
+                    active: isActive && isBoldTitle,
+                    noBold: noneBold,
+                })}
+            >
+                <EllipsisContent component={"div"} text={title}></EllipsisContent>
+            </div>
         );
     });
     if (isLoading) {

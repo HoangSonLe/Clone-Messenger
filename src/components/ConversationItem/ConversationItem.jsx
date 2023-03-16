@@ -208,9 +208,10 @@ function ConversationItem({ data, isLoading }) {
                             <div style={{ height: "8px" }}></div>
                             {isTmp == true ? null : data.lastMessage ? (
                                 <div className={cx("message")}>
-                                    <EllipsisContent component="div">
-                                        <div>{`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}</div>
-                                    </EllipsisContent>
+                                    <EllipsisContent
+                                        component="div"
+                                        text={`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}
+                                    ></EllipsisContent>
 
                                     <div className={cx("dot-space")}>.</div>
                                     <div className={cx("time")}>

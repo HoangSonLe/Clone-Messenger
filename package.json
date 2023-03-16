@@ -1,12 +1,11 @@
 {
   "name": "clone-messenger",
   "version": "0.1.0",
-  "homepage": "https://hoangsonle.github.io/Clone-Messenger",
+  "homepage": "https://hoangsonle.github.io",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@material-ui/lab": "^4.0.0-alpha.61",
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.113",
     "@mui/material": "^5.11.0",
@@ -30,7 +29,6 @@
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.5",
     "react-scripts": "5.0.1",
-    "react-text-ellipsis": "^1.6.0",
     "react-toastify": "^9.1.1",
     "signalr": "^2.4.3",
     "sort-by": "^1.2.0",
@@ -44,7 +42,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -b master -d build"
   },
   "eslintConfig": {
     "extends": [

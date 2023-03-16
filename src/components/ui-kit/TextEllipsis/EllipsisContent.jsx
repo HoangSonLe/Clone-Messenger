@@ -1,37 +1,16 @@
 import PropTypes from "prop-types";
 import React from "react";
-import TextEllipsis from "react-text-ellipsis";
 
-// const propTypes = {
-//   lines: PropTypes.number,
-//   component: PropTypes.elementType,
-//   debounceTimeoutOnResize: PropTypes.number,
-//   ellipsisChars: PropTypes.string,
-//   className: PropTypes.string,
-// };
 function EllipsisContent(props) {
-    const {
-        lines,
-        debounceTimeoutOnResize,
-        ellipsisChars,
-        className,
-        style,
-        component,
-        children,
-        ...otherProps
-    } = props;
-    return (
-        <TextEllipsis
-            style={{ ...style, overflowWrap: "anywhere" }}
-            lines={lines}
-            tag={component}
-            ellipsisChars={ellipsisChars}
-            tagClass={className}
-            debounceTimeoutOnResize={debounceTimeoutOnResize}
-        >
-            {children}
-        </TextEllipsis>
-    );
+    const { lines, text, ellipsisChars, ...otherProps } = props;
+    const style = {
+        display: "-webkit-box",
+        overflow: "hidden",
+        WebkitBoxOrient: "vertical",
+        wordBreak: "break-word",
+        WebkitLineClamp: lines,
+    };
+    return <div style={style}>{text}</div>;
 }
 EllipsisContent.defaultProps = {
     lines: 1,
