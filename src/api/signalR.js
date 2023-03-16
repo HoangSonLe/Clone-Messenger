@@ -56,12 +56,12 @@ const SignalRInit = () => {
     });
 
     connection
-        .start()
+        .start({ jsonp: true })
         .done(function () {
             console.log("Now connected, connection ID=" + connection.id);
         })
-        .fail(function () {
-            console.log("Could not Connect!");
+        .fail(function (e) {
+            console.log("Could not Connect!",e);
         });
 
     return <></>;
