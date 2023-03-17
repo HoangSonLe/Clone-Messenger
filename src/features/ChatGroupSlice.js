@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, current } from "@reduxjs/toolkit";
 const mockData = {
     id: 1,
     name: "Chat Name Chat Name Chat NameChat NameChat Name Chat NameChat NameChat NameChat NameChat NameChat Name",
@@ -25,7 +25,8 @@ const chatGroupSlice = createSlice({
         },
         addNewGroupAndRemoveTmp: (state, action, index = 0) => {
             let data = action.payload;
-            state.chatGroupList = state.chatGroupList.filter((i) => i.isTmp == true);
+            // console.log(JSON.stringify(state, undefined, 2));
+            state.chatGroupList = state.chatGroupList.filter((i) => i.isTmp != true);
             state.chatGroupList.splice(index, 0, data);
         },
         addGroup: (state, action, index = 0) => {
@@ -41,6 +42,9 @@ const chatGroupSlice = createSlice({
         removeGroup: (state, action) => {
             let data = action.payload;
             state.chatGroupList = state.chatGroupList.filter((i) => i.id != data.id);
+        },
+        removeTmpGroup: (state, action) => {
+            state.chatGroupList = state.chatGroupList.filter((i) => i.isTmp != true);
         },
         updateLastMessage: (state, action) => {
             let data = action.payload;
@@ -99,6 +103,7 @@ export const {
     updateLastMessage,
     addListGroup,
     removeGroup,
+    removeTmpGroup,
     setLoadMore,
     resetState,
 } = actions;

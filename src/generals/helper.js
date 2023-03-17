@@ -61,9 +61,17 @@ helper.dateDiff = dateDiff;
 helper.hoursDiff = hoursDiff;
 helper.minutesDiff = minutesDiff;
 helper.secondsDiff = secondsDiff;
+const toConvertSystemDateTime = function (utcDatetime) {
+    // let format = "YYYY-MM-DD HH:mm:ss";
+    // let dt = moment(datetime).format(format);
+    // let d = moment.utc(dt, format).utcOffset("+07:00", true).format();
+    // return d;
+    return moment.utc(utcDatetime).local();
+};
 helper.timeNotification = (datetime) => {
     const now = new Date(Date.now());
-    const time = moment(datetime).toDate();
+    const localTime = toConvertSystemDateTime(datetime);
+    const time = localTime.toDate();
     let timeString = "";
     if (yearsDiff(time, now) > 0) {
         timeString = `${yearsDiff(time, now)} năm`;
@@ -84,27 +92,29 @@ helper.timeNotification = (datetime) => {
 };
 helper.messageTimeDisplay = (datetime) => {
     const now = new Date(Date.now());
-    const time = moment(datetime);
+    const localTime = toConvertSystemDateTime(datetime);
+    const time = localTime.toDate();
     let timeString = "";
     if (dateDiff(time, now) <= 7) {
         let format = "ddd LT";
-        timeString = moment(datetime).format(format);
+        timeString = localTime.format(format);
     } else {
         let format = "DD/MM/YY, LT";
-        timeString = moment(datetime).format(format);
+        timeString = localTime.format(format);
     }
     return timeString;
 };
 helper.messageTimeToolTipDisplay = (datetime) => {
     const now = new Date(Date.now());
-    const time = moment(datetime);
+    const localTime = toConvertSystemDateTime(datetime);
+    const time = localTime.toDate();
     let timeString = "";
     if (dateDiff(time, now) <= 7) {
         let format = "dddd hh:mma";
-        timeString = moment(datetime).format(format);
+        timeString = localTime.format(format);
     } else {
         let format = "MMMM D, YYYY [at] LT";
-        timeString = moment(datetime).format(format);
+        timeString = localTime.format(format);
     }
     return timeString;
 };

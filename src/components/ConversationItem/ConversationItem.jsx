@@ -17,7 +17,7 @@ import styles from "./ConversationItem.module.scss";
 import { processMessageReadStatus } from "../MessageContent/Message/Message";
 import { EMessageReadStatus } from "../../const/enum";
 import MessageStatus from "../MessageContent/Message/MessageStatus";
-import { removeGroup } from "../../features/ChatGroupSlice";
+import { removeGroup, removeTmpGroup } from "../../features/ChatGroupSlice";
 import chatMessageApi from "../../api/chatMessageApi";
 import { getImageAvatarSrc, toastErrorList } from "../../generals/utils";
 import AvatarGroup from "../ui-kit/Avatar/AvatarGroup";
@@ -99,8 +99,11 @@ function ConversationItem({ data, isLoading }) {
         }
     };
     //
-    const removeConversation = () => {
-        _fetchGetConversation(() => dispatch(removeGroup(data)));
+    const removeTmpConversation = () => {
+        dispatch(removeTmpGroup());
+        if (conversation.isTmp == true) {
+            _fetchGetConversation();
+        }
     };
     //Handle status message (READ,SENT)
     let process = null;
@@ -226,8 +229,8 @@ function ConversationItem({ data, isLoading }) {
                         <div
                             className={cx("action-button-icon")}
                             onClick={(e) => {
-                                e.preventDefault();
-                                removeConversation();
+                                e.stopPropagation();
+                                removeTmpConversation();
                             }}
                         >
                             <ClearIcon />
@@ -239,7 +242,7 @@ function ConversationItem({ data, isLoading }) {
                                 !isDisplayButton ? "visible" : "invisible"
                             )}
                             onClick={(e) => {
-                                e.preventDefault();
+                                e.stopPropagation();
                                 setDisplayButton((prev) => !prev);
                             }}
                         >
