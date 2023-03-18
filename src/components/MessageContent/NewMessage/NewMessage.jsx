@@ -32,7 +32,7 @@ export default function NewMessage() {
                 dispatch(updateTmpChatGroup(response.data));
             }
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     const handleAddMember = (value) => {
@@ -81,7 +81,7 @@ export default function NewMessage() {
                 setSearchList(response.data);
             }
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
 

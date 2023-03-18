@@ -52,7 +52,7 @@ export default function MessageList() {
             }
             setLoading(false);
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     useEffect(() => {
@@ -66,6 +66,11 @@ export default function MessageList() {
             _fetchGetGroupList();
         }
     };
+    let tmp = [...chatGroupList].sort((a, b) => {
+        if (a.lastMessage == null) return 1;
+        else if (b.lastMessage == null) return -1;
+        return new Date(b.lastMessage.createdDate) - new Date(a.lastMessage.createdDate);
+    });
     return (
         <div className={cx("wrapper")}>
             <Header title={"Chats"}>
@@ -82,7 +87,7 @@ export default function MessageList() {
             <div className={cx("message-list")}>
                 <ScrollLoadMore onScrollBottom={onScrollBottom}>
                     <>
-                        {chatGroupList.map((i, index) => (
+                        {tmp.map((i, index) => (
                             <ConversationItem key={`${i.id}-${index}`} data={i} />
                         ))}
                         {isLoading ? (

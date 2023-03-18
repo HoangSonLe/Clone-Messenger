@@ -51,7 +51,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
             }
             setAutoScrollBottom();
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     //Send message and create new chat group
@@ -64,7 +64,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
             }
             // setAutoScrollBottom();
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     const onSubmitForm = (e) => {

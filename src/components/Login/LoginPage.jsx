@@ -66,7 +66,7 @@ function LoginPage() {
             }
         } catch (err) {
             setPendingLogin(false);
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     const handleLoginFacebook = async () => {
@@ -107,7 +107,7 @@ function LoginPage() {
             }
         } catch (err) {
             setPendingLogin(false);
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     const showPreview = (files) => {

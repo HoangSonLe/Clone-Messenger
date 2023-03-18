@@ -24,7 +24,7 @@ export default function UploadFile({
                     onUploaded(files);
                 }
             } catch (err) {
-                toastErrorList(err?.response.data);
+                toastErrorList(err?.response?.data);
             }
         } else {
             onUploaded(files);

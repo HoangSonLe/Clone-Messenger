@@ -40,7 +40,7 @@ export default function Messages() {
                 }
                 setLoading(false);
             } catch (err) {
-                toastErrorList(err?.response.data);
+                toastErrorList(err?.response?.data);
             }
         } else {
             setLoading(false);

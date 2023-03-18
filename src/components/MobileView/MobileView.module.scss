@@ -1,0 +1,60 @@
+@import "normalize.css";
+
+.wrapper {
+    height: 100vh;
+    width: 100vw;
+    -webkit-text-size-adjust: none;
+    cursor: pointer;
+}
+
+.container {
+    padding: 110px 30px 35px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    position: absolute;
+    height: 100px;
+    padding-left: 30px;
+    display: flex;
+    align-items: center;
+
+    img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
+.title {
+    font-size: 60px;
+    font-weight: 450;
+    line-height: 52px;
+    padding: 0 0 8px;
+    margin: 0 0 10px 0;
+    word-break: break-word;
+    color: transparent;
+    background-image: linear-gradient(83.84deg, #0088FF -6.87%, #A033FF 26.54%, #FF5C87 58.58%);
+    background: linear-gradient(81.84deg, #0099ff -9.4%, #a033ff 51.57%, #ff5280 84.07%, #ff7061 90.59%);
+    -webkit-background-clip: text;
+
+}
+
+.content {
+    color: rgba(89, 89, 89, 1);
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 30px;
+    word-break: keep-all;
+    padding-bottom: 20px ;
+}
+.meta{
+    font-weight: 600;
+    color: #000;
+    font-size: 15px;
+}
+.meta-content{
+
+}

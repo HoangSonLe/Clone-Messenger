@@ -76,7 +76,7 @@ function ConversationItem({ data, isLoading }) {
                 }
             }
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     //Get data conversation tmp
@@ -88,7 +88,7 @@ function ConversationItem({ data, isLoading }) {
                 dispatch(initConversation(response.data));
             }
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     //

@@ -1,0 +1,30 @@
+import { useEffect, useState } from 'react';
+
+const useIsMobile = (breakpoint = 640) => {
+  const checkForDevice = () => window.innerWidth < breakpoint;
+
+  const [isMobile, setIsMobile] = useState(checkForDevice());
+
+  useEffect(() => {
+    const handlePageResized = () => {
+      setIsMobile(checkForDevice());
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('load', handlePageResized);
+      window.addEventListener('reload', handlePageResized);
+    }
+
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('load', handlePageResized);
+        window.removeEventListener('reload', handlePageResized);
+      }
+    };
+  }, []);
+
+  return {
+    isMobile,
+  };
+};
+
+export default useIsMobile;

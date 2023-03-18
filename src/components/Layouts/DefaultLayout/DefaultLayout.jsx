@@ -30,7 +30,7 @@ export default function DefaultLayout() {
                 dispatch(setPageDefaultModel(response.data));
             }
         } catch (err) {
-            toastErrorList(err?.response.data);
+            toastErrorList(err?.response?.data);
         }
     };
     useEffect(() => {

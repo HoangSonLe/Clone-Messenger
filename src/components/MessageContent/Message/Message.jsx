@@ -202,13 +202,22 @@ const processMessageReadStatus = (userId, listMembers, message, messageStatusIte
         readUsers.length == listMembers.length - 1 &&
         lastReadExceptSender.length != listMembers.length - 1
     ) {
+        let lastRead = messageStatusItemList.filter(
+            (j) => j.chatMessageId == message.id && j.userId == message.createdBy
+        );
         //Đã đọc hết và tin nhắn đọc cuối != tin nhắn hiện tại => Không hiện gì
-        status = EMessageReadStatus.ReadAll;
+        if (listMembers.length == 2 && lastRead.length == 1) {
+            status = EMessageReadStatus.ReadOne;
+            lastReadExceptSender = lastRead;
+        } else {
+            status = EMessageReadStatus.ReadAll;
+        }
     } else if (
         readUsers.length == listMembers.length - 1 &&
         lastReadExceptSender.length == listMembers.length - 1
     ) {
         //Đã đọc hết và tin nhắn đọc cuối == tin nhắn hiện tại => Hiện tất cả những người đã đọc
+
         status = EMessageReadStatus.ReadAllLast;
     } else if (readUsers.length >= 1 && lastReadExceptSender.length <= readUsers.length) {
         //Vài người đã đọc, vài người chưa đọc
