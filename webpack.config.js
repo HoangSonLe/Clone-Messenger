@@ -90,7 +90,8 @@ module.exports = {
         }),
         new webpack.DefinePlugin({
             "process.env": {
-                API_URL: JSON.stringify("https://clonemessenger.azurewebsites.net/api"),
+                // API_URL: JSON.stringify("https://clonemessenger.azurewebsites.net/api"),
+                API_URL: JSON.stringify("http://clonemess.somee.com/api"),
                 // API_URL: JSON.stringify("https://localhost:44344/api"),            
             },
         }),

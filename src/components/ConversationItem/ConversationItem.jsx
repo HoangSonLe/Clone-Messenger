@@ -108,6 +108,7 @@ function ConversationItem({ data, isLoading }) {
     //Handle status message (READ,SENT)
     let process = null;
     let inlineStatus = null;
+    let hasNoSeen = false;
     if (!isLoading && data && !isTmp && data.lastMessage) {
         process = processMessageReadStatus(
             currentUserId,
@@ -167,6 +168,7 @@ function ConversationItem({ data, isLoading }) {
                             }}
                         ></div>
                     );
+                    hasNoSeen = true;
                 } else {
                     inlineStatus = <MessageStatus status={data.lastMessage.messageStatus} />;
                 }
@@ -201,7 +203,7 @@ function ConversationItem({ data, isLoading }) {
                     <div className={cx("wrapper")}>
                         <AvatarWithName
                             title={data.name}
-                            isActive={isActive && isTmp == false}
+                            isActive={(hasNoSeen || isActive) && isTmp == false}
                             isBoldTitle={true && isTmp == false}
                             isOnline={isTmp == false && onlineUserList.length > 0}
                             srcList={isTmp == true ? [defaultAvatar] : imageSrcList}
@@ -213,6 +215,7 @@ function ConversationItem({ data, isLoading }) {
                                 <div className={cx("message")}>
                                     <EllipsisContent
                                         component="div"
+                                        isBold={hasNoSeen}
                                         text={`${data.lastMessage.createdByName}: ${data.lastMessage.text}`}
                                     ></EllipsisContent>
 

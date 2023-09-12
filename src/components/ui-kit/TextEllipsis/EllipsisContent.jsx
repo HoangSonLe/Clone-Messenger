@@ -2,14 +2,17 @@ import PropTypes from "prop-types";
 import React from "react";
 
 function EllipsisContent(props) {
-    const { lines, text, ellipsisChars, ...otherProps } = props;
-    const style = {
+    const { lines, text, ellipsisChars, isBold, ...otherProps } = props;
+    let style = {
         display: "-webkit-box",
         overflow: "hidden",
         WebkitBoxOrient: "vertical",
         wordBreak: "break-word",
         WebkitLineClamp: lines,
     };
+    if (isBold) {
+        style = { ...style, fontWeight: "bold" };
+    }
     return <div style={style}>{text}</div>;
 }
 EllipsisContent.defaultProps = {
