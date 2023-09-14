@@ -1,5 +1,7 @@
+import { Backdrop, CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
 import PropTypes from "prop-types";
+import { useState } from "react";
 
 import { EUploadType } from "../../../const/enum";
 import { toastErrorList, uploadFiles } from "../../../generals/utils";
@@ -15,8 +17,10 @@ export default function UploadFile({
     onUploaded,
     renderComponent,
 }) {
+    const [isUploading, setUploading] = useState(false);
     const idInput = "file";
     const onUpload = async (files) => {
+        setUploading(true);
         if (isAutoUpload) {
             try {
                 let response = await uploadFiles(files);
@@ -29,6 +33,7 @@ export default function UploadFile({
         } else {
             onUploaded(files);
         }
+        setUploading(false);
     };
     const onChange = (e) => {
         let files = e.target.files;
@@ -65,6 +70,12 @@ export default function UploadFile({
                     <BaseUploadFile renderComponent={renderComp} onDrop={onUpload} />
                 </>
             ) : null}
+            <Backdrop
+                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={isUploading}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
 }

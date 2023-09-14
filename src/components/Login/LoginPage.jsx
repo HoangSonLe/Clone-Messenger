@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Backdrop, Button, CircularProgress } from "@mui/material";
 import classNames from "classnames/bind";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -113,15 +113,21 @@ function LoginPage() {
     const showPreview = (files) => {
         if (files && files.length >= 1) {
             let f = files[0];
-            let reader = new FileReader();
-            reader.onload = (x) => {
-                setImage({
-                    imageFile: f,
-                    imageName: f.name,
-                    imageSrc: x.target.result,
-                });
-            };
-            reader.readAsDataURL(f);
+            var url = URL.createObjectURL(f);
+            // let reader = new FileReader();
+            // reader.onload = (x) => {
+            //     setImage({
+            //         imageFile: f,
+            //         imageName: f.name,
+            //         imageSrc: x.target.result,
+            //     });
+            // };
+            // reader.readAsDataURL(f);
+            setImage({
+                imageFile: f,
+                imageName: f.name,
+                imageSrc: url,
+            });
         }
     };
     useKey(
@@ -133,6 +139,7 @@ function LoginPage() {
         },
         [userName, passWord, displayName]
     );
+    console.log("sss", image);
     return (
         <div className={cx("wrapper")}>
             <div className={cx("logo")}>
@@ -293,6 +300,12 @@ function LoginPage() {
                 pauseOnHover
                 theme="colored"
             />
+            <Backdrop
+                sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={pendingLogin}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
         </div>
     );
 }
