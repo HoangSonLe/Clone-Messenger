@@ -1,4 +1,14 @@
-import { Backdrop, Button, CircularProgress } from "@mui/material";
+import {
+    Backdrop,
+    Button,
+    CircularProgress,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow,
+} from "@mui/material";
 import classNames from "classnames/bind";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -16,6 +26,17 @@ import UploadFile from "../ui-kit/UploadFile/UploadFile";
 import styles from "./LoginPage.module.scss";
 import useKey from "../../hooks/useKey";
 const cx = classNames.bind(styles);
+
+function createData(userName, passWord) {
+    return { userName, passWord };
+}
+const rows = [
+    createData("hoangson", "1234"),
+    createData("hoang son", "1234"),
+    createData("hoang son1", "1234"),
+    createData("hoang son2", "1234"),
+    createData("utc", "1234"),
+];
 function LoginPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -139,102 +160,102 @@ function LoginPage() {
         },
         [userName, passWord, displayName]
     );
-    console.log("sss", image);
     return (
         <div className={cx("wrapper")}>
             <div className={cx("logo")}>
                 <img src={logo} alt="logo" />
             </div>
-            <div className={cx("content")}>
-                <p className={cx("title")}>Connect with your favourite people</p>
-                <form noValidate>
-                    {!isLogin ? (
-                        <input
-                            value={displayName}
-                            placeholder="Display name"
-                            type={"text"}
-                            onChange={(e) => setDisplayName(e.target.value)}
-                        />
-                    ) : null}
-                    <input
-                        value={userName}
-                        placeholder="Username"
-                        type={"text"}
-                        onChange={(e) => setUserName(e.target.value)}
-                    />
-                    <input
-                        value={passWord}
-                        placeholder="Password"
-                        type={"password"}
-                        onChange={(e) => setPassWord(e.target.value)}
-                    />
-                    <div>
+            <div className={cx("wrap-content")}>
+                <div className={cx("content")}>
+                    <p className={cx("title")}>Connect with your favourite people</p>
+                    <form noValidate>
                         {!isLogin ? (
-                            <div className={cx("image-container")}>
-                                <UploadFile
-                                    onUploaded={showPreview}
-                                    renderComponent={(idInput) => (
-                                        <label htmlFor={idInput}>
-                                            <div className={cx("icon-upload")}>
-                                                <img
-                                                    width={50}
-                                                    height={50}
-                                                    src={addAvatar}
-                                                    alt={image.imageName}
-                                                />
-                                                <h4>Add an avatar</h4>
-                                            </div>
-                                        </label>
-                                    )}
-                                />
-                                <img
-                                    className={cx("avatar")}
-                                    src={image.imageSrc ?? defaultAvatar}
-                                    alt={image.imageName}
-                                />
-                            </div>
+                            <input
+                                value={displayName}
+                                placeholder="Display name"
+                                type={"text"}
+                                onChange={(e) => setDisplayName(e.target.value)}
+                            />
                         ) : null}
-                    </div>
-                </form>
-            </div>
-            <Button
-                sx={{
-                    borderRadius: "30px",
-                    fontSize: "15px",
-                    textTransform: "none",
-                    backgroundColor: helper.getColorFromName("lightBlue"),
-                }}
-                variant="contained"
-                size="large"
-                onClick={isLogin ? handleLogin : handleRegister}
-                disabled={pendingLogin}
-            >
-                {pendingLogin ? (
-                    <CircularProgress
-                        sx={{
-                            color: helper.getColorFromName("secondaryIcon"),
-                            marginRight: "10px",
-                        }}
-                        size={15}
-                    />
-                ) : null}
-                Continue
-            </Button>
-            <div className={cx("buttons")}>
+                        <input
+                            value={userName}
+                            placeholder="Username"
+                            type={"text"}
+                            onChange={(e) => setUserName(e.target.value)}
+                        />
+                        <input
+                            value={passWord}
+                            placeholder="Password"
+                            type={"password"}
+                            onChange={(e) => setPassWord(e.target.value)}
+                        />
+                        <div>
+                            {!isLogin ? (
+                                <div className={cx("image-container")}>
+                                    <UploadFile
+                                        onUploaded={showPreview}
+                                        renderComponent={(idInput) => (
+                                            <label htmlFor={idInput}>
+                                                <div className={cx("icon-upload")}>
+                                                    <img
+                                                        width={50}
+                                                        height={50}
+                                                        src={addAvatar}
+                                                        alt={image.imageName}
+                                                    />
+                                                    <h4>Add an avatar</h4>
+                                                </div>
+                                            </label>
+                                        )}
+                                    />
+                                    <img
+                                        className={cx("avatar")}
+                                        src={image.imageSrc ?? defaultAvatar}
+                                        alt={image.imageName}
+                                    />
+                                </div>
+                            ) : null}
+                        </div>
+                    </form>
+                </div>
                 <Button
                     sx={{
                         borderRadius: "30px",
-                        textTransform: "none",
                         fontSize: "15px",
+                        textTransform: "none",
+                        backgroundColor: helper.getColorFromName("lightBlue"),
                     }}
-                    variant="outlined"
+                    variant="contained"
                     size="large"
-                    onClick={(e) => setLogin((prevState) => !prevState)}
+                    onClick={isLogin ? handleLogin : handleRegister}
                     disabled={pendingLogin}
                 >
-                    {isLogin ? "Register new account" : "Have an account"}
+                    {pendingLogin ? (
+                        <CircularProgress
+                            sx={{
+                                color: helper.getColorFromName("secondaryIcon"),
+                                marginRight: "10px",
+                            }}
+                            size={15}
+                        />
+                    ) : null}
+                    Continue
                 </Button>
-                {/* <Button
+                <div className={cx("buttons")}>
+                    <Button
+                        sx={{
+                            borderRadius: "30px",
+                            textTransform: "none",
+                            fontSize: "15px",
+                        }}
+                        variant="outlined"
+                        size="large"
+                        onClick={(e) => setLogin((prevState) => !prevState)}
+                        disabled={pendingLogin}
+                    >
+                        {isLogin ? "Register new account" : "Have an account"}
+                    </Button>
+                    {/* <Button
                     sx={{
                         borderRadius: "30px",
                         textTransform: "none",
@@ -263,6 +284,33 @@ function LoginPage() {
                 >
                     Login with Facebook
                 </Button> */}
+                </div>
+                <div className={cx("text")}>Some accounts you can try:</div>
+                <TableContainer sx={{ width: "unset", maxHeight: "150px" }}>
+                    <Table stickyHeader sx={{ width: "300px" }} aria-label="simple table">
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ fontWeight: "bold" }}>Username</TableCell>
+                                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                                    Password
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {rows.map((row) => (
+                                <TableRow
+                                    key={row.userName}
+                                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                                >
+                                    <TableCell component="th" scope="row">
+                                        {row.userName}
+                                    </TableCell>
+                                    <TableCell align="right">{row.passWord}</TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
             </div>
             <div className={cx("footer")}>
                 <a data-track="Not on Facebook?" href="https://www.facebook.com/r.php">
