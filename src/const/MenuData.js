@@ -218,7 +218,7 @@ const MessageItemMenu = (data) => {
             to: "/",
             child: null,
             groupIndex: 4,
-            onClick: () => dispatch(removeGroup(data)),//TODO
+            // onClick: () => dispatch(removeGroup(data)),//TODO
             // onClickDispatch: () => removeGroup(data),
         },
         {

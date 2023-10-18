@@ -18,9 +18,8 @@ export default function NewMessage() {
     const dispatch = useDispatch();
     const [searchString, setSearchString] = useState("");
     const [searchList, setSearchList] = useState([]);
+    const [selectedMemberList, setSelectedMemberList] = useState([]);
     const { currentUserId } = useSelector((state) => state.auth);
-    const { chatGroupList } = useSelector((state) => state.chatGroup);
-    const { listMembers } = chatGroupList[0];
     const debounceRef = useRef(null);
     // useDebugValue(memberList);
     let _fetchGetTmpConversation = async (memberList) => {
@@ -28,6 +27,7 @@ export default function NewMessage() {
             let memberIds = memberList.map((i) => i.userId);
             let response = await chatMessageApi.searchChatGroup(memberIds);
             if (response.isSuccess == true) {
+                response.data.isTmp = true;
                 dispatch(initConversation(response.data));
                 dispatch(updateTmpChatGroup(response.data));
             }
@@ -36,7 +36,8 @@ export default function NewMessage() {
         }
     };
     const handleAddMember = (value) => {
-        var tmp = [...listMembers];
+        var tmp = [...selectedMemberList];
+        setSelectedMemberList(tmp);
         tmp.push({
             userId: value.id,
             displayName: value.displayName,
@@ -46,8 +47,9 @@ export default function NewMessage() {
         _fetchGetTmpConversation(tmp);
     };
     const removeMember = (value) => {
-        var tmp = [...listMembers];
+        var tmp = [...selectedMemberList];
         tmp = tmp.filter((i) => i.userId != value.userId);
+        setSelectedMemberList(tmp);
         _fetchGetTmpConversation(tmp);
     };
     let rowItem = (item) => {
@@ -84,7 +86,6 @@ export default function NewMessage() {
             toastErrorList(err?.response?.data);
         }
     };
-
     return (
         <div className={cx("wrapper")}>
             <div className={cx("wrapper-message")}>
@@ -92,7 +93,7 @@ export default function NewMessage() {
                 <div className={cx("header")}>
                     <div className={cx("title")}>To:</div>
                     <div className={cx("search")}>
-                        {listMembers.map((i) => {
+                        {selectedMemberList.map((i) => {
                             if (i.userId == currentUserId) return null;
                             return (
                                 <div className={cx("chip")} key={i.userId}>
@@ -117,11 +118,26 @@ export default function NewMessage() {
                             renderContent={() => {
                                 return (
                                     <div className={cx("popup")}>
-                                        {(searchList ?? [])
-                                            .filter((i) =>
-                                                listMembers.every((j) => j.userId != i.id)
-                                            )
-                                            .map((i) => rowItem(i))}
+                                        {searchList?.length > 0 ? (
+                                            (searchList ?? [])
+                                                .filter((i) =>
+                                                    selectedMemberList.every(
+                                                        (j) => j.userId != i.id
+                                                    )
+                                                )
+                                                .map((i) => rowItem(i))
+                                        ) : (
+                                            <div
+                                                style={{
+                                                    height: "100%",
+                                                    width: "100%",
+                                                    fontSize: "15px",
+                                                    padding: "5px",
+                                                }}
+                                            >
+                                                No results
+                                            </div>
+                                        )}
                                     </div>
                                 );
                             }}
@@ -130,7 +146,7 @@ export default function NewMessage() {
                 </div>
                 {/* Header */}
                 {/* Messages */}
-                {listMembers?.length > 0 ? <Messages /> : null}
+                {selectedMemberList.length > 0 ? <Messages /> : null}
                 {/* Messages */}
             </div>
         </div>

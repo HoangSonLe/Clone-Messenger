@@ -5,11 +5,20 @@ import classNames from "classnames/bind";
 import { useRef, useState } from "react";
 
 import styles from "./Search.module.scss";
+import { defaultOnClick } from "../../../generals/utils";
 const cx = classNames.bind(styles);
 export default function Search() {
     const [searchValue, setSearchValue] = useState("");
     const [isFocusInput, setFocusInput] = useState(false);
     const inputRef = useRef();
+
+     //Handle change text
+     const handleKeyDown = (event) => {
+        if (event.key === "Enter" && !event.shiftKey) {
+            defaultOnClick(event);
+        }
+    };
+
     return (
         <div className={cx("wrapper")}>
             <div className={cx("btn-back")}>
@@ -41,6 +50,7 @@ export default function Search() {
                         onFocus={() => setFocusInput(true)}
                         placeholder="Search Messenger"
                         onChange={(e) => setSearchValue(e.target.value)}
+                        onKeyDown={handleKeyDown}
                     />
                 </div>
             </div>

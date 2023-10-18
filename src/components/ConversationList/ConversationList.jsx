@@ -37,11 +37,13 @@ export default function MessageList() {
     const handleAddNewConversation = () => {
         let tmp = { ...chatGroupViewModel };
         let tmpCon = { ...chatGroupDetailViewModel };
-        if (chatGroupList.some((i) => i.isTmp == true)) return;
+        let findTmp = chatGroupList?.find((i) => i.isTmp == true);
         if (conversation) {
             dispatch(setLastConversationId(conversation.id));
         }
-        dispatch(addGroup(tmp));
+        if (!findTmp) {
+            dispatch(addGroup(tmp));
+        }
         dispatch(initConversation(tmpCon));
     };
     const _fetchGetGroupList = async () => {
@@ -67,6 +69,7 @@ export default function MessageList() {
         }
     };
     let tmp = [...chatGroupList].sort((a, b) => {
+        if (a.isTmp || b.isTmp) return 1;
         if (a.lastMessage == null) return 1;
         else if (b.lastMessage == null) return -1;
         return new Date(b.lastMessage.createdDate) - new Date(a.lastMessage.createdDate);

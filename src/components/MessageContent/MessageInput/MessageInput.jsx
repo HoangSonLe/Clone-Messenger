@@ -5,10 +5,12 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import classNames from "classnames/bind";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import chatGroupApi from "../../../api/chatGroupApi";
 
 import chatMessageApi from "../../../api/chatMessageApi";
 import { FileInputIcon, GifInputIcon, StickerInputIcon } from "../../../assets/Icons";
-import { removeGroup } from "../../../features/ChatGroupSlice";
+import { removeGroup, removeTmpGroup } from "../../../features/ChatGroupSlice";
+import { initConversation } from "../../../features/MessageSlice";
 import helper from "../../../generals/helper";
 import { toastErrorList } from "../../../generals/utils";
 import IconButtonCustom from "../../ui-kit/IconButton/IconButtonCustom";
@@ -25,6 +27,8 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
     const [files, setFiles] = useState([]);
     const { conversation } = useSelector((state) => state.message);
     const { messagePostData } = useSelector((state) => state.pageDefault);
+    const { defaultModel } = useSelector((state) => state.pageDefault);
+
     const textAreaRef = useRef();
     const resizeTextArea = () => {
         textAreaRef.current.style.height = "auto";
@@ -47,6 +51,18 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
         try {
             let response = await chatMessageApi.sendMessage(data);
             if (response.isSuccess == true) {
+                if (conversation?.isTmp) {
+                    let post = {
+                        ...defaultModel.chatMessagePaginationModel,
+                        hasMore: true,
+                        chatGroupId: conversation.id,
+                    };
+                    let response = await chatGroupApi.getChatGroupDetail(post);
+                    if (response.isSuccess == true) {
+                        dispatch(removeTmpGroup());
+                        dispatch(initConversation(response.data));
+                    }
+                }
                 setText("");
             }
             setAutoScrollBottom();
@@ -69,7 +85,7 @@ function MessageInput({ isRemoveFromChatGroup, setAutoScrollBottom }) {
     };
     const onSubmitForm = (e) => {
         e.preventDefault();
-        if (conversation.isTmp) {
+        if (!conversation?.id || conversation?.id == "00000000-0000-0000-0000-000000000000") {
             let postData = {
                 userIds: conversation.listMembers.map((i) => i.userId),
                 text: text,

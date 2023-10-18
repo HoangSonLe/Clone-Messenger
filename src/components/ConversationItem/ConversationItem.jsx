@@ -55,11 +55,13 @@ function ConversationItem({ data, isLoading }) {
     const isActive = data && conversation?.id == data?.id;
     const isTmp = data && data.isTmp == true;
     //Get data conversation
-    const _fetchGetConversation = async (callback) => {
+    const _fetchGetConversation = async (chatgroupId, callback) => {
         try {
             //Case conversationTmp
-            let id = lastConversationId ?? data?.id;
-            if (!id || id == "00000000-0000-0000-0000-000000000000") {
+            if (
+                !chatgroupId ||
+                chatgroupId == "00000000-0000-0000-0000-000000000000"
+            ) {
                 typeof callback == "function" && callback();
                 dispatch(initConversation(null));
             } else {
@@ -67,7 +69,7 @@ function ConversationItem({ data, isLoading }) {
                 let post = {
                     ...defaultModel.chatMessagePaginationModel,
                     hasMore: true,
-                    chatGroupId: id,
+                    chatGroupId: chatgroupId,
                 };
                 let response = await chatGroupApi.getChatGroupDetail(post);
                 if (response.isSuccess == true) {
@@ -95,15 +97,13 @@ function ConversationItem({ data, isLoading }) {
     const onClickGetConversation = () => {
         if (data) {
             if (isTmp) _fetchGetTmpConversation();
-            else _fetchGetConversation();
+            else _fetchGetConversation(data?.id);
         }
     };
     //
     const removeTmpConversation = () => {
         dispatch(removeTmpGroup());
-        if (conversation.isTmp == true) {
-            _fetchGetConversation();
-        }
+        _fetchGetConversation(lastConversationId);
     };
     //Handle status message (READ,SENT)
     let process = null;
