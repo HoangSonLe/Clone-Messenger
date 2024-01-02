@@ -20,6 +20,7 @@ import Search from "../ui-kit/Search/Search";
 import styles from "./ConversationList.module.scss";
 import { initConversation } from "../../features/MessageSlice";
 import { toastErrorList } from "../../generals/utils";
+import { useGetChatGroupListMutation } from "../../RTKQueryApi/chatGroupApi";
 const cx = classNames.bind(styles);
 const styleIcon = {
     color: helper.getColorFromName("primaryText"),
@@ -33,7 +34,8 @@ export default function MessageList() {
     const { chatGroupViewModel, chatGroupDetailViewModel } = useSelector(
         (state) => state.pageDefault.defaultModel
     );
-    const [isLoading, setLoading] = useState(true);
+    const isFetching = false;
+    const [getList,data] = useGetChatGroupListMutation();
     const handleAddNewConversation = () => {
         let tmp = { ...chatGroupViewModel };
         let tmpCon = { ...chatGroupDetailViewModel };
@@ -52,19 +54,17 @@ export default function MessageList() {
             if (response.isSuccess == true) {
                 dispatch(addListGroup(response.data));
             }
-            setLoading(false);
         } catch (err) {
             toastErrorList(err?.response?.data);
         }
     };
     useEffect(() => {
+        getList();
         dispatch(resetState());
-        _fetchGetGroupList();
     }, []);
 
     const onScrollBottom = () => {
         if (hasMore) {
-            setLoading(true);
             _fetchGetGroupList();
         }
     };
@@ -93,7 +93,7 @@ export default function MessageList() {
                         {tmp.map((i, index) => (
                             <ConversationItem key={`${i.id}-${index}`} data={i} />
                         ))}
-                        {isLoading ? (
+                        {isFetching ? (
                             <>
                                 <ConversationItem isLoading={true} />
                                 <ConversationItem isLoading={true} />

@@ -13,6 +13,7 @@ import { configRoutes } from "../../../routes/routes";
 import MessageContent from "../../MessageContent/MessageContent";
 import Navigation from "../../Navigation/Navigation";
 import styles from "./DefaultLayout.module.scss";
+import { useGetPageDefaultModelQuery } from "../../../RTKQueryApi/chatGroupApi";
 const cx = classNames.bind(styles);
 export default function DefaultLayout() {
     const { isLoggedIn } = useSelector((state) => state.auth);
@@ -23,6 +24,7 @@ export default function DefaultLayout() {
     };
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const data = useGetPageDefaultModelQuery();
     const _fetchPageDefaultModel = async () => {
         try {
             let response = await pageDefaultApi.getPageDefaultModel();
@@ -34,7 +36,7 @@ export default function DefaultLayout() {
         }
     };
     useEffect(() => {
-        isLoggedIn ? _fetchPageDefaultModel() : navigate(configRoutes.login);
+        // isLoggedIn ? _fetchPageDefaultModel() : navigate(configRoutes.login);
     }, [isLoggedIn]);
     //TODO : xu ly case api bi dung vaf nhan nut them chat group loi
     return (
