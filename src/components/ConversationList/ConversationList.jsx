@@ -20,7 +20,7 @@ import Search from "../ui-kit/Search/Search";
 import styles from "./ConversationList.module.scss";
 import { initConversation } from "../../features/MessageSlice";
 import { toastErrorList } from "../../generals/utils";
-import { useGetChatGroupListMutation } from "../../RTKQueryApi/chatGroupApi";
+import { useGetChatGroupListMutation } from "../../RTKQueryApis/chatGroup.api";
 const cx = classNames.bind(styles);
 const styleIcon = {
     color: helper.getColorFromName("primaryText"),

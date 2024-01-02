@@ -4,7 +4,7 @@ import pageDefaultSlice from "../features/PageDefaultSlice";
 import messageSlice from "../features/MessageSlice";
 import authSlice from "../features/AuthSlice";
 import userSlice from "../features/UserSlice";
-import { groupApi } from "../RTKQueryApi/chatGroupApi";
+import { baseRTKApi } from "../RTKQueryApis/base.api";
 
 const store = configureStore({
     reducer: {
@@ -13,9 +13,9 @@ const store = configureStore({
         message: messageSlice,
         auth: authSlice,
         user: userSlice,
-        [groupApi.reducerPath] : groupApi.reducer
+        [baseRTKApi.reducerPath] : baseRTKApi.reducer
     },
-    middleware : (getDefaultMiddleware) => getDefaultMiddleware().concat(groupApi.middleware)
+    middleware : (getDefaultMiddleware) => getDefaultMiddleware().concat(baseRTKApi.middleware)
 });
 
 export default store;

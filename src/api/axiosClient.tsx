@@ -1,5 +1,12 @@
-import axios from "axios";
-import { toastError } from "../generals/utils.js";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
+// interface Acknowledgement {
+//     isSuccess: boolean;
+//     errorMessage: string[];
+//     successMessage: string[];
+// }
+// interface IAcknowledgement<T = any> extends Acknowledgement {
+//     data: T;
+// }
 
 const axiosClient = axios.create({
     baseURL: process.env.API_URL,
@@ -9,21 +16,25 @@ const axiosClient = axios.create({
     },
 });
 
-axiosClient.interceptors.request.use(async (config) => {
+axiosClient.interceptors.request.use(async (config: AxiosRequestConfig) => {
     let token = sessionStorage.getItem("jwtToken");
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+        if (!config?.headers) {
+            throw new Error(`Expected 'config' and 'config.headers' not to be undefined`);
+        }
+        config.headers.Authorization =`Bearer ${token}`;
     }
     return config;
 });
 axiosClient.interceptors.response.use(
-    (response) => {
+    (response: AxiosResponse) => {
         if (response && response.data) {
-            response.isSuccess = true;
-            return response.data;
+            // response.isSuccess = true;
+            // return response;
+            console.log(response);
         }
         return response;
-    },
+    }
     // (err) => {
     //     // Handle errors
     //     console.log(err);

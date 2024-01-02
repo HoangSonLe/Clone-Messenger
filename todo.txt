@@ -6,3 +6,6 @@ xem lại cách apply css trong react
 
 
 đây là git chính
+
+
+fix route auth

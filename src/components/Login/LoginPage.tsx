@@ -1,3 +1,4 @@
+import React from "react";
 import {
     Backdrop,
     Button,
@@ -25,9 +26,11 @@ import { configRoutes } from "../../routes/routes";
 import UploadFile from "../ui-kit/UploadFile/UploadFile";
 import styles from "./LoginPage.module.scss";
 import useKey from "../../hooks/useKey";
+import { UploadFileType } from "../../types/uploadFile.js";
+import { useLoginMutation } from "../../RTKQueryApis/auth.api";
 const cx = classNames.bind(styles);
 
-function createData(userName, passWord) {
+function createData(userName: string, passWord: string) {
     return { userName, passWord };
 }
 const rows = [
@@ -41,14 +44,15 @@ function LoginPage() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [pendingLogin, setPendingLogin] = useState(false);
-    const [isLogin, setLogin] = useState(true);
-    const [userName, setUserName] = useState("");
-    const [passWord, setPassWord] = useState("");
-    const [image, setImage] = useState({
-        imageName: null,
-        imageSrc: defaultAvatar,
-        imageFile: null,
+    const [pendingLogin, setPendingLogin] = useState<boolean>(false);
+    const [login,data] = useLoginMutation();
+
+    const [isLogin, setLogin] = useState<boolean>(true);
+    const [userName, setUserName] = useState<string>("");
+    const [passWord, setPassWord] = useState<string>("");
+    const [image, setImage] = useState<UploadFileType>({
+        name: "",
+        src: defaultAvatar,
     });
     const [displayName, setDisplayName] = useState("");
     const validate = () => {
@@ -80,14 +84,15 @@ function LoginPage() {
                 passWord: passWord,
             };
             setPendingLogin(true);
-            let response = await authApi.login(postData);
-            if (response.isSuccess == true) {
-                dispatch(login(response.data));
-                navigate(configRoutes.home);
-            }
+            let response = await login(postData);
+            console.log(response)
+            // if (response.isSuccess == true) {
+            //     dispatch(login(response.data));
+            //     navigate(configRoutes.home);
+            // }
         } catch (err) {
             setPendingLogin(false);
-            toastErrorList(err?.response?.data);
+            // toastErrorList(err?.response?.data);
         }
     };
     const handleLoginFacebook = async () => {
@@ -95,10 +100,10 @@ function LoginPage() {
         try {
             setPendingLogin(true);
             let response = await authApi.loginFacebook();
-            if (response.isSuccess == true) {
-                // dispatch(login(response.data));
-                navigate(configRoutes.home);
-            }
+            // if (response.isSuccess == true) {
+            //     // dispatch(login(response.data));
+            //     navigate(configRoutes.home);
+            // }
         } catch (err) {
             setPendingLogin(false);
             console.log("err", err);
@@ -108,8 +113,8 @@ function LoginPage() {
         if (validate() == false) return null;
         try {
             let fileId = null;
-            if (image.imageFile) {
-                var uploadFile = await uploadFiles([image.imageFile], "/chat/UploadImage");
+            if (image.file) {
+                var uploadFile = await uploadFiles([image.file], "/chat/UploadImage");
                 fileId = uploadFile.data.data[0].id;
             }
             let postData = {
@@ -120,18 +125,18 @@ function LoginPage() {
             };
             setPendingLogin(true);
             let response = await authApi.register(postData);
-            if (response.isSuccess) {
-                dispatch(login(response.data));
-                navigate(configRoutes.home);
-            } else {
-                setPendingLogin(false);
-            }
+            // if (response.isSuccess) {
+            //     dispatch(login(response.data));
+            //     navigate(configRoutes.home);
+            // } else {
+            //     setPendingLogin(false);
+            // }
         } catch (err) {
             setPendingLogin(false);
-            toastErrorList(err?.response?.data);
+            // toastErrorList(err?.response?.data);
         }
     };
-    const showPreview = (files) => {
+    const showPreview = (files : File[]) => {
         if (files && files.length >= 1) {
             let f = files[0];
             var url = URL.createObjectURL(f);
@@ -145,9 +150,9 @@ function LoginPage() {
             // };
             // reader.readAsDataURL(f);
             setImage({
-                imageFile: f,
-                imageName: f.name,
-                imageSrc: url,
+                file: f,
+                name: f.name,
+                src: url,
             });
         }
     };
@@ -201,7 +206,7 @@ function LoginPage() {
                                                         width={50}
                                                         height={50}
                                                         src={addAvatar}
-                                                        alt={image.imageName}
+                                                        alt={image.name}
                                                     />
                                                     <h4>Add an avatar</h4>
                                                 </div>
@@ -210,8 +215,8 @@ function LoginPage() {
                                     />
                                     <img
                                         className={cx("avatar")}
-                                        src={image.imageSrc ?? defaultAvatar}
-                                        alt={image.imageName}
+                                        src={image.src ?? defaultAvatar}
+                                        alt={image.name}
                                     />
                                 </div>
                             ) : null}

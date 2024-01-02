@@ -1,28 +1,10 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { toastErrorList } from "../generals/utils";
-import { addListGroup } from "../features/ChatGroupSlice";
+import { baseRTKApi } from "./base.api";
 
-export const groupApi = createApi({
-    reducerPath: "chatGroupApi",
-    baseQuery: fetchBaseQuery({
-        baseUrl: `${process.env.API_URL}/chat/`,
-        credentials: "same-origin",
-        prepareHeaders: (headers) => {
-            headers.set("Content-Type", "application/json; charset=utf-8");
-            headers.set("Access-Control-Allow-Origin", "*");
-            let token = sessionStorage.getItem("jwtToken");
-            if (token) {
-                headers.set("authorization", `Bearer ${token}`);
-            }
-
-            return headers;
-        },
-    }),
-    // transformResponse: (response, meta, arg) => response.data,
+export const groupApi = baseRTKApi.injectEndpoints({
     endpoints: (build) => ({
         getChatGroupList: build.mutation({
             query: (params) => ({
-                url: "GetChatGroupList",
+                url: "chat/GetChatGroupList",
                 method: "post",
                 body: {...params}
             }),
@@ -41,7 +23,7 @@ export const groupApi = createApi({
         }),
         getPageDefaultModel: build.query({
             query: (params) => ({
-                url: "GetPageDefaultModel",
+                url: "chat/GetPageDefaultModel",
                 method: "get",
             }),
             // async onQueryStarted(id, { dispatch, queryFulfilled }) {

@@ -17,7 +17,7 @@ module.exports = {
     },
     resolve: {
         //build luôn cả cái file có đuôi dưới khi dùng webpack
-        extensions: ["*", ".jsx", ".js"],
+        extensions: ["*", ".jsx", ".js", ".tsx", ".ts"],
         modules: ["node_modules"],
     },
     devServer: {
@@ -44,6 +44,11 @@ module.exports = {
                 use: "babel-loader",
             },
             {
+                test: /\.(ts|tsx)$/,
+                exclude: /node_modules/,
+                use: "ts-loader",
+            },
+            {
                 //Load scss
                 test: /\.s[ac]ss$/i,
                 use: [
@@ -63,7 +68,7 @@ module.exports = {
                             },
                         },
                     },
-                    // Compiles Sass to CSS
+// Compiles Sass to CSS
                     "sass-loader",
                 ],
             },
@@ -91,8 +96,8 @@ module.exports = {
         new webpack.DefinePlugin({
             "process.env": {
                 // API_URL: JSON.stringify("https://clonemessenger.azurewebsites.net/api"),
-                API_URL: JSON.stringify("https://clonemess.somee.com/api"),
-                // API_URL: JSON.stringify("https://localhost:44344/api"),            
+                // API_URL: JSON.stringify("https://clonemess.somee.com/api"),
+                API_URL: JSON.stringify("https://localhost:44344/api"),
             },
         }),
         new HtmlWebpackPlugin({

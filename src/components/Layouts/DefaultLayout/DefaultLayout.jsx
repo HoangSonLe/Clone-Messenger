@@ -13,7 +13,7 @@ import { configRoutes } from "../../../routes/routes";
 import MessageContent from "../../MessageContent/MessageContent";
 import Navigation from "../../Navigation/Navigation";
 import styles from "./DefaultLayout.module.scss";
-import { useGetPageDefaultModelQuery } from "../../../RTKQueryApi/chatGroupApi";
+import { useGetPageDefaultModelQuery } from "../../../RTKQueryApis/chatGroup.api";
 const cx = classNames.bind(styles);
 export default function DefaultLayout() {
     const { isLoggedIn } = useSelector((state) => state.auth);

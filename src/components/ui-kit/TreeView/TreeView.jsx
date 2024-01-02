@@ -1,19 +1,9 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import { styled } from "@mui/material/styles";
+import React from "react";
+import TreeItem from "@mui/lab/TreeItem";
 import Box from "@mui/material/Box";
-import TreeView from "@mui/lab/TreeView";
-import TreeItem, { treeItemClasses } from "@mui/lab/TreeItem";
 import Typography from "@mui/material/Typography";
-import MailIcon from "@mui/icons-material/Mail";
-import DeleteIcon from "@mui/icons-material/Delete";
-import Label from "@mui/icons-material/Label";
-import SupervisorAccountIcon from "@mui/icons-material/SupervisorAccount";
-import InfoIcon from "@mui/icons-material/Info";
-import ForumIcon from "@mui/icons-material/Forum";
-import LocalOfferIcon from "@mui/icons-material/LocalOffer";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import ArrowRightIcon from "@mui/icons-material/ArrowRight";
+import { styled } from "@mui/material/styles";
+import PropTypes from "prop-types";
 
 const StyledTreeItemRoot = styled(TreeItem)(({ theme }) => ({
     color: theme.palette.text.secondary,
@@ -56,7 +46,6 @@ function StyledTreeItem(props) {
                 "& .MuiTreeItem-content": {
                     color: "#0A7CFF",
                     paddingRight: 10,
-                    fontWeight: ,
                     // "&.Mui-expanded": {
                     //     fontWeight: theme.typography.fontWeightRegular,
                     // },
